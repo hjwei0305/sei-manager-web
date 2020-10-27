@@ -1,23 +1,41 @@
-export default [
+const routes = [
   {
     path: '/user',
-    component: '../layouts/LoginLayout',
+    component: '../layouts/TempLoginLayout',
     routes: [
-      { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './Login' },
+      {
+        name: 'login',
+        path: '/user/login',
+        component: './Login',
+      },
     ],
   },
   {
+    name: 'updatePwd',
+    path: '/updatePwd',
+    component: './UpdatePassword',
+  },
+  {
+    name: 'retrievePwd',
+    path: '/retrievePwd',
+    component: './RetrievePwd',
+  },
+  {
     path: '/',
-    component: '../layouts/AuthLayout',
+    component: '../layouts/BasicLayout',
+    Routes: ['./src/components/PrivateRoute'],
     routes: [
-      { path: '/', redirect: '/dashboard' },
-      { path: '/dashboard', component: './Dashboard' },
       {
-        path: '/moduleName',
-        name: 'moduleName',
-        routes: [{ path: '/moduleName/demo', component: './Demo' }],
+        path: '/',
+        redirect: '/DashBoard',
+      },
+      {
+        path: '/DashBoard',
+        name: 'DashBoard',
+        component: './DashBoard',
       },
     ],
   },
 ];
+
+export default routes;

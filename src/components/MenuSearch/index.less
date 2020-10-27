@@ -1,0 +1,44 @@
+@import '../../themes/default.less';
+
+.popver-wrapper {
+  width: 232px;
+  :global {
+    .ant-popover-content > .ant-popover-arrow {
+      border-top-color: @menu-search-box;
+      border-left-color: @menu-search-box;
+    }
+    .ant-popover-inner {
+      background-color: @menu-search-box;
+      border-radius: 0;
+      box-shadow: 0 12px 32px 0 rgba(38, 38, 38, 0.16);
+    }
+    .ant-popover-inner-content {
+      padding: 0;
+      .menu-search-popver-content {
+        height: calc(100vh - 142px);
+        padding: 4px 0;
+        .ps .ps__rail-x.ps--clicking,
+        .ps .ps__rail-x:focus,
+        .ps .ps__rail-x:hover,
+        .ps .ps__rail-y.ps--clicking,
+        .ps .ps__rail-y:focus,
+        .ps .ps__rail-y:hover {
+          background-color: transparent;
+        }
+        .ant-empty {
+          .ant-empty-image {
+            height: 60px;
+          }
+          .ant-empty-description {
+            color: @menu-search-empty-desc;
+          }
+        }
+        .menu-search {
+          &:last-child {
+            border-bottom-color: transparent;
+          }
+        }
+      }
+    }
+  }
+}

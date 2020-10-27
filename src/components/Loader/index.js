@@ -1,3 +1,3 @@
-import { PageLoader } from 'suid';
+import { ListLoader } from 'suid';
 
-export default PageLoader;
+export default ListLoader;

@@ -1,0 +1,57 @@
+@import '../themes/default.less';
+
+.portal-layout {
+  display: flex;
+  flex-direction: row;
+  min-width: 1200px;
+  height: calc(100vh);
+  min-height: 480px;
+  overflow: auto;
+  background-color: @base-bg-color;
+  :global {
+    .layout-sidebar {
+      width: @sidebar-width;
+      background-color: @menu-dark-bg;
+      transition: width 0.3s;
+      &.layout-sidebar-collapsed {
+        width: @sidebar-collapsed-width;
+      }
+    }
+    .layout-center {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+      .layout-center-header {
+        height: @center-header-height;
+        background-color: @center-bg-color;
+      }
+      .layout-center-content {
+        flex: 1;
+        box-sizing: border-box;
+        padding: 8px;
+        overflow: auto;
+        #root-subapp {
+          height: 100%;
+          overflow: hidden;
+          > div {
+            height: 100%;
+            overflow: hidden;
+            > div {
+              height: 100%;
+              overflow: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.breadcrumb-wrapper {
+  :global {
+    .pre-urlpath {
+      color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}

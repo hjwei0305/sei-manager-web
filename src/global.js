@@ -1,6 +1,14 @@
 import React from 'react';
-import { Button, message, notification } from 'antd';
+import { Button, notification } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
+import { message } from 'suid';
+import fetchPolyfill from './fetchPolyfill';
+
+fetchPolyfill();
+/** 默认配置message，最多弹出来一个，屏幕弹框吐丝现象 */
+message.config({
+  maxCount: 1,
+});
 
 // if pwa is true
 if (process.env.NODE_ENV === 'production') {

@@ -40,5 +40,6 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'no-unused-expressions': 0,
     'consistent-return': 0,
+    'react/no-find-dom-node': 0,
   },
 };

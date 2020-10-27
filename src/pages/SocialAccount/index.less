@@ -1,0 +1,31 @@
+.bind-warpper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #eee;
+  :global {
+    .bind-from-wrapper {
+      width: 337px;
+      min-height: 323px;
+      padding: 20px 40px;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 0 5px 3px #ddd;
+      .bind-form-title {
+        color: grey;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 70px;
+        text-align: center;
+      }
+      .ant-row.ant-form-item {
+        height: auto;
+        margin-bottom: 12px;
+      }
+      .bind-form-button {
+        width: 100%;
+      }
+    }
+  }
+}

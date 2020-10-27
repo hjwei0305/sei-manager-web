@@ -1,0 +1,16 @@
+export default {
+  'login.title': '账号登录',
+  'login.userName': '用户名',
+  'login.userName-invalid': '请输入用户名!',
+  'login.password': '密码',
+  'login.password-invalid': '请输入密码!',
+  'login.message-invalid-credentials': '账户或密码错误',
+  'login.message-invalid-verification-code': '验证码错误',
+  'login.tab-login-credentials': '账户密码登录',
+  'login.forgot-password': '忘记密码?',
+  'login.signup': '注册账户',
+  'login.login': '登录',
+  'login.loginning': '登录中...',
+  'register.register': '注册',
+  'register.get-verification-code': '获取验证码',
+};

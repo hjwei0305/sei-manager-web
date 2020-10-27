@@ -1,0 +1,38 @@
+@import '~antd/es/style/themes/default.less';
+
+.container-box {
+  :global {
+    .ant-input-lg {
+      height: 48px;
+      padding: 8px 11px;
+      font-size: 16px;
+    }
+
+    .ant-input[disabled] {
+      color: rgba(0, 0, 0, 0.65);
+    }
+    .ant-input-affix-wrapper .ant-input:not(:first-child) {
+      padding-left: 36px;
+    }
+    .ant-modal-title {
+      margin: 32px 24px 20px 24px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 700;
+      font-size: 24px;
+      text-align: center;
+    }
+    .ant-form {
+      margin: 0 36px;
+    }
+    .login-from-wrapper {
+      .ant-row.ant-form-item {
+        height: auto;
+      }
+      .login-form-button {
+        width: 100%;
+        height: 48px;
+        margin: 8px 0 32px 0;
+      }
+    }
+  }
+}

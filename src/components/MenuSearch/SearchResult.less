@@ -1,0 +1,45 @@
+@import '../../themes/default.less';
+
+.menu-search-result-box {
+  position: relative;
+  border-bottom: 3px solid @menu-search-result-group-split;
+  :global {
+    .title {
+      height: 42px;
+      padding: 0 16px;
+      color: @menu-search-result-group-title;
+      font-size: 16px;
+      line-height: 42px;
+    }
+    .menu-search-value {
+      color: @hightLightColor;
+    }
+    .ant-list-item {
+      position: relative;
+      padding: 8px 16px;
+      background-color: @menu-search-result-item-bg;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      .ant-list-item-meta-content {
+        .ant-list-item-meta-title {
+          color: @menu-search-result-title;
+        }
+        .ant-list-item-meta-description {
+          color: @menu-search-result-desc;
+          font-size: 12px;
+        }
+      }
+      &:hover {
+        background-color: @menu-search-result-item-hover;
+        .ant-list-item-meta-content {
+          .ant-list-item-meta-title {
+            color: @menu-search-result-title-hover;
+          }
+        }
+      }
+    }
+    .ant-list-split .ant-list-item {
+      border-bottom: 1px solid @menu-search-result-list-split;
+    }
+  }
+}

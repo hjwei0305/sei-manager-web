@@ -1,6 +1,7 @@
 node_modules
 *.html
 /components/test/*
+public
 dist
 package.json
 .umi

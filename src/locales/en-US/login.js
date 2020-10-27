@@ -1,0 +1,16 @@
+export default {
+  'login.title': 'Account Login',
+  'login.userName': 'userName',
+  'login.userName-invalid': 'please enter userName!',
+  'login.password': 'password',
+  'login.password-invalid': 'please enter password!',
+  'login.message-invalid-credentials': 'Invalid username or password',
+  'login.message-invalid-verification-code': 'Invalid verification code',
+  'login.tab-login-credentials': 'Credentials',
+  'login.forgot-password': 'Forgot your password?',
+  'login.signup': 'Sign up',
+  'login.login': 'Login',
+  'login.loginning': 'Loginning...',
+  'register.register': 'Register',
+  'register.get-verification-code': 'Get code',
+};

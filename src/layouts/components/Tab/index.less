@@ -1,0 +1,15 @@
+.content-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  :global {
+    .content-tabs-wrapper {
+      height: 33px;
+      overflow: hidden;
+    }
+    .content-tabpane-warpper {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+.user-icon-wrapper {
+  display: inline-block;
+  height: 100%;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  :global {
+    .username {
+      margin-left: 5px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    .ant-avatar-icon {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .avatar {
+      margin-right: 8px;
+      vertical-align: top;
+      background: rgba(255, 255, 255, 0.85);
+    }
+  }
+}
+
+.user-menu-item {
+  :global {
+    .ant-dropdown-menu-item {
+      padding: 10px 16px;
+    }
+  }
+}
