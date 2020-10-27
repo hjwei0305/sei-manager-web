@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Form, Button } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
+import cls from 'classnames';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import md5 from 'md5';
 import { utils } from 'suid';
+import defaultLogo from '@/assets/logo@2x_100x42.png';
 import SelectLang from '@/components/SelectLang';
 import LoginForm from './Form';
 import styles from './index.less';
@@ -91,8 +93,11 @@ class Login extends Component {
 
     return (
       <div className={styles['container-box']}>
+        <div className={cls('form-logo', 'horizontal')}>
+          <img src={defaultLogo} alt="" />
+        </div>
         <div className="login-form-title">
-          <span>{formatMessage({ id: 'login.title', desc: '账号登录' })}</span>
+          <span className="title">开发与运维平台</span>
         </div>
 
         <LoginForm

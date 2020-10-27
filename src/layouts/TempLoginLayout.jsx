@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet';
 import { PageLoader, Animate } from 'suid';
 import { constants } from '@/utils';
 import Footer from '@/components/Footer';
-import defaultLogo from '../assets/logonew@2x.png';
 import styles from './TempLoginLayout.less';
 
 const { LOCAL_PATH } = constants;
@@ -45,9 +44,7 @@ export class TempLoginLayout extends PureComponent {
         </div>
         <div className={styles['login-box']}>
           <div className="main-wrapper">
-            <div className={cls('logo')}>
-              <img src={defaultLogo} alt="" />
-            </div>
+            <div className={cls('logo', 'horizontal')} />
             <div className={cls('form-box')}>
               {loading ? <PageLoader /> : <Animate type="bounceIn">{children}</Animate>}
             </div>

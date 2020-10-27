@@ -10,6 +10,14 @@
   border-radius: 4px;
   box-shadow: 0 3px 26px rgba(28, 38, 84, 0.75);
   :global {
+    .form-logo {
+      justify-content: center;
+      margin-top: 48px;
+      img {
+        width: 100px;
+        height: 42px;
+      }
+    }
     .ant-input-lg {
       height: 48px;
       padding: 8px 11px;
@@ -48,20 +56,17 @@
     }
     .login-form-title {
       height: 60px;
-      margin: 48px 24px 20px 24px;
-      color: rgba(0, 0, 0, 0.85);
+      margin: 18px;
+      color: #595959;
       font-weight: 700;
       font-size: 24px;
       line-height: 60px;
       text-align: center;
-      &_item {
-        cursor: pointer;
-        &:hover {
-          color: @primary-color;
-        }
-      }
-      &_item-actived {
-        color: @primary-color;
+      .title {
+        margin-left: 8px;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 700;
+        font-size: 32px;
       }
     }
     .ant-form {
