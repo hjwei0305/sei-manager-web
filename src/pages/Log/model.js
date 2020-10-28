@@ -1,46 +1,29 @@
 import { utils } from 'suid';
-import moment from 'moment';
-import { getEntityNames } from './service';
+import { constants } from '@/utils';
 
-const { pathMatchRegexp, dvaModel } = utils;
+const { ENV_CATEGORY } = constants;
+const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
-const defaultFormat = 'YYYY-MM-DD hh:mm:00';
+const ENV_CATEGORY_DATA = Object.keys(ENV_CATEGORY).map(key => ENV_CATEGORY[key]);
+
 export default modelExtend(model, {
-  namespace: 'dataAudit',
+  namespace: 'runtimeLog',
 
   state: {
-    startTime: moment().format(defaultFormat),
-    endTime: moment().format(defaultFormat),
-    className: '',
-    operatorName: '',
-    operationCategory: '',
-    propertyName: '',
-    operatorAccount: '',
-    propertyRemark: '',
-    entityNames: [],
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      history.listen(location => {
-        if (pathMatchRegexp('/data/audit', location.pathname)) {
-          dispatch({
-            type: 'getDataRoleList',
-          });
-        }
-      });
-    },
+    currentEnvViewType: ENV_CATEGORY_DATA[0],
+    envViewData: ENV_CATEGORY_DATA,
   },
   effects: {
-    *getDataRoleList({ payload }, { call, put }) {
-      const re = yield call(getEntityNames, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            entityNames: re.data,
-          },
-        });
-      }
-    },
+    // *getDataRoleList({ payload }, { call, put }) {
+    //   const re = yield call('', payload);
+    //   if (re.success) {
+    //     yield put({
+    //       type: 'updateState',
+    //       payload: {
+    //         entityNames: re.data,
+    //       },
+    //     });
+    //   }
+    // },
   },
 });

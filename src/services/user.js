@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-27 15:38:39
+ * @Last Modified time: 2020-10-28 14:15:07
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -83,31 +83,6 @@ export async function getVerifyCode(reqId) {
       needToken: false,
     },
   });
-}
-
-/** 获取生成二维码配置信息 */
-export async function authorizeData(authType = 'weChat') {
-  return request({
-    method: 'GET',
-    url: `${SERVER_PATH}/sso/authorizeData?authType=${authType}`,
-    headers: {
-      needToken: false,
-    },
-  });
-}
-
-/** 获取wechat, sdk,配置信息 */
-export async function getWeChatCfg(params = { authType: 'weChat' }) {
-  return request({
-    method: 'POST',
-    url: `${SERVER_PATH}/sso/js/sdk`,
-    params,
-  });
-}
-
-/** 获取当前用户有权限的功能项集合 */
-export async function getAuthorizedFeatures(userId) {
-  return request.get(`${SERVER_PATH}/auth/getAuthorizedFeatures?userId=${userId}`);
 }
 
 /** 清除用户缓存 */

@@ -2,6 +2,9 @@ import pwa from './en-US/pwa';
 import login from './en-US/login';
 
 export default {
+  'app.dashboard': 'Home',
+  'app.dashboard.custom': 'Custom Dashboard',
+  'app.logout': 'Logout',
   'app.lang': 'Language',
   'app.request.error': 'Interface request exception',
   'app.request.info': 'Request info',

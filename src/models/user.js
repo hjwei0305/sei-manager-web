@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-27 15:38:46
+ * @Last Modified time: 2020-10-28 13:21:49
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -12,7 +12,6 @@ import {
   userLogin,
   userLogout,
   bindingSocialAccount,
-  getAuthorizedFeatures,
   clearUserAuthCaches,
   getVerifyCode,
   getUserByXsid,
@@ -39,7 +38,6 @@ const {
   getCurrentLocale,
   adaptLocale,
   getCurrentUser,
-  setCurrentAuth,
   setCurrentPolicy,
 } = userInfoOperation;
 
@@ -51,7 +49,6 @@ export default {
     sessionId: null,
     verifyCode: null,
     qrConfig: null,
-    tenantSetting: null,
   },
 
   subscriptions: {
@@ -251,13 +248,6 @@ export default {
           activedMenu: null,
         },
       });
-    },
-    *getUserFeatures(_, { call }) {
-      const user = getCurrentUser();
-      const result = yield call(getAuthorizedFeatures, user.userId);
-      if (result && result.success) {
-        setCurrentAuth(result.data);
-      }
     },
     *getVerifyCode({ payload }, { call, put }) {
       const result = yield call(getVerifyCode, payload.reqId);

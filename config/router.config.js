@@ -30,9 +30,14 @@ const routes = [
         redirect: '/DashBoard',
       },
       {
-        path: '/DashBoard',
+        path: '/dashBoard',
         name: 'DashBoard',
         component: './DashBoard',
+      },
+      {
+        path: '/log/logRecord',
+        name: 'DashBoard',
+        component: './Log',
       },
     ],
   },

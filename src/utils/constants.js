@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-27 15:33:13
+ * @Last Modified time: 2020-10-28 14:17:17
  */
 import { name } from '../../package.json';
 
@@ -36,18 +36,25 @@ const LOCAL_PATH = process.env.NODE_ENV !== 'production' ? '..' : `../${APP_BASE
 
 const SERVER_PATH = getServerPath();
 
-const LOGIN_STATUS = {
-  SUCCESS: 'success',
-  MULTI_TENANT: 'multiTenant',
-  CAPTCHA_ERROR: 'captchaError',
-  FROZEN: 'frozen',
-  LOCKED: 'locked',
-  FAILURE: 'failure',
+const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+
+const ENV_CATEGORY = {
+  dev: { key: 'dev', title: '开发', color: 'purple' },
+  test: { key: 'test', title: '测试', color: 'blue' },
+  prd: { key: 'prd', title: '生产', color: 'green' },
+};
+
+const LEVEL_CATEGORY = {
+  dev: { key: 'dev', title: '开发', color: 'purple' },
+  test: { key: 'test', title: '测试', color: 'blue' },
+  prd: { key: 'prd', title: '生产', color: 'green' },
 };
 
 export default {
   APP_BASE,
   LOCAL_PATH,
   SERVER_PATH,
-  LOGIN_STATUS,
+  IS_DEVELOPMENT,
+  ENV_CATEGORY,
+  LEVEL_CATEGORY,
 };

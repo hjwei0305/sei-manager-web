@@ -2,6 +2,9 @@ import pwa from './zh-CN/pwa';
 import login from './zh-CN/login';
 
 export default {
+  'app.dashboard': '平台首页',
+  'app.dashboard.custom': '自定义首页',
+  'app.logout': '退出',
   'app.lang': '语种',
   'app.request.error': '接口请求异常',
   'app.request.info': '接口请求提示',

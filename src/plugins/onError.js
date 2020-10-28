@@ -36,7 +36,7 @@ export default {
         });
       } else {
         notification.error({
-          message: formatMessage({ id: 'app.request.error', defaultMessage: '请求错误' }),
+          message: formatMessage({ id: 'app.request.error', defaultMessage: '接口请求异常' }),
           description: err.message,
         });
       }

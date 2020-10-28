@@ -1,62 +1,29 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { trim } from 'lodash';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Tag, Input, Button } from 'antd';
 import { ExtTable, ListCard } from 'suid';
 import { constants } from '@/utils';
-import QueryForm from './QueryForm';
+import { FilterView } from '@/components';
 import styles from './index.less';
 
-const { SERVER_PATH, OPERATION_CATEGORY } = constants;
+const { ENV_CATEGORY, LEVEL_CATEGORY } = constants;
 const { Search } = Input;
 
-@connect(({ dataAudit, loading }) => ({ dataAudit, loading }))
-class DataAuditHome extends PureComponent {
+@connect(({ runtimeLog, loading }) => ({ runtimeLog, loading }))
+class LogList extends PureComponent {
   static tableRef = null;
 
-  static listCardRef = null;
-
-  query = queryData => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'dataAudit/updateState',
-      payload: {
-        ...queryData,
-      },
-    });
+  reload = () => {
     this.tableRef.remoteDataRefresh();
-  };
-
-  renderOperation = optType => {
-    switch (optType) {
-      case OPERATION_CATEGORY.CREATE:
-        return <Tag color="green">{optType}</Tag>;
-      case OPERATION_CATEGORY.UPDATE:
-        return <Tag color="blue">{optType}</Tag>;
-      case OPERATION_CATEGORY.DELETE:
-        return <Tag color="red">{optType}</Tag>;
-      default:
-    }
-  };
-
-  handlerSearchChange = v => {
-    this.listCardRef.handlerSearchChange(v);
-  };
-
-  handlerPressEnter = () => {
-    this.listCardRef.handlerPressEnter();
-  };
-
-  handlerSearch = v => {
-    this.listCardRef.handlerSearch(v);
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
     const { dispatch } = this.props;
     confirm();
     dispatch({
-      type: 'dataAudit/updateState',
+      type: 'runtimeLog/updateState',
       payload: {
         [dataIndex]: selectedKeys[0],
       },
@@ -67,15 +34,21 @@ class DataAuditHome extends PureComponent {
     const { dispatch } = this.props;
     clearFilter();
     dispatch({
-      type: 'dataAudit/updateState',
+      type: 'runtimeLog/updateState',
       payload: {
         [dataIndex]: '',
       },
     });
   };
 
-  handlerColumnSearchChange = (e, dataIndex) => {
-    this.searchValue[dataIndex] = trim(e.target.value);
+  handlerEnvChange = currentEnvViewType => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        currentEnvViewType,
+      },
+    });
   };
 
   renderCustomTool = (dataIndex, clearFilters) => (
@@ -96,13 +69,27 @@ class DataAuditHome extends PureComponent {
     </>
   );
 
+  renderEnv = env => {
+    const evnData = ENV_CATEGORY[env];
+    if (evnData) {
+      return <Tag color={evnData.color}>{evnData.title}</Tag>;
+    }
+    return env;
+  };
+
+  renderLevel = level => {
+    const evnData = LEVEL_CATEGORY[level];
+    if (evnData) {
+      return <Tag color={evnData.color}>{evnData.title}</Tag>;
+    }
+    return level;
+  };
+
   getColumnSearchComponent = (dataIndex, setSelectedKeys, selectedKeys, confirm, clearFilters) => {
     if (dataIndex === 'className') {
-      const { dataAudit } = this.props;
-      const { entityNames } = dataAudit;
       const entityNameProps = {
         className: 'search-content',
-        dataSource: entityNames,
+        dataSource: [],
         searchProperties: ['entityName'],
         showArrow: false,
         showSearch: false,
@@ -114,7 +101,6 @@ class DataAuditHome extends PureComponent {
           this.handleColumnSearch(keys, dataIndex, confirm);
         },
         customTool: () => this.renderCustomTool(dataIndex, clearFilters),
-        onListCardRef: ref => (this.listCardRef = ref),
         itemField: {
           title: item => item.entityName,
         },
@@ -176,95 +162,79 @@ class DataAuditHome extends PureComponent {
   };
 
   render() {
-    const { dataAudit, loading } = this.props;
-    const { startTime, endTime, className, entityName, operatorName } = dataAudit;
+    const { runtimeLog } = this.props;
+    const { currentEnvViewType, envViewData } = runtimeLog;
     const columns = [
       {
-        title: '变更时间',
-        dataIndex: 'operateTime',
+        title: '时间',
+        dataIndex: 'timestamp',
         width: 180,
         align: 'center',
         required: true,
         fixed: 'left',
       },
       {
-        title: '变更人',
-        dataIndex: 'operatorName',
+        title: '环境',
+        dataIndex: 'env',
         width: 100,
         fixed: 'left',
         required: true,
-        ...this.getColumnSearchProps('operatorName'),
+        render: this.renderEnv,
+        // ...this.getColumnSearchProps('operatorName'),
       },
       {
-        title: '数据类型',
-        dataIndex: 'entityName',
+        title: '调用服务',
+        dataIndex: 'fromServer',
         width: 220,
         required: true,
-        ...this.getColumnSearchProps('className'),
+        // ...this.getColumnSearchProps('className'),
       },
       {
-        title: '变更类型',
-        dataIndex: 'operationCategory',
+        title: '日志等极',
+        dataIndex: 'level',
         width: 100,
         align: 'center',
         required: true,
-        render: optType => this.renderOperation(optType),
+        render: this.renderLevel,
       },
       {
-        title: '变更字段',
-        dataIndex: 'propertyRemark',
+        title: '	日志类',
+        dataIndex: 'logger',
         width: 240,
         required: true,
       },
       {
-        title: '变更字段代码',
-        dataIndex: 'propertyName',
+        title: '日志消息',
+        dataIndex: 'message',
         width: 220,
         optional: true,
       },
       {
-        title: '变更前',
-        dataIndex: 'originalValue',
+        title: '应用代码',
+        dataIndex: 'serviceName',
         width: 220,
         required: true,
       },
       {
-        title: '变更后',
-        dataIndex: 'newValue',
+        title: '跟踪id',
+        dataIndex: 'traceId',
         width: 380,
         required: true,
       },
-      {
-        title: '变更人账号',
-        dataIndex: 'operatorAccount',
-        width: 180,
-        optional: true,
-        ...this.getColumnSearchProps('operatorAccount'),
-      },
-      {
-        title: '数据类型代码',
-        dataIndex: 'className',
-        width: 320,
-        optional: true,
-      },
     ];
-    const queryFormProps = {
-      queryData: {
-        startTime,
-        endTime,
-        className,
-        entityName,
-        operatorName,
-      },
-      loading: loading.global,
-      query: this.query,
-    };
     const toolBarProps = {
       layout: { leftSpan: 24 },
       left: (
-        <Fragment>
-          <QueryForm {...queryFormProps} />
-        </Fragment>
+        <>
+          <FilterView
+            currentViewType={currentEnvViewType}
+            viewTypeData={envViewData}
+            onAction={this.handlerEnvChange}
+          />
+          <Button onClick={this.reloadData}>
+            <FormattedMessage id="global.refresh" defaultMessage="刷新" />
+          </Button>
+        </>
       ),
     };
     const tableProps = {
@@ -273,28 +243,13 @@ class DataAuditHome extends PureComponent {
       columns,
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-datachange/dataChangeLog/queryByPage`,
-      },
-      cascadeParams: {
-        startTime,
-        endTime,
-        operatorName,
-        className,
+        url: `/sei-manager/log/findByPage`,
       },
       remotePaging: true,
-      showSearch: false,
       onTableRef: ref => (this.tableRef = ref),
       sort: {
         field: {
-          operateTime: 'desc',
-          entityName: null,
-          operatorName: null,
-          originalValue: null,
-          newValue: null,
-          operationCategory: null,
-          propertyRemark: null,
-          propertyName: null,
-          operatorAccount: null,
+          timestamp: 'desc',
         },
       },
     };
@@ -306,4 +261,4 @@ class DataAuditHome extends PureComponent {
   }
 }
 
-export default DataAuditHome;
+export default LogList;

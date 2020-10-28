@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-27 16:31:10
+ * @Last Modified time: 2020-10-28 15:01:58
  */
 import { router } from 'umi';
 import { utils } from 'suid';
@@ -96,7 +96,7 @@ export default {
     /** 被激活的菜单项 */
     activedMenu: null,
     /** 页签打开模式 spa spa-tab iframe */
-    mode: 'iframe',
+    mode: 'spa-tab',
     /** 所有菜单树的叶子菜单 */
     allLeafMenus: [],
     /** 是否显示登录框 */

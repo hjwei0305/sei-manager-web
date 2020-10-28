@@ -51,13 +51,8 @@ class BasicLayout extends React.Component {
           },
         });
       });
-      dispatch({
-        type: 'user/getUserFeatures',
-        payload: {
-          userId,
-        },
-      });
     }
+    console.log(11);
     window.addEventListener('message', this.delegateTab, false);
   }
 
@@ -270,7 +265,7 @@ class BasicLayout extends React.Component {
 
   render() {
     const { collapsed } = this.state;
-    const { menu, children, user } = this.props;
+    const { menu, children } = this.props;
     const {
       tabData,
       mode,
@@ -283,7 +278,6 @@ class BasicLayout extends React.Component {
       moreTabData,
       favoriteMenus,
     } = menu;
-    const { tenantSetting } = user;
     const isSubAppRouter = this.isSubAppRouter();
     let activedKey = '';
     let title = formatMessage({ id: 'app.dashboard', desc: '平台首页' });
@@ -333,7 +327,6 @@ class BasicLayout extends React.Component {
               activedMenuKey={activedKey}
               mode={mode}
               onCollapse={this.handleTogCollapsed}
-              tenantSetting={tenantSetting}
             />
           </nav>
           <section className={cls('layout-center')}>
@@ -389,7 +382,7 @@ class BasicLayout extends React.Component {
                   style={{
                     display: isSubAppRouter ? 'block' : 'none',
                   }}
-                 />
+                />
               )}
             </content>
           </section>
