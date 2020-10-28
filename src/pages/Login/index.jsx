@@ -5,8 +5,7 @@ import { router } from 'umi';
 import cls from 'classnames';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import md5 from 'md5';
-import { utils } from 'suid';
-import defaultLogo from '@/assets/logo@2x_100x42.png';
+import { utils, Animate } from 'suid';
 import SelectLang from '@/components/SelectLang';
 import LoginForm from './Form';
 import styles from './index.less';
@@ -94,10 +93,20 @@ class Login extends Component {
     return (
       <div className={styles['container-box']}>
         <div className={cls('form-logo', 'horizontal')}>
-          <img src={defaultLogo} alt="" />
+          <Animate type="fadeInLeft" delay={200}>
+            S
+          </Animate>
+          <Animate type="tada" delay={400} duration={1500}>
+            E
+          </Animate>
+          <Animate type="fadeInRight" delay={200}>
+            I
+          </Animate>
         </div>
         <div className="login-form-title">
-          <span className="title">开发与运维平台</span>
+          <Animate type="flipInY" delay={400}>
+            <span className="title">开发与运维平台</span>
+          </Animate>
         </div>
 
         <LoginForm
