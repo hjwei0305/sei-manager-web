@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-28 14:15:07
+ * @Last Modified time: 2020-10-29 15:10:13
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -10,6 +10,7 @@ import { constants } from '@/utils';
 const { request } = utils;
 
 const { SERVER_PATH } = constants;
+const testPath = 'http://202.98.157.34:8100/mock/5f98deffbd240382b5a7c400/sei-manager-web';
 
 /** 更新密码 */
 export const updatePwd = data =>
@@ -55,7 +56,7 @@ export const bindingSocialAccount = data =>
  * id {string} 唯一值
  */
 export async function userLogin(params) {
-  return request.post(`${SERVER_PATH}/sei-auth/auth/login`, params, {
+  return request.post(`${testPath}/sei-auth/auth/login`, params, {
     headers: {
       needToken: false,
     },
@@ -93,7 +94,7 @@ export async function clearUserAuthCaches(userId) {
 export const getPortrait = (params = {}) =>
   request({
     method: 'GET',
-    url: `${SERVER_PATH}/sei-basic/userProfile/findPortrait`,
+    url: `${testPath}/sei-basic/userProfile/findPortrait`,
     params,
   });
 
