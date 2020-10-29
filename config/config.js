@@ -5,12 +5,14 @@ import routes from './router.config';
 import proxy from './proxy.config';
 import themeConfig from './theme.config';
 
+const basePath = '/sei-mananger-web/';
 export default {
   history: 'hash',
   treeShaking: true,
   ignoreMomentLocale: true,
   targets: { ie: 11 },
-  publicPath: '/sei-mananger-web/',
+  base: basePath,
+  publicPath: basePath,
   hash: true,
   plugins,
   routes,
