@@ -5,7 +5,7 @@ import routes from './router.config';
 import proxy from './proxy.config';
 import themeConfig from './theme.config';
 
-const basePath = '/sei-mananger-web/';
+const basePath = '/sei-manager-web/';
 export default {
   history: 'hash',
   treeShaking: true,
