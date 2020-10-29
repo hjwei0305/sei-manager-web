@@ -1,20 +1,20 @@
 import React from 'react';
-import Iframe from '@/layouts/components/Tab/Iframe';
-import { constants } from '@/utils';
+// import Iframe from '@/layouts/components/Tab/Iframe';
+// import { constants } from '@/utils';
 import styles from './index.less';
 
-const { IS_DEVELOPMENT } = constants;
+// const { IS_DEVELOPMENT } = constants;
 
 const DashBoard = () => (
   <section className={styles['dashboard-wrapper']}>
-    {!IS_DEVELOPMENT ? (
+    {/* {!IS_DEVELOPMENT ? (
       <Iframe
         visible
         title="dashboard"
         url="/sei-dashboard-web/#/sei-dashboard-web/scene/sei/home"
         id="portal-dashboard"
       />
-    ) : null}
+    ) : null} */}
   </section>
 );
 
