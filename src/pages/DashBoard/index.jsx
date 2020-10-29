@@ -5,7 +5,7 @@ import styles from './index.less';
 
 // const { IS_DEVELOPMENT } = constants;
 
-const DashBoard = () => (
+const Dashboard = () => (
   <section className={styles['dashboard-wrapper']}>
     {/* {!IS_DEVELOPMENT ? (
       <Iframe
@@ -18,4 +18,4 @@ const DashBoard = () => (
   </section>
 );
 
-export default DashBoard;
+export default Dashboard;

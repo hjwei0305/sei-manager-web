@@ -31,8 +31,8 @@ const routes = [
       },
       {
         path: '/dashBoard',
-        name: 'DashBoard',
-        component: './DashBoard',
+        name: 'Dashboard',
+        component: './Dashboard',
       },
       {
         path: '/log/logRecord',
