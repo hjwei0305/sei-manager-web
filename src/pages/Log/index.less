@@ -57,3 +57,49 @@
     }
   }
 }
+
+.level-box {
+  border-right: none;
+
+  :global {
+    .ant-menu-item {
+      padding: 2px 16px;
+
+      &:hover {
+        background-color: @hover-color;
+      }
+
+      .selected {
+        position: absolute;
+        left: 4px;
+        line-height: 42px;
+      }
+
+      .view-popover-box-trigger {
+        display: inline-block;
+        padding: 8px;
+        line-height: 22px;
+      }
+
+      &.ant-menu-item-selected {
+        background-color: @menu-item-active-bg;
+      }
+    }
+  }
+}
+
+.log-detail-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  transform: translateX(0) !important;
+  :global {
+    .ant-drawer-header {
+      border-color: transparent;
+    }
+    .ant-drawer-body {
+      height: ~'calc(100% - 55px)';
+      padding: 0;
+    }
+  }
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { utils } from 'suid';
 import { constants } from '@/utils';
 
@@ -5,11 +6,30 @@ const { request } = utils;
 
 const { SERVER_PATH } = constants;
 
-/** 获取实体类型列表 */
-export async function getEntityNames() {
-  const url = `${SERVER_PATH}/sei-datachange/dataChangeLog/getEntityNames`;
+/**
+ * 获取日志详情
+ * @id string
+ * @serviceName string
+ */
+export async function getLogDetail(params) {
+  const url = `/sei-manager/log/detail`;
   return request({
     url,
     method: 'GET',
+    params,
+  });
+}
+
+/**
+ * 获取链路日志
+ * @traceId string
+ * @serviceName string
+ */
+export async function getTranceLog(params) {
+  const url = `/sei-manager/log/findByTraceId`;
+  return request({
+    url,
+    method: 'GET',
+    params,
   });
 }

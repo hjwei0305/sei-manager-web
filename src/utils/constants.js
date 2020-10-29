@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-28 14:17:17
+ * @Last Modified time: 2020-10-29 10:28:47
  */
 import { name } from '../../package.json';
 
@@ -38,23 +38,79 @@ const SERVER_PATH = getServerPath();
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
+/** 非菜单页面 */
+export const NoMenuPages = [
+  // {
+  //   id: 'flow-homepage',
+  //   url: '/sei-flow-web/homepage',
+  //   title: '我的任务',
+  //   noClosable: true,
+  //   /** 激活刷新 */
+  //   activedRefresh: true,
+  // },
+  {
+    id: 'userProfile',
+    title: '个人设置',
+    url: '/sei-basic-web/userProfile',
+    // closeActiveParentTab: true,
+  },
+];
+
 const ENV_CATEGORY = {
-  dev: { key: 'dev', title: '开发', color: 'purple' },
-  test: { key: 'test', title: '测试', color: 'blue' },
-  prd: { key: 'prd', title: '生产', color: 'green' },
+  dev: { key: 'dev', title: '开发' },
+  test: { key: 'test', title: '测试' },
+  prd: { key: 'prd', title: '生产' },
 };
 
 const LEVEL_CATEGORY = {
-  dev: { key: 'dev', title: '开发', color: 'purple' },
-  test: { key: 'test', title: '测试', color: 'blue' },
-  prd: { key: 'prd', title: '生产', color: 'green' },
+  ALL: { key: 'ALL', title: '全部' },
+  INFO: { key: 'INFO', title: 'INFO', color: '' },
+  DEBUG: { key: 'DEBUG', title: 'DEBUG', color: 'blue' },
+  ERROR: { key: 'ERROR', title: 'ERROR', color: 'red' },
+  FATAL: { key: 'FATAL', title: 'FATAL', color: 'magenta' },
+};
+
+/** 日期枚举 */
+const SEARCH_DATE_PERIOD = {
+  ALL: {
+    name: 'ALL',
+    remark: '全部',
+  },
+  THIS_5M: {
+    name: 'THIS_5M',
+    remark: '近5分钟',
+  },
+  THIS_30M: {
+    name: 'THIS_30M',
+    remark: '近半小时',
+  },
+  THIS_60M: {
+    name: 'THIS_60M',
+    remark: '近1小时',
+  },
+  TODAY: {
+    name: 'TODAY',
+    remark: '今日',
+  },
+  PERIOD: {
+    name: 'PERIOD',
+    remark: '指定时间段',
+  },
+};
+
+const LOG_ACTION = {
+  DETAIL: 'detail',
+  BY_TRANCE_ID: 'traceId',
 };
 
 export default {
+  NoMenuPages,
   APP_BASE,
   LOCAL_PATH,
   SERVER_PATH,
   IS_DEVELOPMENT,
   ENV_CATEGORY,
   LEVEL_CATEGORY,
+  SEARCH_DATE_PERIOD,
+  LOG_ACTION,
 };

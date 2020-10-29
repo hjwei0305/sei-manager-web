@@ -1,42 +1,63 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Tag, Input, Button } from 'antd';
-import { ExtTable, ListCard } from 'suid';
+import { get } from 'lodash';
+import copy from 'copy-to-clipboard';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { Input, Button, Menu, Drawer } from 'antd';
+import { ExtTable, ExtIcon, message } from 'suid';
 import { constants } from '@/utils';
 import { FilterView } from '@/components';
+import FilterDate from './components/FilterDate';
+import ExtAction from './components/ExtAction';
+import TranceLog from './components/TranceLog';
+import LogDetail from './components/LogDetail';
+import LogLevel from './components/LogLevel';
 import styles from './index.less';
 
-const { ENV_CATEGORY, LEVEL_CATEGORY } = constants;
-const { Search } = Input;
+const { LEVEL_CATEGORY, LOG_ACTION } = constants;
+const FILTER_FIELDS = [
+  { fieldName: 'level', operator: 'EQ', value: null },
+  { fieldName: 'currentServer', operator: 'EQ', value: null },
+  { fieldName: 'fromServer', operator: 'EQ', value: null },
+  { fieldName: 'logger', operator: 'EQ', value: null },
+  { fieldName: 'message', operator: 'EQ', value: null },
+  { fieldName: 'serviceName', operator: 'EQ', value: null },
+  { fieldName: 'traceId', operator: 'EQ', value: null },
+];
 
 @connect(({ runtimeLog, loading }) => ({ runtimeLog, loading }))
 class LogList extends PureComponent {
   static tableRef = null;
 
-  reload = () => {
+  reloadData = () => {
     this.tableRef.remoteDataRefresh();
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
-    const { dispatch } = this.props;
+    const { dispatch, runtimeLog } = this.props;
+    const { filter: originFilter } = runtimeLog;
+    const filter = { ...originFilter };
+    Object.assign(filter, { [dataIndex]: selectedKeys[0] });
     confirm();
     dispatch({
       type: 'runtimeLog/updateState',
       payload: {
-        [dataIndex]: selectedKeys[0],
+        filter,
       },
     });
   };
 
   handleColumnSearchReset = (dataIndex, clearFilter) => {
-    const { dispatch } = this.props;
+    const { dispatch, runtimeLog } = this.props;
+    const { filter: originFilter } = runtimeLog;
+    const filter = { ...originFilter };
+    Object.assign(filter, { [dataIndex]: '' });
     clearFilter();
     dispatch({
       type: 'runtimeLog/updateState',
       payload: {
-        [dataIndex]: '',
+        filter,
       },
     });
   };
@@ -51,68 +72,92 @@ class LogList extends PureComponent {
     });
   };
 
-  renderCustomTool = (dataIndex, clearFilters) => (
-    <>
-      <Search
-        placeholder="可输入关键字查询"
-        onChange={e => this.handlerSearchChange(e.target.value)}
-        onSearch={this.handlerSearch}
-        onPressEnter={this.handlerPressEnter}
-        style={{ width: '100%' }}
-      />
-      <Button
-        onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
-        style={{ width: 90, marginLeft: 8 }}
-      >
-        重置
-      </Button>
-    </>
-  );
-
-  renderEnv = env => {
-    const evnData = ENV_CATEGORY[env];
-    if (evnData) {
-      return <Tag color={evnData.color}>{evnData.title}</Tag>;
+  onLevelChange = (e, dataIndex, setSelectedKeys, confirm, clearFilters) => {
+    const { dispatch, runtimeLog } = this.props;
+    const { filter: originFilter } = runtimeLog;
+    const filter = { ...originFilter };
+    if (e.key === LEVEL_CATEGORY.ALL.key) {
+      clearFilters();
+      Object.assign(filter, { [dataIndex]: null });
+    } else {
+      setSelectedKeys(e.key);
+      Object.assign(filter, { [dataIndex]: e.key });
+      confirm();
     }
-    return env;
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        filter,
+      },
+    });
   };
 
-  renderLevel = level => {
-    const evnData = LEVEL_CATEGORY[level];
-    if (evnData) {
-      return <Tag color={evnData.color}>{evnData.title}</Tag>;
-    }
-    return level;
+  handlerFitlerDate = (dataIndex, currentDate, confirm) => {
+    const { startTime = null, endTime = null } = currentDate;
+    const { dispatch, runtimeLog } = this.props;
+    const { filter: originFilter } = runtimeLog;
+    const filter = { ...originFilter };
+    Object.assign(filter, {
+      [dataIndex]: startTime === null || endTime === null ? null : [startTime, endTime],
+    });
+    confirm();
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        filter,
+      },
+    });
   };
 
   getColumnSearchComponent = (dataIndex, setSelectedKeys, selectedKeys, confirm, clearFilters) => {
-    if (dataIndex === 'className') {
-      const entityNameProps = {
-        className: 'search-content',
-        dataSource: [],
-        searchProperties: ['entityName'],
-        showArrow: false,
-        showSearch: false,
-        rowKey: 'className',
-        allowCancelSelect: true,
-        selectedKeys,
-        onSelectChange: keys => {
-          setSelectedKeys(keys);
-          this.handleColumnSearch(keys, dataIndex, confirm);
-        },
-        customTool: () => this.renderCustomTool(dataIndex, clearFilters),
-        itemField: {
-          title: item => item.entityName,
-        },
-      };
+    if (dataIndex === 'level') {
+      const { runtimeLog } = this.props;
+      const { levelViewData, filter } = runtimeLog;
+      const selectedKey = get(filter, 'level') || LEVEL_CATEGORY.ALL.key;
       return (
-        <div style={{ padding: 8, maxHeight: 360, height: 360 }}>
-          <ListCard {...entityNameProps} />
+        <div
+          style={{
+            padding: 8,
+            maxHeight: 300,
+            height: 300,
+            width: 160,
+            boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+          }}
+        >
+          <Menu
+            className={cls(styles['level-box'])}
+            onClick={e => this.onLevelChange(e, dataIndex, setSelectedKeys, confirm, clearFilters)}
+            selectedKeys={[`${selectedKey}`]}
+          >
+            {levelViewData.map(m => {
+              return (
+                <Menu.Item key={m.key}>
+                  {m.key === selectedKey ? (
+                    <ExtIcon type="check" className="selected" antd />
+                  ) : null}
+                  <span className="view-popover-box-trigger">{m.title}</span>
+                </Menu.Item>
+              );
+            })}
+          </Menu>
+        </div>
+      );
+    }
+    if (dataIndex === 'timestamp') {
+      return (
+        <div style={{ padding: 8, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
+          <FilterDate
+            onAction={currentDate => {
+              const { startTime = null, endTime = null } = currentDate;
+              setSelectedKeys(startTime === null || endTime === null ? null : [startTime, endTime]);
+              this.handlerFitlerDate(dataIndex, currentDate, confirm);
+            }}
+          />
         </div>
       );
     }
     return (
-      <div style={{ padding: 8 }}>
+      <div style={{ padding: 8, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
         <Input
           ref={node => {
             this.searchInput = node;
@@ -155,78 +200,193 @@ class LogList extends PureComponent {
         ),
       onFilterDropdownVisibleChange: visible => {
         if (visible) {
-          setTimeout(() => this.searchInput.select());
+          setTimeout(() => {
+            if (this.searchInput) {
+              this.searchInput.select();
+            }
+          });
         }
       },
     };
   };
 
-  render() {
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
+  getFilter = () => {
     const { runtimeLog } = this.props;
-    const { currentEnvViewType, envViewData } = runtimeLog;
+    const { filter, currentEnvViewType } = runtimeLog;
+    const filters = [{ fieldName: 'env', operator: 'EQ', value: currentEnvViewType.key }];
+    FILTER_FIELDS.forEach(f => {
+      const value = get(filter, f.fieldName, null) || null;
+      if (value !== null) {
+        const param = { ...f };
+        Object.assign(param, { value });
+        filters.push(param);
+      }
+    });
+    const timestamp = get(filter, 'timestamp', null) || null;
+    if (timestamp && timestamp.length === 2) {
+      filters.push({ fieldName: 'timestamp', operator: 'GE', value: timestamp[0] });
+      filters.push({ fieldName: 'timestamp', operator: 'LE', value: timestamp[1] });
+    }
+    return { filters };
+  };
+
+  renderCopyColumn = t => {
+    if (t) {
+      return <span onClick={() => this.handlerCopy(t)}>{t}</span>;
+    }
+    return '-';
+  };
+
+  handlerAction = (key, record) => {
+    const { dispatch } = this.props;
+    switch (key) {
+      case LOG_ACTION.DETAIL:
+        dispatch({
+          type: 'runtimeLog/getLogDetail',
+          payload: {
+            currentLog: record,
+          },
+        });
+        break;
+      case LOG_ACTION.BY_TRANCE_ID:
+        dispatch({
+          type: 'runtimeLog/getTranceLog',
+          payload: {
+            currentLog: record,
+          },
+        });
+        break;
+      default:
+    }
+  };
+
+  handerTranceLogDetail = (keys, items) => {
+    if (keys.length === 1) {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'runtimeLog/getTranceLogDetail',
+        payload: {
+          currentLog: items[0],
+        },
+      });
+    }
+  };
+
+  handlerClose = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        logData: null,
+        tranceData: [],
+        currentLog: null,
+        showTranceLog: false,
+        showDetail: false,
+      },
+    });
+  };
+
+  render() {
+    const { runtimeLog, loading } = this.props;
+    const {
+      currentEnvViewType,
+      envViewData,
+      showDetail,
+      showTranceLog,
+      logData,
+      tranceData,
+    } = runtimeLog;
     const columns = [
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 60,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        fixed: 'left',
+        render: (id, record) => (
+          <span className={cls('action-box')}>
+            <ExtAction key={id} onAction={this.handlerAction} recordItem={record} />
+          </span>
+        ),
+      },
       {
         title: '时间',
         dataIndex: 'timestamp',
-        width: 180,
+        width: 200,
         align: 'center',
-        required: true,
         fixed: 'left',
+        required: true,
+        ...this.getColumnSearchProps('timestamp'),
       },
       {
-        title: '环境',
-        dataIndex: 'env',
-        width: 100,
-        fixed: 'left',
-        required: true,
-        render: this.renderEnv,
-        // ...this.getColumnSearchProps('operatorName'),
+        title: '当前服务',
+        dataIndex: 'currentServer',
+        width: 220,
+        optional: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('currentServer'),
       },
       {
         title: '调用服务',
         dataIndex: 'fromServer',
         width: 220,
-        required: true,
-        // ...this.getColumnSearchProps('className'),
+        optional: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('fromServer'),
       },
       {
         title: '日志等极',
         dataIndex: 'level',
         width: 100,
-        align: 'center',
         required: true,
-        render: this.renderLevel,
-      },
-      {
-        title: '	日志类',
-        dataIndex: 'logger',
-        width: 240,
-        required: true,
+        render: (_t, record) => <LogLevel item={record} />,
+        ...this.getColumnSearchProps('level'),
       },
       {
         title: '日志消息',
         dataIndex: 'message',
-        width: 220,
-        optional: true,
+        width: 580,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('message'),
+      },
+      {
+        title: '	日志类',
+        dataIndex: 'logger',
+        width: 420,
+        required: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('logger'),
       },
       {
         title: '应用代码',
         dataIndex: 'serviceName',
         width: 220,
         required: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('serviceName'),
       },
       {
         title: '跟踪id',
         dataIndex: 'traceId',
         width: 380,
         required: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('traceId'),
       },
     ];
     const toolBarProps = {
-      layout: { leftSpan: 24 },
       left: (
         <>
           <FilterView
+            title="环境视图"
             currentViewType={currentEnvViewType}
             viewTypeData={envViewData}
             onAction={this.handlerEnvChange}
@@ -240,11 +400,18 @@ class LogList extends PureComponent {
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
+      storageId: '14a948c7-b777-4d30-b845-392dc7c55307',
       columns,
+      searchProperties: columns.map(col => col.dataIndex),
+      searchPlaceHolder: '输入关键字查询',
       store: {
         type: 'POST',
         url: `/sei-manager/log/findByPage`,
+        params: {
+          idxName: 'sei-basic*',
+        },
       },
+      cascadeParams: this.getFilter(),
       remotePaging: true,
       onTableRef: ref => (this.tableRef = ref),
       sort: {
@@ -253,9 +420,36 @@ class LogList extends PureComponent {
         },
       },
     };
+    const tranceLogProps = {
+      visible: showTranceLog,
+      onCloseModal: this.handlerClose,
+      loading: loading.effects['runtimeLog/getTranceLog'],
+      logLoading: loading.effects['runtimeLog/getTranceLogDetail'],
+      logData,
+      tranceData,
+      onSelectLog: this.handerTranceLogDetail,
+    };
+    const logDetailProps = {
+      loading: loading.effects['runtimeLog/getLogDetail'],
+      logData,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...tableProps} />
+        <TranceLog {...tranceLogProps} />
+        <Drawer
+          width={660}
+          destroyOnClose
+          getContainer={false}
+          placement="right"
+          visible={showDetail}
+          title="日志详情"
+          className={cls(styles['log-detail-box'])}
+          onClose={this.handlerClose}
+          style={{ position: 'absolute' }}
+        >
+          <LogDetail {...logDetailProps} />
+        </Drawer>
       </div>
     );
   }

@@ -150,6 +150,7 @@ class BasicLayout extends React.Component {
   /** 判断是否是子应用路由 */
   isSubAppRouter = () => {
     const { base, history } = this.props;
+    console.log(base.apps.some(item => history.location.pathname.startsWith(item.base)));
     return base.apps.some(item => history.location.pathname.startsWith(item.base));
   };
 
@@ -275,7 +276,7 @@ class BasicLayout extends React.Component {
               >
                 <DashBoard />
               </div> */}
-              {!isSubAppRouter && !activedKey ? children : null}
+              {!isSubAppRouter ? children : null}
               {mode === 'iframe' ? (
                 <TabPane
                   style={activedKey === '' ? { visibility: 'hidden', height: 0 } : {}}

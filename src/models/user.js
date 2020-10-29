@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-28 13:21:49
+ * @Last Modified time: 2020-10-28 15:18:54
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -16,7 +16,6 @@ import {
   getVerifyCode,
   getUserByXsid,
   updatePwd,
-  authorizeData,
   getPortrait,
   sendVerifyCode,
   findpwd,
@@ -172,22 +171,6 @@ export default {
       const { success, message: msg } = result || {};
       if (success) {
         message.success(msg);
-      } else {
-        message.error(msg);
-      }
-
-      return result;
-    },
-    *authorizeData(_, { call, put }) {
-      const result = yield call(authorizeData);
-      const { success, message: msg, data } = result || {};
-      if (success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            qrConfig: data,
-          },
-        });
       } else {
         message.error(msg);
       }

@@ -27,7 +27,7 @@ const routes = [
     routes: [
       {
         path: '/',
-        redirect: '/DashBoard',
+        redirect: '/dashBoard',
       },
       {
         path: '/dashBoard',
@@ -36,7 +36,7 @@ const routes = [
       },
       {
         path: '/log/logRecord',
-        name: 'DashBoard',
+        name: 'Log',
         component: './Log',
       },
     ],
