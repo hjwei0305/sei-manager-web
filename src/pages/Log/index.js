@@ -127,6 +127,7 @@ class LogList extends PureComponent {
   renderCustomTool = (dataIndex, clearFilters) => (
     <>
       <Search
+        allowClear
         placeholder="输入代码或名称关键字"
         onChange={e => this.handlerSearchChange(e.target.value)}
         onSearch={this.handlerSearch}
