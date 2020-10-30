@@ -80,7 +80,7 @@ class FilterDateView extends PureComponent {
   handlerSubmit = () => {
     const { startDate, endDate } = this.dateRef.state;
     const startTime = startDate ? moment(startDate).format('YYYY-MM-DD hh:mm:00') : null;
-    const endTime = endDate ? moment(endDate).format('YYYY-MM-DD hh:mm::59') : null;
+    const endTime = endDate ? moment(endDate).format('YYYY-MM-DD hh:mm:59') : null;
     if (!startDate || !endDate) {
       this.setState({
         startTime,
@@ -130,7 +130,7 @@ class FilterDateView extends PureComponent {
     if (customizeDatePeriod) {
       const scopeDatePickerProps = {
         format: 'YYYY-MM-DD hh:mm',
-        showTime: { format: 'HH:mm' },
+        showTime: { format: 'hh:mm' },
         value: [startTime, endTime],
         allowClear: true,
       };

@@ -124,7 +124,7 @@ class LogList extends PureComponent {
     this.listCardRef.handlerSearch(v);
   };
 
-  renderCustomTool = (dataIndex, clearFilters) => (
+  renderCustomTool = () => (
     <>
       <Search
         allowClear
@@ -134,12 +134,6 @@ class LogList extends PureComponent {
         onPressEnter={this.handlerPressEnter}
         style={{ width: '100%' }}
       />
-      <Button
-        onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
-        style={{ marginLeft: 8 }}
-      >
-        重置
-      </Button>
     </>
   );
 
@@ -179,7 +173,8 @@ class LogList extends PureComponent {
     }
     if (dataIndex === 'serviceName') {
       const { runtimeLog } = this.props;
-      const { serviceList } = runtimeLog;
+      const { serviceList, filter } = runtimeLog;
+      const serviceName = get(filter, 'serviceName') || '全部';
       const serviceNameProps = {
         className: 'search-content',
         dataSource: serviceList,
@@ -210,6 +205,23 @@ class LogList extends PureComponent {
             boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
           }}
         >
+          <div
+            style={{
+              display: 'flex',
+              height: 42,
+              padding: '0 24px',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: 16 }}>{serviceName}</div>
+            <Button
+              onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
+              style={{ marginLeft: 8 }}
+            >
+              重置
+            </Button>
+          </div>
           <ListCard {...serviceNameProps} />
         </div>
       );
