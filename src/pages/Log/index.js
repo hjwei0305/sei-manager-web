@@ -222,7 +222,9 @@ class LogList extends PureComponent {
               重置
             </Button>
           </div>
-          <ListCard {...serviceNameProps} />
+          <div className="list-body" style={{ height: 462 }}>
+            <ListCard {...serviceNameProps} />
+          </div>
         </div>
       );
     }
