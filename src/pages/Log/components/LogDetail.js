@@ -47,14 +47,14 @@ class LogDetail extends PureComponent {
               <Descriptions.Item label="日志等级">
                 <LogLevel item={logData} />
               </Descriptions.Item>
-              <Descriptions.Item label="日志类">{this.getFieldValue('logger')}</Descriptions.Item>
-              <Descriptions.Item label="日志消息">
-                {this.getFieldValue('message')}
-              </Descriptions.Item>
               <Descriptions.Item label="应用代码">
                 {this.getFieldValue('serviceName')}
               </Descriptions.Item>
-              <Descriptions.Item label="堆栈信息">
+              <Descriptions.Item label="日志类">{this.getFieldValue('logger')}</Descriptions.Item>
+              <Descriptions.Item label="日志消息" className="message-text">
+                {this.getFieldValue('message')}
+              </Descriptions.Item>
+              <Descriptions.Item label="堆栈信息" className="message-text">
                 {this.getFieldValue('stackTrace')}
               </Descriptions.Item>
               <Descriptions.Item label="时间戳">

@@ -294,6 +294,7 @@ class LogList extends PureComponent {
   render() {
     const { runtimeLog, loading } = this.props;
     const {
+      currentLog,
       currentEnvViewType,
       envViewData,
       showDetail,
@@ -320,11 +321,19 @@ class LogList extends PureComponent {
       {
         title: '时间',
         dataIndex: 'timestamp',
-        width: 200,
+        width: 210,
         align: 'center',
         fixed: 'left',
         required: true,
         ...this.getColumnSearchProps('timestamp'),
+      },
+      {
+        title: '应用代码',
+        dataIndex: 'serviceName',
+        width: 200,
+        required: true,
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('serviceName'),
       },
       {
         title: '当前服务',
@@ -345,7 +354,7 @@ class LogList extends PureComponent {
       {
         title: '日志等极',
         dataIndex: 'level',
-        width: 100,
+        width: 120,
         required: true,
         render: (_t, record) => <LogLevel item={record} />,
         ...this.getColumnSearchProps('level'),
@@ -361,23 +370,15 @@ class LogList extends PureComponent {
         title: '	日志类',
         dataIndex: 'logger',
         width: 420,
-        required: true,
+        optional: true,
         render: this.renderCopyColumn,
         ...this.getColumnSearchProps('logger'),
-      },
-      {
-        title: '应用代码',
-        dataIndex: 'serviceName',
-        width: 220,
-        required: true,
-        render: this.renderCopyColumn,
-        ...this.getColumnSearchProps('serviceName'),
       },
       {
         title: '跟踪id',
         dataIndex: 'traceId',
         width: 380,
-        required: true,
+        optional: true,
         render: this.renderCopyColumn,
         ...this.getColumnSearchProps('traceId'),
       },
@@ -427,6 +428,7 @@ class LogList extends PureComponent {
       logLoading: loading.effects['runtimeLog/getTranceLogDetail'],
       logData,
       tranceData,
+      currentLog,
       onSelectLog: this.handerTranceLogDetail,
     };
     const logDetailProps = {
@@ -438,7 +440,7 @@ class LogList extends PureComponent {
         <ExtTable {...tableProps} />
         <TranceLog {...tranceLogProps} />
         <Drawer
-          width={660}
+          width="60%"
           destroyOnClose
           getContainer={false}
           placement="right"

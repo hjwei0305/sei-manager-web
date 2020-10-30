@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Layout, Card, Input, Empty } from 'antd';
+import { Modal, Layout, Card, Input, Empty, Avatar, Tag } from 'antd';
 import cls from 'classnames';
+import { get } from 'lodash';
 import { ListCard, ExtIcon } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import LogDetail from '../LogDetail';
@@ -17,6 +18,7 @@ class TranceLog extends PureComponent {
   static listCardRef;
 
   static propTypes = {
+    currentLog: PropTypes.object,
     visible: PropTypes.bool,
     onCloseModal: PropTypes.func,
     loading: PropTypes.bool,
@@ -58,6 +60,14 @@ class TranceLog extends PureComponent {
     );
   };
 
+  renderAvatar = ({ item, index }) => {
+    const { currentLog } = this.props;
+    if (currentLog && currentLog.id === item.id) {
+      return <Avatar icon="check" size={22} shape="square" className="current-log" />;
+    }
+    return <Tag>{index + 1}</Tag>;
+  };
+
   render() {
     const {
       loading,
@@ -67,10 +77,13 @@ class TranceLog extends PureComponent {
       visible,
       onCloseModal,
       onSelectLog,
+      currentLog,
     } = this.props;
+    const selectedKey = get(currentLog, 'id') || '';
     const tranceListProps = {
       title: '链路列表',
       showSearch: false,
+      selectedKeys: [selectedKey],
       dataSource: tranceData,
       searchProperties: ['message', 'logger'],
       onSelectChange: (keys, items) => {
@@ -78,6 +91,7 @@ class TranceLog extends PureComponent {
       },
       loading,
       itemField: {
+        avatar: this.renderAvatar,
         title: item => item.logger,
         description: item => item.timestamp,
         extra: item => <LogLevel item={item} />,
@@ -89,7 +103,6 @@ class TranceLog extends PureComponent {
       <Modal
         mask={false}
         closable={false}
-        keyboard={false}
         wrapClassName={styles['trance-log-box']}
         visible={visible}
         footer={null}

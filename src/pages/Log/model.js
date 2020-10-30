@@ -64,10 +64,19 @@ export default modelExtend(model, {
         serviceName: serviceName ? `${serviceName}*` : '',
       });
       if (re.success) {
+        let logData = null;
+        const reLog = yield call(getLogDetail, {
+          id: get(currentLog, 'id', null),
+          serviceName: serviceName ? `${serviceName}*` : '',
+        });
+        if (reLog.success) {
+          logData = reLog.data;
+        }
         yield put({
           type: 'updateState',
           payload: {
             tranceData: re.data,
+            logData,
           },
         });
       }

@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-29 15:08:27
+ * @Last Modified time: 2020-10-30 09:22:51
  */
 import { name } from '../../package.json';
 
@@ -62,6 +62,7 @@ const ENV_CATEGORY = {
 const LEVEL_CATEGORY = {
   ALL: { key: 'ALL', title: '全部' },
   INFO: { key: 'INFO', title: 'INFO', color: '' },
+  WARN: { key: 'WARN', title: 'WARN', color: 'orange' },
   DEBUG: { key: 'DEBUG', title: 'DEBUG', color: 'blue' },
   ERROR: { key: 'ERROR', title: 'ERROR', color: 'red' },
   FATAL: { key: 'FATAL', title: 'FATAL', color: 'magenta' },
