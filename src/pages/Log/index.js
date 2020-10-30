@@ -187,7 +187,6 @@ class LogList extends PureComponent {
         showArrow: false,
         showSearch: false,
         rowKey: 'code',
-        allowCancelSelect: true,
         selectedKeys,
         pagination: { pageSize: 60 },
         onSelectChange: keys => {
