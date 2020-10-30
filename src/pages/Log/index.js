@@ -232,7 +232,7 @@ class LogList extends PureComponent {
       const { dispatch, runtimeLog } = this.props;
       const { currentTimeViewType } = runtimeLog;
       return (
-        <div style={{ padding: 8, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
+        <div style={{ padding: 8, width: 210, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
           <FilterDate
             currentTimeViewType={currentTimeViewType}
             onAction={(timeViewType, currentDate) => {
