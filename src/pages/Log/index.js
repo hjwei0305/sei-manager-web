@@ -229,10 +229,19 @@ class LogList extends PureComponent {
       );
     }
     if (dataIndex === 'timestamp') {
+      const { dispatch, runtimeLog } = this.props;
+      const { currentTimeViewType } = runtimeLog;
       return (
         <div style={{ padding: 8, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
           <FilterDate
-            onAction={currentDate => {
+            currentTimeViewType={currentTimeViewType}
+            onAction={(timeViewType, currentDate) => {
+              dispatch({
+                type: 'runtimeLog/updateState',
+                payload: {
+                  currentTimeViewType: timeViewType,
+                },
+              });
               const { startTime = null, endTime = null } = currentDate;
               setSelectedKeys(startTime === null || endTime === null ? null : [startTime, endTime]);
               this.handlerFitlerDate(dataIndex, currentDate, confirm);
@@ -388,6 +397,12 @@ class LogList extends PureComponent {
     return `应用(${serviceName})`;
   };
 
+  renderColumnTimestamp = () => {
+    const { runtimeLog } = this.props;
+    const { currentTimeViewType } = runtimeLog;
+    return `时间(${currentTimeViewType.remark})`;
+  };
+
   render() {
     const { runtimeLog, loading } = this.props;
     const {
@@ -416,7 +431,7 @@ class LogList extends PureComponent {
         ),
       },
       {
-        title: '时间',
+        title: this.renderColumnTimestamp(),
         dataIndex: 'timestamp',
         width: 210,
         fixed: 'left',

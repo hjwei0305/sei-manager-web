@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-30 09:22:51
+ * @Last Modified time: 2020-10-30 22:49:50
  */
 import { name } from '../../package.json';
 
@@ -92,7 +92,7 @@ const SEARCH_DATE_PERIOD = {
   },
   PERIOD: {
     name: 'PERIOD',
-    remark: '指定时间段',
+    remark: '自定义',
   },
 };
 

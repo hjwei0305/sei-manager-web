@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { get, isEqual, findIndex } from 'lodash';
+import { get } from 'lodash';
 import { Button, Icon, Menu, PageHeader, message } from 'antd';
 import { ExtIcon, ScopeDatePicker } from 'suid';
 import { constants } from '@/utils';
@@ -11,42 +11,30 @@ import styles from './index.less';
 const { SEARCH_DATE_PERIOD } = constants;
 const { Item } = Menu;
 
-const viewTypeData = Object.keys(SEARCH_DATE_PERIOD).map(key => SEARCH_DATE_PERIOD[key]);
-const initCurrentViewType = viewTypeData[0];
+const SEARCH_DATE_PERIOD_DATA = Object.keys(SEARCH_DATE_PERIOD).map(key => SEARCH_DATE_PERIOD[key]);
 
 class FilterDateView extends PureComponent {
   static dateRef = null;
 
   static propTypes = {
+    currentTimeViewType: PropTypes.object.isRequired,
     onAction: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
+    const { currentTimeViewType } = props;
     this.state = {
       startTime: null,
       endTime: null,
-      currentViewType: initCurrentViewType,
-      selectedKey: findIndex(viewTypeData, initCurrentViewType),
-      menusData: viewTypeData,
-      customizeDatePeriod: get(initCurrentViewType, 'name') === SEARCH_DATE_PERIOD.PERIOD.name,
+      customizeDatePeriod: get(currentTimeViewType, 'name') === SEARCH_DATE_PERIOD.PERIOD.name,
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const { currentViewType } = this.state;
-    if (!isEqual(prevProps.viewTypeData, viewTypeData)) {
-      this.setState({
-        menusData: viewTypeData,
-        selectedKey: findIndex(viewTypeData, currentViewType),
-      });
-    }
-  }
-
-  dataHandle = (currentViewType, period = {}) => {
+  dataHandle = (currentTimeViewType, period = {}) => {
     const { onAction } = this.props;
-    const newVal = { ...currentViewType, ...period };
-    switch (currentViewType.name) {
+    const newVal = { ...currentTimeViewType, ...period };
+    switch (currentTimeViewType.name) {
       case 'THIS_5M':
         newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
@@ -73,7 +61,7 @@ class FilterDateView extends PureComponent {
         break;
     }
     if (onAction) {
-      onAction(newVal);
+      onAction(currentTimeViewType, newVal);
     }
   };
 
@@ -93,14 +81,14 @@ class FilterDateView extends PureComponent {
       }
       return;
     }
-    const currentViewType = viewTypeData.filter(i => i.name === SEARCH_DATE_PERIOD.PERIOD.name)[0];
+    const currentTimeViewType = SEARCH_DATE_PERIOD_DATA.filter(
+      i => i.name === SEARCH_DATE_PERIOD.PERIOD.name,
+    )[0];
     this.setState({
-      selectedKey: findIndex(viewTypeData, currentViewType),
-      currentViewType,
       startTime,
       endTime,
     });
-    this.dataHandle(currentViewType, {
+    this.dataHandle(currentTimeViewType, {
       startTime,
       endTime,
     });
@@ -108,15 +96,12 @@ class FilterDateView extends PureComponent {
 
   onActionOperation = e => {
     e.domEvent.stopPropagation();
-    const { menusData, selectedKey } = this.state;
-    const currentViewType = menusData[e.key];
-    const isPeriod = currentViewType.name === SEARCH_DATE_PERIOD.PERIOD.name;
+    const currentTimeViewType = SEARCH_DATE_PERIOD[e.key];
+    const isPeriod = currentTimeViewType.name === SEARCH_DATE_PERIOD.PERIOD.name;
     this.setState({
-      selectedKey: isPeriod ? selectedKey : e.key,
       customizeDatePeriod: isPeriod,
-      currentViewType,
     });
-    if (!isPeriod) this.dataHandle(currentViewType);
+    if (!isPeriod) this.dataHandle(currentTimeViewType);
   };
 
   onBack = () => {
@@ -125,8 +110,9 @@ class FilterDateView extends PureComponent {
     });
   };
 
-  getContent = menus => {
-    const { selectedKey, customizeDatePeriod, startTime, endTime } = this.state;
+  getContent = () => {
+    const { currentTimeViewType } = this.props;
+    const { customizeDatePeriod, startTime, endTime } = this.state;
     if (customizeDatePeriod) {
       const scopeDatePickerProps = {
         format: 'YYYY-MM-DD HH:mm',
@@ -154,12 +140,12 @@ class FilterDateView extends PureComponent {
       <Menu
         className={cls(styles['action-menu-box'])}
         onClick={e => this.onActionOperation(e)}
-        selectedKeys={[`${selectedKey}`]}
+        selectedKeys={[currentTimeViewType.name]}
       >
-        {menus.map((m, index) => {
+        {SEARCH_DATE_PERIOD_DATA.map(m => {
           return (
-            <Item key={index.toString()}>
-              {index.toString() === selectedKey.toString() ? (
+            <Item key={m.name}>
+              {m.name === currentTimeViewType.name ? (
                 <ExtIcon type="check" className="selected" antd />
               ) : null}
               <span className="view-popover-box-trigger">{m.remark}</span>
@@ -170,16 +156,8 @@ class FilterDateView extends PureComponent {
     );
   };
 
-  onVisibleChange = v => {
-    const { selectedKeys } = this.state;
-    this.setState({
-      selectedKeys: !v ? '' : selectedKeys,
-    });
-  };
-
   render() {
-    const { menusData } = this.state;
-    return <>{this.getContent(menusData)}</>;
+    return <>{this.getContent()}</>;
   }
 }
 
