@@ -232,7 +232,7 @@ class LogList extends PureComponent {
       const { dispatch, runtimeLog } = this.props;
       const { currentTimeViewType } = runtimeLog;
       return (
-        <div style={{ padding: 8, width: 210, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
+        <div style={{ padding: 8, width: 260, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
           <FilterDate
             currentTimeViewType={currentTimeViewType}
             onAction={(timeViewType, currentDate) => {
@@ -251,7 +251,7 @@ class LogList extends PureComponent {
       );
     }
     return (
-      <div style={{ padding: 8, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
+      <div style={{ padding: 8, width: 320, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
         <Input
           ref={node => {
             this.searchInput = node;
@@ -260,21 +260,21 @@ class LogList extends PureComponent {
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => this.handleColumnSearch(selectedKeys, dataIndex, confirm)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          style={{ width: '100%', marginBottom: 8, display: 'block' }}
         />
         <Button
           type="primary"
           onClick={() => this.handleColumnSearch(selectedKeys, dataIndex, confirm)}
           icon="search"
           size="small"
-          style={{ width: 90, marginRight: 8 }}
+          style={{ width: 70, marginRight: 8 }}
         >
           搜索
         </Button>
         <Button
           onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
           size="small"
-          style={{ width: 90 }}
+          style={{ width: 70 }}
         >
           重置
         </Button>
