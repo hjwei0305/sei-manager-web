@@ -503,8 +503,8 @@ class LogList extends PureComponent {
       store: {
         type: 'POST',
         url: `/sei-manager/log/findByPage`,
+        params: this.getFilter(),
       },
-      cascadeParams: this.getFilter(),
       remotePaging: true,
       onTableRef: ref => (this.tableRef = ref),
       sort: {
