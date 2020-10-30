@@ -33,3 +33,14 @@ export async function getTranceLog(params) {
     params,
   });
 }
+
+/**
+ * 获取当前所有可用应用服务清单
+ */
+export async function getServices() {
+  const url = `/sei-manager/application/getServices`;
+  return request({
+    url,
+    method: 'GET',
+  });
+}

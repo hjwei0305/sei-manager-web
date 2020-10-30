@@ -1,10 +1,10 @@
 import { utils } from 'suid';
 import { get } from 'lodash';
 import { constants } from '@/utils';
-import { getLogDetail, getTranceLog } from './service';
+import { getLogDetail, getTranceLog, getServices } from './service';
 
 const { ENV_CATEGORY, LEVEL_CATEGORY } = constants;
-const { dvaModel } = utils;
+const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 const ENV_CATEGORY_DATA = Object.keys(ENV_CATEGORY).map(key => ENV_CATEGORY[key]);
 const LEVEL_CATEGORY_DATA = Object.keys(LEVEL_CATEGORY).map(key => LEVEL_CATEGORY[key]);
@@ -22,8 +22,31 @@ export default modelExtend(model, {
     filter: {},
     logData: null,
     tranceData: [],
+    serviceList: [],
+  },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (pathMatchRegexp('/log/logRecord', location.pathname)) {
+          dispatch({
+            type: 'getServices',
+          });
+        }
+      });
+    },
   },
   effects: {
+    *getServices(_, { call, put }) {
+      const re = yield call(getServices);
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            serviceList: re.data || [],
+          },
+        });
+      }
+    },
     *getLogDetail({ payload }, { call, put }) {
       const { currentLog } = payload;
       yield put({

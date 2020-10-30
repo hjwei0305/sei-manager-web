@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Input, Button, Menu, Drawer } from 'antd';
-import { ExtTable, ExtIcon, message } from 'suid';
+import { ExtTable, ExtIcon, message, ListCard } from 'suid';
 import { constants } from '@/utils';
 import { FilterView } from '@/components';
 import FilterDate from './components/FilterDate';
@@ -16,6 +16,7 @@ import LogLevel from './components/LogLevel';
 import styles from './index.less';
 
 const { LEVEL_CATEGORY, LOG_ACTION } = constants;
+const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'level', operator: 'EQ', value: null },
   { fieldName: 'currentServer', operator: 'EQ', value: null },
@@ -29,6 +30,8 @@ const FILTER_FIELDS = [
 @connect(({ runtimeLog, loading }) => ({ runtimeLog, loading }))
 class LogList extends PureComponent {
   static tableRef = null;
+
+  static listCardRef = null;
 
   reloadData = () => {
     this.tableRef.remoteDataRefresh();
@@ -109,6 +112,36 @@ class LogList extends PureComponent {
     });
   };
 
+  handlerSearchChange = v => {
+    this.listCardRef.handlerSearchChange(v);
+  };
+
+  handlerPressEnter = () => {
+    this.listCardRef.handlerPressEnter();
+  };
+
+  handlerSearch = v => {
+    this.listCardRef.handlerSearch(v);
+  };
+
+  renderCustomTool = (dataIndex, clearFilters) => (
+    <>
+      <Search
+        placeholder="输入代码或名称关键字"
+        onChange={e => this.handlerSearchChange(e.target.value)}
+        onSearch={this.handlerSearch}
+        onPressEnter={this.handlerPressEnter}
+        style={{ width: '100%' }}
+      />
+      <Button
+        onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
+        style={{ marginLeft: 8 }}
+      >
+        重置
+      </Button>
+    </>
+  );
+
   getColumnSearchComponent = (dataIndex, setSelectedKeys, selectedKeys, confirm, clearFilters) => {
     if (dataIndex === 'level') {
       const { runtimeLog } = this.props;
@@ -140,6 +173,44 @@ class LogList extends PureComponent {
               );
             })}
           </Menu>
+        </div>
+      );
+    }
+    if (dataIndex === 'serviceName') {
+      const { runtimeLog } = this.props;
+      const { serviceList } = runtimeLog;
+      const serviceNameProps = {
+        className: 'search-content',
+        dataSource: serviceList,
+        searchProperties: ['code', 'name'],
+        showArrow: false,
+        showSearch: false,
+        rowKey: 'code',
+        allowCancelSelect: true,
+        selectedKeys,
+        pagination: { pageSize: 60 },
+        onSelectChange: keys => {
+          setSelectedKeys(keys);
+          this.handleColumnSearch(keys, dataIndex, confirm);
+        },
+        customTool: () => this.renderCustomTool(dataIndex, clearFilters),
+        onListCardRef: ref => (this.listCardRef = ref),
+        itemField: {
+          title: item => item.code,
+          description: item => item.name,
+        },
+      };
+      return (
+        <div
+          style={{
+            padding: 8,
+            maxHeight: 520,
+            height: 520,
+            width: 320,
+            boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+          }}
+        >
+          <ListCard {...serviceNameProps} />
         </div>
       );
     }
@@ -219,12 +290,17 @@ class LogList extends PureComponent {
     const { runtimeLog } = this.props;
     const { filter, currentEnvViewType } = runtimeLog;
     const filters = [{ fieldName: 'env', operator: 'EQ', value: currentEnvViewType.key }];
+    let idxName = '*';
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
       if (value !== null) {
         const param = { ...f };
-        Object.assign(param, { value });
-        filters.push(param);
+        if (param.fieldName === 'serviceName') {
+          idxName = `${value}*`;
+        } else {
+          Object.assign(param, { value });
+          filters.push(param);
+        }
       }
     });
     const timestamp = get(filter, 'timestamp', null) || null;
@@ -232,7 +308,7 @@ class LogList extends PureComponent {
       filters.push({ fieldName: 'timestamp', operator: 'GE', value: timestamp[0] });
       filters.push({ fieldName: 'timestamp', operator: 'LE', value: timestamp[1] });
     }
-    return { filters };
+    return { filters, idxName };
   };
 
   renderCopyColumn = t => {
@@ -328,7 +404,7 @@ class LogList extends PureComponent {
         ...this.getColumnSearchProps('timestamp'),
       },
       {
-        title: '应用代码',
+        title: '应用',
         dataIndex: 'serviceName',
         width: 200,
         required: true,
@@ -408,9 +484,6 @@ class LogList extends PureComponent {
       store: {
         type: 'POST',
         url: `/sei-manager/log/findByPage`,
-        params: {
-          idxName: 'sei-basic*',
-        },
       },
       cascadeParams: this.getFilter(),
       remotePaging: true,
