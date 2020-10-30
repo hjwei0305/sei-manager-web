@@ -381,6 +381,13 @@ class LogList extends PureComponent {
     });
   };
 
+  renderColumnServiceName = () => {
+    const { runtimeLog } = this.props;
+    const { filter } = runtimeLog;
+    const serviceName = get(filter, 'serviceName') || '全部';
+    return `应用(${serviceName})`;
+  };
+
   render() {
     const { runtimeLog, loading } = this.props;
     const {
@@ -418,7 +425,7 @@ class LogList extends PureComponent {
         ...this.getColumnSearchProps('timestamp'),
       },
       {
-        title: '应用',
+        title: this.renderColumnServiceName(),
         dataIndex: 'serviceName',
         width: 200,
         required: true,
@@ -491,7 +498,6 @@ class LogList extends PureComponent {
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
-      storageId: '14a948c7-b777-4d30-b845-392dc7c55307',
       columns,
       searchProperties: columns.map(col => col.dataIndex),
       searchPlaceHolder: '输入关键字查询',
