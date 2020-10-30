@@ -498,7 +498,7 @@ class LogList extends PureComponent {
       bordered: false,
       toolBar: toolBarProps,
       columns,
-      searchProperties: columns.map(col => col.dataIndex),
+      searchProperties: ['*'],
       searchPlaceHolder: '输入关键字查询',
       store: {
         type: 'POST',
