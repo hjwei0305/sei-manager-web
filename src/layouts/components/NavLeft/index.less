@@ -1,13 +1,5 @@
 @import '../../../themes/default.less';
 
-.collect-icon {
-  float: right;
-  margin-top: 12px;
-  &:hover {
-    transform: scale(1.5);
-  }
-}
-
 .nav-left-wrapper {
   box-sizing: border-box;
   height: 100%;
@@ -100,6 +92,39 @@
       .ant-menu-submenu > .ant-menu-submenu-title {
         padding: 0 10px !important;
         text-align: center;
+      }
+    }
+    .collect-icon {
+      position: absolute;
+      top: 9px;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      line-height: 26px;
+      &:hover {
+        transform: scale(1.5);
+      }
+    }
+    .ant-menu-item {
+      padding-right: 40px;
+      .collect-icon {
+        display: none;
+      }
+      .collect-icon-actived {
+        display: block;
+        &:hover {
+          top: 11px;
+          transform: scale(1.5);
+        }
+      }
+      &:hover {
+        .collect-icon {
+          display: block;
+          &:hover {
+            top: 11px;
+            transform: scale(1.5);
+          }
+        }
       }
     }
   }

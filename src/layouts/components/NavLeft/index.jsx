@@ -75,15 +75,24 @@ class NavLeft extends React.Component {
     const { mode } = this.props;
     if (mode !== 'iframe') {
       return (
-        <Link to={item.url}>
-          {item.iconType ? <Icon type={item.iconType} /> : null}
-          <span>{item.title}</span>
-          <Icon className="collect-icon" type="star" onClick={e => this.handleCollect(e, item)} />
-        </Link>
+        <>
+          <Link to={item.url}>
+            {item.iconType ? <Icon type={item.iconType} /> : null}
+            <span>{item.title}</span>
+          </Link>
+          <Icon
+            className={cls({
+              'collect-icon-actived': item.favorite,
+              'collect-icon': true,
+            })}
+            type="star"
+            onClick={e => this.handleCollect(e, item)}
+          />
+        </>
       );
     }
     return (
-      <Fragment>
+      <>
         <span>
           {item.iconType ? <Icon type={item.iconType} /> : null}
           <span>{item.title}</span>
@@ -97,7 +106,7 @@ class NavLeft extends React.Component {
           theme={item.favorite ? 'twoTone' : ''}
           onClick={e => this.handleCollect(e, item)}
         />
-      </Fragment>
+      </>
     );
   };
 
@@ -162,7 +171,7 @@ class NavLeft extends React.Component {
             <img src={collapsedMenuLogo} alt="logo" />
           ) : (
             <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 24, fontWeight: 700 }}>
-              开发者运维平台
+              开发与运维平台
             </span>
           )}
         </div>
