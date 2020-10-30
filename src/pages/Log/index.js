@@ -362,7 +362,7 @@ class LogList extends PureComponent {
       {
         title: '日志消息',
         dataIndex: 'message',
-        width: 580,
+        width: 780,
         render: this.renderCopyColumn,
         ...this.getColumnSearchProps('message'),
       },
