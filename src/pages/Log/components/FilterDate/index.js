@@ -48,19 +48,19 @@ class FilterDateView extends PureComponent {
     const newVal = { ...currentViewType, ...period };
     switch (currentViewType.name) {
       case 'THIS_5M':
-        newVal.endTime = moment().format('YYYY-MM-DD hh:mm:ss');
+        newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(5, 'minute')
           .format('YYYY-MM-DD HH:mm:ss');
         break;
       case 'THIS_30M':
-        newVal.endTime = moment().format('YYYY-MM-DD hh:mm:ss');
+        newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(30, 'minute')
           .format('YYYY-MM-DD HH:mm:ss');
         break;
       case 'THIS_60M':
-        newVal.endTime = moment().format('YYYY-MM-DD hh:mm:ss');
+        newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(1, 'hour')
           .format('YYYY-MM-DD HH:mm:ss');
@@ -79,8 +79,8 @@ class FilterDateView extends PureComponent {
 
   handlerSubmit = () => {
     const { startDate, endDate } = this.dateRef.state;
-    const startTime = startDate ? moment(startDate).format('YYYY-MM-DD hh:mm:00') : null;
-    const endTime = endDate ? moment(endDate).format('YYYY-MM-DD hh:mm:59') : null;
+    const startTime = startDate ? moment(startDate).format('YYYY-MM-DD HH:mm:00') : null;
+    const endTime = endDate ? moment(endDate).format('YYYY-MM-DD HH:mm:59') : null;
     if (!startDate || !endDate) {
       this.setState({
         startTime,
@@ -129,8 +129,8 @@ class FilterDateView extends PureComponent {
     const { selectedKey, customizeDatePeriod, startTime, endTime } = this.state;
     if (customizeDatePeriod) {
       const scopeDatePickerProps = {
-        format: 'YYYY-MM-DD hh:mm',
-        showTime: { format: 'hh:mm' },
+        format: 'YYYY-MM-DD HH:mm',
+        showTime: { format: 'HH:mm' },
         value: [startTime, endTime],
         allowClear: true,
       };
