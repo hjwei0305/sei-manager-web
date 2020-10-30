@@ -419,7 +419,6 @@ class LogList extends PureComponent {
         title: '时间',
         dataIndex: 'timestamp',
         width: 210,
-        align: 'center',
         fixed: 'left',
         required: true,
         ...this.getColumnSearchProps('timestamp'),
