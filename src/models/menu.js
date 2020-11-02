@@ -142,19 +142,18 @@ export default {
               break;
             }
           }
-          let activedMenu = {
-            id: 'other',
-            title: '其他',
-            url: initPathname,
-          };
+          let activedMenu = null;
 
           if (temp && temp.length) {
             [activedMenu] = temp;
           }
-          if (activedMenu.id !== NoMenuPages[0].id) {
-            payload.tabData = [NoMenuPages[0], activedMenu];
-          } else {
-            payload.tabData = [activedMenu];
+          if (activedMenu) {
+            if (activedMenu.id !== NoMenuPages[0].id) {
+              payload.tabData = [NoMenuPages[0], activedMenu];
+            } else {
+              payload.tabData = [activedMenu];
+            }
+            payload.visibleTabData = [activedMenu];
           }
           payload.activedMenu = activedMenu;
           payload.currMenuTree = currMenuTree;
