@@ -71,16 +71,6 @@ class LogDetail extends PureComponent {
                 />
                 {this.getFieldValue('url')}
               </Descriptions.Item>
-              <Descriptions.Item label="参数" className="message-text">
-                <ExtIcon
-                  type="copy"
-                  className="copy-btn"
-                  antd
-                  tooltip={{ title: '复制内容到粘贴板' }}
-                  onClick={() => this.handlerCopy('args')}
-                />
-                {this.getFieldValue('args')}
-              </Descriptions.Item>
               <Descriptions.Item label="日志类">{this.getFieldValue('logger')}</Descriptions.Item>
               <Descriptions.Item label="日志消息" className="message-text">
                 <ExtIcon
@@ -112,9 +102,19 @@ class LogDetail extends PureComponent {
                 />
                 {this.getFieldValue('userAgent')}
               </Descriptions.Item>
-              <Descriptions.Item label="方法">{this.getFieldValue('methodName')}</Descriptions.Item>
               <Descriptions.Item label="Java类">
                 {this.getFieldValue('className')}
+              </Descriptions.Item>
+              <Descriptions.Item label="方法">{this.getFieldValue('methodName')}</Descriptions.Item>
+              <Descriptions.Item label="参数" className="message-text">
+                <ExtIcon
+                  type="copy"
+                  className="copy-btn"
+                  antd
+                  tooltip={{ title: '复制内容到粘贴板' }}
+                  onClick={() => this.handlerCopy('args')}
+                />
+                {this.getFieldValue('args')}
               </Descriptions.Item>
               <Descriptions.Item label="版本">{this.getFieldValue('version')}</Descriptions.Item>
             </Descriptions>

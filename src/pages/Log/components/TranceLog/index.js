@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Layout, Card, Input, Empty, Avatar, Tag } from 'antd';
 import cls from 'classnames';
-import { get } from 'lodash';
+import { get, split, trim } from 'lodash';
 import { ListCard, ExtIcon } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import LogDetail from '../LogDetail';
@@ -11,6 +11,7 @@ import styles from './index.less';
 
 const { Sider, Content } = Layout;
 const { Search } = Input;
+const colors = ['', 'magenta', 'purple', 'cyan', 'green'];
 
 class TranceLog extends PureComponent {
   static scrollBarRef;
@@ -65,7 +66,40 @@ class TranceLog extends PureComponent {
     if (currentLog && currentLog.id === item.id) {
       return <Avatar icon="check" size={22} shape="square" className="current-log" />;
     }
-    return <Tag>{index + 1}</Tag>;
+    return <Tag style={{ marginRight: 0 }}>{index + 1}</Tag>;
+  };
+
+  renderDesciption = item => {
+    const { timestamp, tracePath } = item;
+    // tracePath: "> sei-fim > sei-eai"
+    const tracePathArr = split(tracePath, '>').filter(t => !!trim(t));
+    const count = tracePathArr.length;
+    return (
+      <>
+        <div className="vertical">
+          <div className="horizontal">
+            {tracePathArr.map((t, idx) => {
+              if (count === 1 || idx === count - 1) {
+                return (
+                  <Tag color={colors[idx]} style={{ marginRight: 0 }}>
+                    {t}
+                  </Tag>
+                );
+              }
+              return (
+                <>
+                  <Tag color={colors[idx]} style={{ marginRight: 0 }}>
+                    {t}
+                  </Tag>
+                  <ExtIcon type="swap-right" antd />
+                </>
+              );
+            })}
+          </div>
+          <div>{timestamp}</div>
+        </div>
+      </>
+    );
   };
 
   render() {
@@ -93,7 +127,7 @@ class TranceLog extends PureComponent {
       itemField: {
         avatar: this.renderAvatar,
         title: item => item.logger,
-        description: item => item.timestamp,
+        description: this.renderDesciption,
         extra: item => <LogLevel item={item} />,
       },
       customTool: this.renderCustomTool,
