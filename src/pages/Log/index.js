@@ -33,7 +33,24 @@ class LogList extends PureComponent {
 
   static listCardRef = null;
 
+  static filterDateRef;
+
   reloadData = () => {
+    const { dispatch, runtimeLog } = this.props;
+    const { filter: originFilter, currentTimeViewType } = runtimeLog;
+    const { startTime = null, endTime = null } = this.filterDateRef.getTimeByTimeViewType(
+      currentTimeViewType,
+    );
+    const filter = { ...originFilter };
+    Object.assign(filter, {
+      timestamp: startTime === null || endTime === null ? null : [startTime, endTime],
+    });
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        filter,
+      },
+    });
     this.tableRef.remoteDataRefresh();
   };
 
@@ -234,6 +251,7 @@ class LogList extends PureComponent {
       return (
         <div style={{ padding: 8, width: 260, boxShadow: '0 3px 8px rgba(0,0,0,0.15)' }}>
           <FilterDate
+            onFilterDateRef={ref => (this.filterDateRef = ref)}
             currentTimeViewType={currentTimeViewType}
             onAction={(timeViewType, currentDate) => {
               dispatch({

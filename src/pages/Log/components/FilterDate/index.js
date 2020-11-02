@@ -19,6 +19,7 @@ class FilterDateView extends PureComponent {
   static propTypes = {
     currentTimeViewType: PropTypes.object.isRequired,
     onAction: PropTypes.func,
+    onFilterDateRef: PropTypes.func,
   };
 
   constructor(props) {
@@ -31,9 +32,15 @@ class FilterDateView extends PureComponent {
     };
   }
 
-  dataHandle = (currentTimeViewType, period = {}) => {
-    const { onAction } = this.props;
-    const newVal = { ...currentTimeViewType, ...period };
+  componentDidMount() {
+    const { onFilterDateRef } = this.props;
+    if (onFilterDateRef) {
+      onFilterDateRef(this);
+    }
+  }
+
+  getTimeByTimeViewType = currentTimeViewType => {
+    const newVal = {};
     switch (currentTimeViewType.name) {
       case 'THIS_5M':
         newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -58,8 +65,15 @@ class FilterDateView extends PureComponent {
         newVal.endTime = moment().format('YYYY-MM-DD 23:59:59');
         break;
       default:
-        break;
     }
+    return newVal;
+  };
+
+  dataHandle = (currentTimeViewType, period = {}) => {
+    const { onAction } = this.props;
+    const newVal = { ...currentTimeViewType, ...period };
+    const { startTime, endTime } = this.getTimeByTimeViewType(currentTimeViewType);
+    Object.assign(newVal, { startTime, endTime });
     if (onAction) {
       onAction(currentTimeViewType, newVal);
     }
