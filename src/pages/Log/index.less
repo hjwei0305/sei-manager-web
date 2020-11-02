@@ -5,6 +5,25 @@
   overflow: hidden;
   background-color: @page-background-color;
   :global {
+    .ant-table-tbody tr > td {
+      .copy-btn {
+        width: 24px;
+        height: 24px;
+        line-height: 28px;
+        border-radius: 4px;
+        visibility: hidden;
+        transition: all 0.3s;
+        &:hover {
+          background-color: fade(@primary-color, 15%);
+        }
+      }
+      &:hover {
+        .copy-btn {
+          visibility: visible;
+        }
+      }
+    }
+
     .suid-panel {
       height: 100%;
       .panel-body {
