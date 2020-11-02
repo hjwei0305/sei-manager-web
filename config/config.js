@@ -11,7 +11,7 @@ export default {
   treeShaking: true,
   ignoreMomentLocale: true,
   targets: { ie: 11 },
-  base: basePath,
+  // base: basePath,
   publicPath: basePath,
   hash: true,
   plugins,
