@@ -61,7 +61,16 @@ class LogDetail extends PureComponent {
               <Descriptions.Item label="调用链路径">
                 {this.getFieldValue('tracePath')}
               </Descriptions.Item>
-              <Descriptions.Item label="参数">{this.getFieldValue('args')}</Descriptions.Item>
+              <Descriptions.Item label="参数" className="message-text">
+                <ExtIcon
+                  type="copy"
+                  className="copy-btn"
+                  antd
+                  tooltip={{ title: '复制内容到粘贴板' }}
+                  onClick={() => this.handlerCopy('args')}
+                />
+                {this.getFieldValue('args')}
+              </Descriptions.Item>
               <Descriptions.Item label="方法">{this.getFieldValue('methodName')}</Descriptions.Item>
               <Descriptions.Item label="Java类">
                 {this.getFieldValue('className')}
