@@ -3,7 +3,7 @@ import TabPane from './TabPane';
 import TabHeader from './TabHeader';
 import styles from './index.less';
 
-class Tab extends React.Component {
+export default class Tab extends React.Component {
   handleReload = () => {
     const { activedKey } = this.props;
     this.tabPaneRef.reload(activedKey);
@@ -39,5 +39,3 @@ class Tab extends React.Component {
 
 Tab.TabHeader = TabHeader;
 Tab.TabPane = TabPane;
-
-export default Tab;

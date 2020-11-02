@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
@@ -363,7 +364,7 @@ class LogList extends PureComponent {
             tooltip={{ title: '复制内容到粘贴板' }}
             onClick={() => this.handlerCopy(t)}
           />
-          {t}
+          <span dangerouslySetInnerHTML={{ __html: t }} />
         </>
       );
     }
@@ -538,7 +539,6 @@ class LogList extends PureComponent {
         </>
       ),
     };
-    const { quickSearchValue = '' } = this.tableRef ? this.tableRef.getQueryParams() : {};
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
@@ -551,7 +551,7 @@ class LogList extends PureComponent {
         params: this.getFilter(),
       },
       cascadeParams: {
-        highlightFields: quickSearchValue ? [quickSearchValue] : [],
+        highlightFields: ['*'],
       },
       remotePaging: true,
       onTableRef: ref => (this.tableRef = ref),

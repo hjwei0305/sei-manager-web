@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import classNames from 'classnames';
 import NProgress from 'nprogress';
+// import { Spin } from 'antd';
 import { PageLoader } from 'suid';
 import { noop } from 'lodash';
 import styles from './index.less';
