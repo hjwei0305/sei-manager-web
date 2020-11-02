@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-30 22:49:50
+ * @Last Modified time: 2020-11-02 14:36:57
  */
 import { name } from '../../package.json';
 
@@ -54,9 +54,9 @@ export const NoMenuPages = [
 ];
 
 const ENV_CATEGORY = {
-  dev: { key: 'dev', title: '开发' },
-  test: { key: 'test', title: '测试' },
-  prd: { key: 'prd', title: '生产' },
+  dev: { key: 'dev', title: '开发环境' },
+  test: { key: 'test', title: '测试环境' },
+  prd: { key: 'prd', title: '生产环境' },
 };
 
 const LEVEL_CATEGORY = {

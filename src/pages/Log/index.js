@@ -528,7 +528,7 @@ class LogList extends PureComponent {
       left: (
         <>
           <FilterView
-            title="环境视图"
+            title="视图"
             currentViewType={currentEnvViewType}
             viewTypeData={envViewData}
             onAction={this.handlerEnvChange}

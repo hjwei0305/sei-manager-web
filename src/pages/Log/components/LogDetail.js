@@ -61,6 +61,16 @@ class LogDetail extends PureComponent {
               <Descriptions.Item label="调用链路径">
                 {this.getFieldValue('tracePath')}
               </Descriptions.Item>
+              <Descriptions.Item label="URL" className="message-text">
+                <ExtIcon
+                  type="copy"
+                  className="copy-btn"
+                  antd
+                  tooltip={{ title: '复制内容到粘贴板' }}
+                  onClick={() => this.handlerCopy('url')}
+                />
+                {this.getFieldValue('url')}
+              </Descriptions.Item>
               <Descriptions.Item label="参数" className="message-text">
                 <ExtIcon
                   type="copy"
@@ -77,26 +87,6 @@ class LogDetail extends PureComponent {
               </Descriptions.Item>
               <Descriptions.Item label="版本">{this.getFieldValue('version')}</Descriptions.Item>
               <Descriptions.Item label="日志类">{this.getFieldValue('logger')}</Descriptions.Item>
-              <Descriptions.Item label="URL" className="message-text">
-                <ExtIcon
-                  type="copy"
-                  className="copy-btn"
-                  antd
-                  tooltip={{ title: '复制内容到粘贴板' }}
-                  onClick={() => this.handlerCopy('url')}
-                />
-                {this.getFieldValue('url')}
-              </Descriptions.Item>
-              <Descriptions.Item label="用户代理" className="message-text">
-                <ExtIcon
-                  type="copy"
-                  className="copy-btn"
-                  antd
-                  tooltip={{ title: '复制内容到粘贴板' }}
-                  onClick={() => this.handlerCopy('userAgent')}
-                />
-                {this.getFieldValue('userAgent')}
-              </Descriptions.Item>
               <Descriptions.Item label="日志消息" className="message-text">
                 <ExtIcon
                   type="copy"
@@ -116,6 +106,16 @@ class LogDetail extends PureComponent {
                   onClick={() => this.handlerCopy('stackTrace')}
                 />
                 {this.getFieldValue('stackTrace')}
+              </Descriptions.Item>
+              <Descriptions.Item label="用户代理" className="message-text">
+                <ExtIcon
+                  type="copy"
+                  className="copy-btn"
+                  antd
+                  tooltip={{ title: '复制内容到粘贴板' }}
+                  onClick={() => this.handlerCopy('userAgent')}
+                />
+                {this.getFieldValue('userAgent')}
               </Descriptions.Item>
             </Descriptions>
           </ScrollBar>
