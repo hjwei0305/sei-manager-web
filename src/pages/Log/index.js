@@ -27,26 +27,6 @@ const FILTER_FIELDS = [
   { fieldName: 'traceId', operator: 'EQ', value: null },
 ];
 
-const Highlight = ({ text, words }) => {
-  if (words.length === 0) {
-    return text;
-  }
-  const reg = new RegExp(words.join('|'), 'g');
-  const token = text.replace(reg, '#@$&#');
-  const elements = token.split('#').map(x =>
-    x[0] === '@'
-      ? React.createElement(
-          'mark',
-          {
-            classname: 'highlight',
-          },
-          x.slice(1),
-        )
-      : x,
-  );
-  return React.createElement('div', null, ...elements);
-};
-
 @connect(({ runtimeLog, loading }) => ({ runtimeLog, loading }))
 class LogList extends PureComponent {
   static tableRef = null;
@@ -374,8 +354,6 @@ class LogList extends PureComponent {
 
   renderCopyColumn = t => {
     if (t) {
-      const { quickSearchValue } = this.tableRef.getQueryParams();
-      const words = quickSearchValue ? [quickSearchValue] : [];
       return (
         <>
           <ExtIcon
@@ -385,7 +363,7 @@ class LogList extends PureComponent {
             tooltip={{ title: '复制内容到粘贴板' }}
             onClick={() => this.handlerCopy(t)}
           />
-          <Highlight text={t} words={words} />
+          {t}
         </>
       );
     }
@@ -560,6 +538,7 @@ class LogList extends PureComponent {
         </>
       ),
     };
+    const { quickSearchValue = '' } = this.tableRef ? this.tableRef.getQueryParams() : {};
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
@@ -570,6 +549,9 @@ class LogList extends PureComponent {
         type: 'POST',
         url: `/sei-manager/log/findByPage`,
         params: this.getFilter(),
+      },
+      cascadeParams: {
+        highlightFields: quickSearchValue ? [quickSearchValue] : [],
       },
       remotePaging: true,
       onTableRef: ref => (this.tableRef = ref),
