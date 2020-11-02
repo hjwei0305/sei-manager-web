@@ -81,11 +81,6 @@ class LogDetail extends PureComponent {
                 />
                 {this.getFieldValue('args')}
               </Descriptions.Item>
-              <Descriptions.Item label="方法">{this.getFieldValue('methodName')}</Descriptions.Item>
-              <Descriptions.Item label="Java类">
-                {this.getFieldValue('className')}
-              </Descriptions.Item>
-              <Descriptions.Item label="版本">{this.getFieldValue('version')}</Descriptions.Item>
               <Descriptions.Item label="日志类">{this.getFieldValue('logger')}</Descriptions.Item>
               <Descriptions.Item label="日志消息" className="message-text">
                 <ExtIcon
@@ -117,6 +112,11 @@ class LogDetail extends PureComponent {
                 />
                 {this.getFieldValue('userAgent')}
               </Descriptions.Item>
+              <Descriptions.Item label="方法">{this.getFieldValue('methodName')}</Descriptions.Item>
+              <Descriptions.Item label="Java类">
+                {this.getFieldValue('className')}
+              </Descriptions.Item>
+              <Descriptions.Item label="版本">{this.getFieldValue('version')}</Descriptions.Item>
             </Descriptions>
           </ScrollBar>
         )}
