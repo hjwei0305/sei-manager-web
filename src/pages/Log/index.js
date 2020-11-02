@@ -424,7 +424,7 @@ class LogList extends PureComponent {
     const { runtimeLog } = this.props;
     const { filter } = runtimeLog;
     const serviceName = get(filter, 'serviceName') || '全部';
-    return `应用(${serviceName})`;
+    return `模块名称(${serviceName})`;
   };
 
   renderColumnTimestamp = () => {
@@ -551,7 +551,7 @@ class LogList extends PureComponent {
         params: this.getFilter(),
       },
       cascadeParams: {
-        highlightFields: ['*'],
+        highlightFields: ['message', 'logger', 'serviceName', 'fromServer'],
       },
       remotePaging: true,
       onTableRef: ref => (this.tableRef = ref),
