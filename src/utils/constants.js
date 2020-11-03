@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-02 14:36:57
+ * @Last Modified time: 2020-11-03 17:26:23
  */
 import { name } from '../../package.json';
 
@@ -80,7 +80,7 @@ const SEARCH_DATE_PERIOD = {
   },
   THIS_30M: {
     name: 'THIS_30M',
-    remark: '近半小时',
+    remark: '近30分钟',
   },
   THIS_60M: {
     name: 'THIS_60M',
