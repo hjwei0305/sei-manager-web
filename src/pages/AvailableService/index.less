@@ -1,0 +1,23 @@
+@import '../../themes/vars.less';
+.role-box {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background-color: @page-background-color;
+  :global {
+    .desc-box {
+      .field-item {
+        .label {
+          display: inline-block;
+          width: 80px;
+          &::after {
+            margin: 0 4px;
+            letter-spacing: 0;
+            content: ':';
+          }
+        }
+      }
+    }
+  }
+}

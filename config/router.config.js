@@ -35,9 +35,26 @@ const routes = [
         component: './Dashboard',
       },
       {
-        path: '/log/logRecord',
-        name: 'Log',
-        component: './Log',
+        path: '/log',
+        namd: '日志分析',
+        routes: [
+          {
+            path: '/log/logRecord',
+            name: 'Log',
+            component: './Log',
+          },
+        ],
+      },
+      {
+        path: '/service',
+        namd: '服务',
+        routes: [
+          {
+            path: '/service/view',
+            name: '可用服务',
+            component: './AvailableService',
+          },
+        ],
       },
     ],
   },

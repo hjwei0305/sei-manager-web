@@ -132,11 +132,10 @@ class Login extends Component {
           </Button>
         </LoginForm>
         <div className="tool-box">
-          <div className="third-login" />
+          <Button type="link" className="forget-pwd" onClick={this.handleRetrievePwd}>
+            <FormattedMessage id="login.forgot-password" defaultMessage="忘记密码?" />
+          </Button>
           <div className="tool-action">
-            <Button type="link" className="forget-pwd" onClick={this.handleRetrievePwd}>
-              <FormattedMessage id="login.forgot-password" defaultMessage="忘记密码?" />
-            </Button>
             <SelectLang />
           </div>
         </div>
