@@ -56,6 +56,37 @@ const routes = [
           },
         ],
       },
+      {
+        path: '/model',
+        namd: '数据模型',
+        routes: [
+          {
+            path: '/model/dataSource',
+            name: '数据源',
+            component: './DataModel/DataSource',
+          },
+          {
+            path: '/model/elementLibrary',
+            name: '元素库',
+            component: './DataModel/ElementLibrary',
+          },
+          {
+            path: '/model/labelLibrary',
+            name: '标签库',
+            component: './DataModel/LabelLibrary',
+          },
+          {
+            path: '/model/dataType',
+            name: '数据类型',
+            component: './DataModel/DataType',
+          },
+          {
+            path: '/model/dataModel',
+            name: '数据类型',
+            component: './DataModel/DataModelManager',
+          },
+        ],
+      },
     ],
   },
 ];

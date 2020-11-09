@@ -1,0 +1,39 @@
+.tree-veiw {
+  :global {
+    .node-content-wrapper {
+      overflow: hidden;
+      .title {
+        float: left;
+      }
+      .icon-items {
+        display: none;
+        float: right;
+        transition: all ease-in 0.2s;
+        .action-box {
+          > i {
+            display: inline-block;
+            margin-right: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all ease-in 0.2s;
+            &:hover {
+              color: #1890ff;
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+          > i.del {
+            &:hover {
+              color: #f5222d;
+              background-color: rgba(245, 34, 45, 0.15);
+            }
+          }
+        }
+      }
+      &:hover {
+        .icon-items {
+          display: inline;
+        }
+      }
+    }
+  }
+}

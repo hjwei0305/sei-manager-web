@@ -1,0 +1,49 @@
+.cascade-layout-wrapper {
+  height: 100% !important;
+  :global {
+    .layout-col-center {
+      background-color: rgba(245, 245, 245, 1);
+    }
+    .layout-col {
+      position: relative;
+      height: 100% !important;
+      .ant-card {
+        height: 100% !important;
+        .ant-card-head {
+          border-bottom: transparent;
+        }
+        .ant-card-body {
+          height: calc(100% - 57px);
+          padding: 8px;
+
+          /** 表格高度100% */
+          .suid-panel {
+            height: 100% !important;
+            .panel-body {
+              height: 100% !important;
+              max-height: 100% !important;
+            }
+          }
+        }
+      }
+    }
+    .layout-col-left {
+      transition: width 5s ease;
+    }
+    .layout-col-right {
+      .icon-wrapper {
+        display: inline-block;
+        padding: 2px 6px;
+        text-align: center;
+        border-radius: 3px;
+        &:hover {
+          background-color: #efeaea;
+          cursor: pointer;
+          > i {
+            color: #1890ff;
+          }
+        }
+      }
+    }
+  }
+}

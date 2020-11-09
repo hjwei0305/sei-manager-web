@@ -1,0 +1,32 @@
+.assign-layout-wrapper {
+  height: 100% !important;
+  :global {
+    .layout-col-center {
+      background-color: rgba(245, 245, 245, 1);
+    }
+    .layout-col {
+      position: relative;
+      height: 100% !important;
+      .ant-card {
+        height: 100% !important;
+        .ant-card-body {
+          height: calc(100% - 57px);
+          padding: 8px;
+          .suid-panel {
+            height: 100% !important;
+            .panel-body {
+              height: 100% !important;
+              max-height: 100% !important;
+            }
+          }
+        }
+      }
+      .opt-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}

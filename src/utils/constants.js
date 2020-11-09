@@ -35,6 +35,7 @@ const LOCAL_PATH = process.env.NODE_ENV !== 'production' ? '..' : `../${APP_BASE
 
 const SERVER_PATH = getServerPath();
 
+const MANAGER_CONTEXT = `${SERVER_PATH}/sei-manager/`;
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 /** 非菜单页面 */
@@ -114,4 +115,5 @@ export default {
   SEARCH_DATE_PERIOD,
   LOG_ACTION,
   MOCKER_PATH,
+  MANAGER_CONTEXT,
 };
