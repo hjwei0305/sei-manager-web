@@ -6,7 +6,6 @@ import cls from 'classnames';
 import { isEqual } from 'lodash';
 import { eventBus } from '@/utils';
 import MenuSearch from '@/components/MenuSearch';
-import FavoriteMenu from '@/components/FavoriteMenu';
 import collapsedLogo from '../../../assets/sei.png';
 
 import styles from './index.less';
@@ -150,14 +149,7 @@ class NavLeft extends React.Component {
 
   render() {
     const { currentSelectedKeys, openKeys } = this.state;
-    const {
-      collapsed,
-      menuConfig = [],
-      allLeafMenus,
-      favoriteMenus,
-      onCollapse,
-      onSelectSearchMenu,
-    } = this.props;
+    const { collapsed, menuConfig = [], allLeafMenus, onCollapse, onSelectSearchMenu } = this.props;
     const collapsedMenuLogo = collapsedLogo;
     return (
       <div
@@ -177,31 +169,13 @@ class NavLeft extends React.Component {
         </div>
         <div className="layout-menu-search">
           {!collapsed ? (
-            <Fragment>
-              <Row type="flex" align="middle">
-                <Col style={{ flex: 1 }}>
-                  <MenuSearch onSelect={onSelectSearchMenu} data={allLeafMenus} />
-                </Col>
-                <Col style={{ width: 50 }}>
-                  <FavoriteMenu
-                    collapsed={collapsed}
-                    data={favoriteMenus}
-                    onSelect={onSelectSearchMenu}
-                    onRemove={this.handleCollect}
-                  />
-                </Col>
-              </Row>
-            </Fragment>
+            <Row type="flex" align="middle">
+              <Col style={{ flex: 1 }}>
+                <MenuSearch onSelect={onSelectSearchMenu} data={allLeafMenus} />
+              </Col>
+            </Row>
           ) : (
-            <Fragment>
-              <Icon className="collapsed-search-icon" type="search" onClick={onCollapse} />
-              <FavoriteMenu
-                collapsed={collapsed}
-                data={favoriteMenus}
-                onSelect={onSelectSearchMenu}
-                onRemove={this.handleCollect}
-              />
-            </Fragment>
+            <Icon className="collapsed-search-icon" type="search" onClick={onCollapse} />
           )}
         </div>
         <div

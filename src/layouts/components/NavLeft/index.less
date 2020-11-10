@@ -131,8 +131,13 @@
   &.nav-left-wrapper-collapsed {
     :global {
       .layout-menu {
-        height: calc(100% - 160px);
+        height: calc(100% - 128px);
         overflow: auto;
+        .ant-menu-item {
+          .collect-icon {
+            display: none;
+          }
+        }
       }
       .layout-logo {
         img {
