@@ -171,7 +171,7 @@ class NavLeft extends React.Component {
             <img src={collapsedMenuLogo} alt="logo" />
           ) : (
             <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 24, fontWeight: 700 }}>
-              开发与运维平台
+              开发运维平台
             </span>
           )}
         </div>

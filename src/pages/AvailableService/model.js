@@ -16,7 +16,7 @@ export default modelExtend(model, {
     currentService: null,
     serviceData: [],
     interfaceData: [],
-    InstanceData: [],
+    instanceData: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -30,6 +30,19 @@ export default modelExtend(model, {
     },
   },
   effects: {
+    *clearState(_, { put }) {
+      yield put({
+        type: 'updateState',
+        payload: {
+          currentEnvViewType: ENV_CATEGORY_DATA[0],
+          envViewData: ENV_CATEGORY_DATA,
+          currentService: null,
+          serviceData: [],
+          interfaceData: [],
+          instanceData: [],
+        },
+      });
+    },
     *getServices(_, { call, put }) {
       const re = yield call(getServices);
       if (re.success) {
@@ -45,38 +58,35 @@ export default modelExtend(model, {
         });
       }
     },
-    *getCurrentServiceData({ payload }, { call, put }) {
-      const re = yield call(getInterfacesByAppCode, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            interfaceData: re.data || [],
-          },
-        });
+    *getCurrentServiceData({ payload }, { call, put, select }) {
+      const { currentService } = payload;
+      const { currentEnvViewType } = yield select(sel => sel.availableService);
+      yield put({
+        type: 'updateState',
+        payload: {
+          currentService,
+        },
+      });
+      let interfaceData = [];
+      let instanceData = [];
+      const resInterface = yield call(getInterfacesByAppCode, { appCode: currentService.code });
+      if (resInterface.success) {
+        interfaceData = resInterface.data || [];
       }
-    },
-    *getInterfacesByAppCode({ payload }, { call, put }) {
-      const re = yield call(getInterfacesByAppCode, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            interfaceData: re.data || [],
-          },
-        });
+      const resInstanceData = yield call(getInstancesByAppEnvCode, {
+        envCode: currentEnvViewType.key,
+        appCode: currentService.code,
+      });
+      if (resInstanceData.success) {
+        instanceData = resInstanceData.data || [];
       }
-    },
-    *getInstancesByAppEnvCode({ payload }, { call, put }) {
-      const re = yield call(getInstancesByAppEnvCode, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            InstanceData: re.data || [],
-          },
-        });
-      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          interfaceData,
+          instanceData,
+        },
+      });
     },
   },
 });

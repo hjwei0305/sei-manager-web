@@ -2,63 +2,74 @@ import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import { ScrollBar, ListLoader } from 'suid';
-import Directive from './Directive';
-import NodeState from './State';
-import FrontendMachine from '../FrontendMachine';
+import Instance from '../Instance';
+import Interface from '../Interface';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
-class OrderConfig extends PureComponent {
+class ServiceConfig extends PureComponent {
   static propTypes = {
-    nodeDataLoading: PropTypes.bool,
-    directiveData: PropTypes.object,
-    saveDirective: PropTypes.func,
-    directiveSaving: PropTypes.bool,
-    currentNode: PropTypes.object,
-    currentDockingChannel: PropTypes.object,
-    saveState: PropTypes.func,
-    stateSaving: PropTypes.bool,
+    loading: PropTypes.bool,
+    currentService: PropTypes.object,
+    currentEnvViewType: PropTypes.object,
     currentTabKey: PropTypes.string,
     onTabChange: PropTypes.func,
-    saveFrontend: PropTypes.func,
-    frontendSaving: PropTypes.bool,
-    deleteFrontend: PropTypes.func,
-    frontendDeleting: PropTypes.bool,
+    interfaceData: PropTypes.object,
+    onSaveInterface: PropTypes.func,
+    interfaceSaving: PropTypes.bool,
+    onDeleteInterface: PropTypes.func,
+    interfaceDeleting: PropTypes.bool,
+    instanceData: PropTypes.object,
+    onDeleteInstance: PropTypes.func,
+    instanceDeleting: PropTypes.bool,
   };
 
   render() {
     const {
-      nodeDataLoading,
-      directiveData,
-      saveDirective,
-      directiveSaving,
       onTabChange,
       currentTabKey,
+      loading,
+      currentService,
+      currentEnvViewType,
+      instanceData,
+      onDeleteInstance,
+      instanceDeleting,
       ...rest
     } = this.props;
-    const directiveProps = { directiveData, saveDirective, directiveSaving };
+    const interfaceProps = {
+      loading,
+      currentService,
+      ...rest,
+    };
+    const instanceProps = {
+      loading,
+      currentService,
+      currentEnvViewType,
+      instanceData,
+      onDeleteInstance,
+      instanceDeleting,
+    };
     return (
       <Tabs
         className={cls(styles['container-box'])}
-        activeKey={currentTabKey || 'directive'}
+        activeKey={currentTabKey || 'instanceTab'}
         onChange={onTabChange}
         animated={false}
       >
-        <TabPane tab="指令配置" key="directive" forceRender>
-          <ScrollBar>
-            {nodeDataLoading ? <ListLoader /> : <Directive {...directiveProps} />}
-          </ScrollBar>
+        <TabPane tab={`服务实例 (${instanceData.length})`} key="instanceTab" forceRender>
+          <Instance {...instanceProps} />
         </TabPane>
-        <TabPane tab="状态配置" key="status" forceRender className="status-box">
-          <NodeState {...rest} />
-        </TabPane>
-        <TabPane tab="前置机配置" key="frontend" forceRender className="status-box">
-          <FrontendMachine {...rest} />
+        <TabPane
+          tab={`接口配置 (${rest.interfaceData.length})`}
+          key="interfaceTab"
+          forceRender
+          className="tab-box"
+        >
+          <Interface {...interfaceProps} />
         </TabPane>
       </Tabs>
     );
   }
 }
 
-export default OrderConfig;
+export default ServiceConfig;

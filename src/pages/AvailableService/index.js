@@ -6,6 +6,7 @@ import { Layout, Empty, Input } from 'antd';
 import { ListCard } from 'suid';
 import { FilterView } from '@/components';
 import empty from '@/assets/item_empty.svg';
+import ServiceConfig from './components/Config';
 import styles from './index.less';
 
 const { Sider, Content } = Layout;
@@ -16,11 +17,25 @@ const { Search } = Input;
 class AvailableService extends PureComponent {
   static listCardRef;
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentTabKey: '',
+    };
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'availableService/clearState',
+    });
+  }
+
   handlerServiceSelect = (keys, items) => {
     if (keys.length === 1) {
       const { dispatch } = this.props;
       dispatch({
-        type: 'availableService/updateState',
+        type: 'availableService/getCurrentServiceData',
         payload: {
           currentService: items[0],
         },
@@ -38,6 +53,12 @@ class AvailableService extends PureComponent {
     });
   };
 
+  handlerSaveInterface = () => {};
+
+  handlerDeleteInterface = () => {};
+
+  handlerDeleteInstance = () => {};
+
   handlerSearchChange = v => {
     this.listCardRef.handlerSearchChange(v);
   };
@@ -48,6 +69,10 @@ class AvailableService extends PureComponent {
 
   handlerSearch = v => {
     this.listCardRef.handlerSearch(v);
+  };
+
+  handlerTabChange = currentTabKey => {
+    this.setState({ currentTabKey });
   };
 
   renderCustomTool = () => {
@@ -74,8 +99,15 @@ class AvailableService extends PureComponent {
   };
 
   render() {
+    const { currentTabKey } = this.state;
     const { loading, availableService } = this.props;
-    const { currentService, serviceData } = availableService;
+    const {
+      currentService,
+      serviceData,
+      currentEnvViewType,
+      interfaceData,
+      instanceData,
+    } = availableService;
     const serviceListProps = {
       title: '服务列表',
       dataSource: serviceData,
@@ -89,6 +121,21 @@ class AvailableService extends PureComponent {
         description: item => item.code,
       },
     };
+    const configProps = {
+      currentTabKey,
+      onTabChange: this.handlerTabChange,
+      loading: loading.effects['availableService/getCurrentServiceData'],
+      currentService,
+      currentEnvViewType,
+      interfaceData,
+      onSaveInterface: this.handlerSaveInterface,
+      interfaceSaving: loading.effects['availableService/saveInterface'],
+      onDeleteInterface: this.handlerDeleteInterface,
+      interfaceDeleting: loading.effects['availableService/deleteInterface'],
+      instanceData,
+      onDeleteInstance: this.handlerDeleteInstance,
+      instanceDeleting: loading.effects['availableService/deleteInstance'],
+    };
     return (
       <Layout className={cls(styles['role-box'])}>
         <Sider width={380} className={cls('left-content', 'auto-height')} theme="light">
@@ -96,7 +143,7 @@ class AvailableService extends PureComponent {
         </Sider>
         <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
           {currentService ? (
-            ''
+            <ServiceConfig {...configProps} />
           ) : (
             <div className="blank-empty">
               <Empty image={empty} description="选择服务项显示详情" />

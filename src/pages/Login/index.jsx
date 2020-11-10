@@ -105,7 +105,7 @@ class Login extends Component {
         </div>
         <div className="login-form-title">
           <Animate type="flipInY" delay={400}>
-            <span className="title">开发与运维平台</span>
+            <span className="title">开发运维平台</span>
           </Animate>
         </div>
 
