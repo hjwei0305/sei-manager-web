@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 
 @withRouter
 @connect(({ labelLibrary, loading }) => ({ labelLibrary, loading }))
@@ -189,7 +189,7 @@ class LabelLibrary extends Component {
       searchProperties: ['name', 'remark'],
       store: {
         type: 'POST',
-        url: `${MDMSCONTEXT}/labelLibrary/findByPage`,
+        url: `${MANAGER_CONTEXT}/labelLibrary/findByPage`,
       },
     };
   };

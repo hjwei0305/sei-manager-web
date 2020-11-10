@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 
 @withRouter
 @connect(({ elementLibrary, loading }) => ({ elementLibrary, loading }))
@@ -212,7 +212,7 @@ class ElementLibrary extends Component {
       remotePaging: true,
       store: {
         type: 'POST',
-        url: `${MDMSCONTEXT}/elementLibrary/findByPage`,
+        url: `${MANAGER_CONTEXT}/elementLibrary/findByPage`,
       },
     };
   };

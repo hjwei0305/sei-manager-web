@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 
 @withRouter
 @connect(({ dataType, loading }) => ({ dataType, loading }))
@@ -240,7 +240,7 @@ class DataType extends Component {
       remotePaging: true,
       store: {
         type: 'POST',
-        url: `${MDMSCONTEXT}/dataType/findByPage`,
+        url: `${MANAGER_CONTEXT}/dataType/findByPage`,
       },
     };
   };

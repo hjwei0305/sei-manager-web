@@ -8,7 +8,7 @@ import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from '../../index.less';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 
 @connect(({ dataModelManager, loading }) => ({ dataModelManager, loading }))
 class ConfigModelFields extends Component {
@@ -276,7 +276,7 @@ class ConfigModelFields extends Component {
       toolBar: toolBarProps,
       store: {
         type: 'GET',
-        url: `${MDMSCONTEXT}/dataModel/getDataModelFields?modelId=${dataModel.id}`,
+        url: `${MANAGER_CONTEXT}/dataModel/getDataModelFields?modelId=${dataModel.id}`,
       },
       searchProperties: ['fieldName'],
       searchPlaceHolder: '输入字段名进行搜索',

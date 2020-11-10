@@ -3,7 +3,7 @@ import { Form, Input } from 'antd';
 import { ExtModal, ComboGrid } from 'suid';
 import { constants } from '@/utils';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -37,7 +37,7 @@ class FormModal extends PureComponent {
       store: {
         type: 'POST',
         autoLoad: false,
-        url: `${MDMSCONTEXT}/dataSource/findByPage`,
+        url: `${MANAGER_CONTEXT}/dataSource/findByPage`,
       },
       columns: [
         {

@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 @withRouter
 @connect(({ dataSource, loading }) => ({ dataSource, loading }))
 class DataSource extends Component {
@@ -206,7 +206,7 @@ class DataSource extends Component {
       searchPlaceHolder: '请输入代码和描述进行搜索',
       store: {
         type: 'POST',
-        url: `${MDMSCONTEXT}/dataSource/findByPage`,
+        url: `${MANAGER_CONTEXT}/dataSource/findByPage`,
       },
     };
   };

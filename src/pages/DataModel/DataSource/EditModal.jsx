@@ -3,7 +3,7 @@ import { Form, Input, Row, Col } from 'antd';
 import { ExtModal, ComboList } from 'suid';
 import { constants } from '@/utils';
 
-const { MDMSCONTEXT } = constants;
+const { MANAGER_CONTEXT } = constants;
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -66,7 +66,7 @@ class FormModal extends PureComponent {
       name: 'dbType',
       store: {
         autoLoad: false,
-        url: `${MDMSCONTEXT}/dataSource/getDBTypes`,
+        url: `${MANAGER_CONTEXT}/dataSource/getDBTypes`,
       },
       rowKey: 'name',
       reader: {
