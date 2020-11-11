@@ -10,16 +10,16 @@
       overflow: hidden;
       line-height: @center-header-height;
       text-align: center;
+      background-color: @primary-color;
       img {
         width: 200px;
         height: 40px;
       }
     }
     .layout-menu-search {
-      padding: 0 10px;
+      padding: 0;
       line-height: 32px;
       text-align: center;
-
       .collapsed-search-icon {
         color: rgba(255, 255, 255, 0.65);
         font-size: 16px;
@@ -30,18 +30,22 @@
       .ant-input {
         color: @menu-search-input-text;
         text-align: left;
-        background-color: @menu-search-input-bg;
+        background-color: transparent;
         border-color: @menu-search-input-border;
+        border-color: #eee;
+        border-radius: 0;
         &:focus,
         &:hover {
-          border-color: #f3f3f3;
+          background-color: fade(@primary-color, 10%);
+          border-color: fade(@primary-color, 0%);
+          border-radius: 0;
         }
         &:focus {
-          box-shadow: 0 0 0 2px @menu-search-input-border-shadow;
+          box-shadow: none;
         }
       }
       .anticon {
-        color: #5d6470;
+        color: fade(@primary-color, 85%);
       }
     }
     .layout-menu {
@@ -54,16 +58,19 @@
       }
     }
     .layout-menu-collapse {
-      color: rgba(255, 255, 255, 0.65);
+      color: fade(@black, 65%);
       line-height: 40px;
       text-align: center;
-      background-color: rgba(245, 241, 241, 0.1);
+      background-color: transparent;
+      border-top: 1px solid @primary-color;
       cursor: pointer;
+      transition: all 0.3s;
       .collapse-icon {
         margin-right: 10px;
       }
       &:hover {
-        color: #fff;
+        color: @primary-color;
+        background-color: fade(@primary-color, 8%);
       }
     }
     .ant-menu-inline {

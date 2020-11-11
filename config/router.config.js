@@ -35,6 +35,17 @@ const routes = [
         component: './Dashboard',
       },
       {
+        path: '/auth',
+        namd: '后台配置',
+        routes: [
+          {
+            path: '/auth/user',
+            name: '用户',
+            component: './User',
+          },
+        ],
+      },
+      {
         path: '/log',
         namd: '日志分析',
         routes: [

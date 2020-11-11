@@ -2,18 +2,21 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:57:34
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-05 10:05:31
+ * @Last Modified time: 2020-11-10 16:46:38
  */
 import { utils } from 'suid';
-import { constants, userInfoOperation } from '@/utils';
+import { constants } from '@/utils';
 
 const { request } = utils;
-const { getCurrentUser } = userInfoOperation;
-const { SERVER_PATH, MOCKER_PATH } = constants;
+const { SERVER_PATH, LOCAL_PATH } = constants;
 
+/** 获取所有的大屏模板 */
 export const getMenu = () => {
-  const { userId } = getCurrentUser() || {};
-  return request.get(`${MOCKER_PATH}/sei-basic/user/getUserAuthorizedMenus?userId=${userId}`);
+  const url = `${LOCAL_PATH}/local/menu.json`;
+  return request({
+    url,
+    method: 'GET',
+  });
 };
 
 /** 收藏菜单 */

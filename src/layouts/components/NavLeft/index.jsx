@@ -6,7 +6,6 @@ import cls from 'classnames';
 import { isEqual } from 'lodash';
 import { eventBus } from '@/utils';
 import MenuSearch from '@/components/MenuSearch';
-import collapsedLogo from '../../../assets/sei.png';
 
 import styles from './index.less';
 
@@ -79,14 +78,6 @@ class NavLeft extends React.Component {
             {item.iconType ? <Icon type={item.iconType} /> : null}
             <span>{item.title}</span>
           </Link>
-          <Icon
-            className={cls({
-              'collect-icon-actived': item.favorite,
-              'collect-icon': true,
-            })}
-            type="star"
-            onClick={e => this.handleCollect(e, item)}
-          />
         </>
       );
     }
@@ -96,15 +87,6 @@ class NavLeft extends React.Component {
           {item.iconType ? <Icon type={item.iconType} /> : null}
           <span>{item.title}</span>
         </span>
-        <Icon
-          className={cls({
-            'collect-icon-actived': item.favorite,
-            'collect-icon': true,
-          })}
-          type="star"
-          theme={item.favorite ? 'twoTone' : ''}
-          onClick={e => this.handleCollect(e, item)}
-        />
       </>
     );
   };
@@ -150,7 +132,6 @@ class NavLeft extends React.Component {
   render() {
     const { currentSelectedKeys, openKeys } = this.state;
     const { collapsed, menuConfig = [], allLeafMenus, onCollapse, onSelectSearchMenu } = this.props;
-    const collapsedMenuLogo = collapsedLogo;
     return (
       <div
         className={cls({
@@ -159,13 +140,9 @@ class NavLeft extends React.Component {
         })}
       >
         <div className="layout-logo" onClick={this.handleLogoClick}>
-          {collapsed ? (
-            <img src={collapsedMenuLogo} alt="logo" />
-          ) : (
-            <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 24, fontWeight: 700 }}>
-              开发运维平台
-            </span>
-          )}
+          <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 24, fontWeight: 700 }}>
+            {collapsed ? 'SEI' : '开发运维平台'}
+          </span>
         </div>
         <div className="layout-menu-search">
           {!collapsed ? (
@@ -197,7 +174,6 @@ class NavLeft extends React.Component {
                 defaultOpenKeys={openKeys}
                 selectedKeys={currentSelectedKeys}
                 mode="inline"
-                theme="dark"
                 inlineCollapsed={collapsed}
               >
                 {this.renderMenu(menuConfig)}
