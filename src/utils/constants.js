@@ -2,12 +2,12 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-12 13:51:31
+ * @Last Modified time: 2020-11-12 14:39:12
  */
 import { name } from '../../package.json';
 
 /** 服务接口基地址，默认是当前站点的域名地址 */
-const BASE_DOMAIN = '/';
+const BASE_DOMAIN = '';
 
 /**
  * 非生产环境下是使用mocker开发，还是与真实后台开发或联调
