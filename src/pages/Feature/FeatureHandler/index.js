@@ -187,7 +187,7 @@ class FeatureHandler extends Component {
     const toolBarProps = {
       left: (
         <>
-          <Button type="primary" onClick={this.add}>
+          <Button type="primary" ghost onClick={this.add}>
             <FormattedMessage id="global.add" defaultMessage="新建" />
           </Button>
           <Button onClick={this.reloadData}>
