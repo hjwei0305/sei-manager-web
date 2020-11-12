@@ -39,6 +39,11 @@ const routes = [
         namd: '后台配置',
         routes: [
           {
+            path: '/auth/feature',
+            name: '功能项',
+            component: './Feature',
+          },
+          {
             path: '/auth/user',
             name: '用户',
             component: './User',

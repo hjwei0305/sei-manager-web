@@ -5,10 +5,10 @@ export default {
     secure: false,
     pathRewrite: { '^/mocker.api': '' },
   },
-  '/sei-manager': {
-    target: 'http://dsei.changhong.com/sei-manager',
+  '/api-gateway': {
+    target: 'http://dsei.changhong.com',
     changeOrigin: true,
     secure: false,
-    pathRewrite: { '^/sei-manager': '' },
+    pathRewrite: { '^/api-gateway': '' },
   },
 };

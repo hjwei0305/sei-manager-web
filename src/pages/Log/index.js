@@ -16,7 +16,7 @@ import LogDetail from './components/LogDetail';
 import LogLevel from './components/LogLevel';
 import styles from './index.less';
 
-const { LEVEL_CATEGORY, LOG_ACTION } = constants;
+const { LEVEL_CATEGORY, LOG_ACTION, SERVER_PATH } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'level', operator: 'EQ', value: null },
@@ -547,7 +547,7 @@ class LogList extends PureComponent {
       searchPlaceHolder: '输入关键字查询',
       store: {
         type: 'POST',
-        url: `/sei-manager/log/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/log/findByPage`,
         params: this.getFilter(),
       },
       cascadeParams: {

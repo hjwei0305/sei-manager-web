@@ -16,7 +16,6 @@ class Login extends Component {
   static loginReqId = utils.getUUID();
 
   state = {
-    showTenant: false,
     showVertifCode: false,
   };
 
@@ -43,12 +42,6 @@ class Login extends Component {
       }).then(res => {
         const { success, data } = res || {};
         if (success) {
-          /** 多租户 */
-          if (data.loginStatus === 'multiTenant') {
-            this.setState({
-              showTenant: true,
-            });
-          }
           /** 验证码 */
           if (data.loginStatus === 'captchaError') {
             dispatch({
@@ -87,7 +80,7 @@ class Login extends Component {
   render() {
     const { loading, user } = this.props;
     const { verifyCode } = user;
-    const { showTenant, showVertifCode } = this.state;
+    const { showVertifCode } = this.state;
     const isLoading = loading.effects['user/userLogin'];
 
     return (
@@ -116,7 +109,6 @@ class Login extends Component {
           loginReqId={this.loginReqId}
           verifyCode={verifyCode}
           loading={isLoading}
-          showTenant={showTenant}
           showVertifCode={showVertifCode}
         >
           <Button

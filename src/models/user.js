@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-28 15:18:54
+ * @Last Modified time: 2020-11-12 09:59:11
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -129,8 +129,7 @@ export default {
     *userLogin({ payload }, { put, take }) {
       const result = yield userLogin({ ...payload, locale: adaptLocale(getCurrentLocale()) });
       const { success, data, message: msg } = result || {};
-      const { loginStatus } = data || {};
-      if (success && loginStatus === 'success') {
+      if (success) {
         yield put({
           type: 'menu/updateState',
           payload: {
@@ -159,11 +158,7 @@ export default {
           message: '请求错误',
           description: msg,
         });
-        if (loginStatus === 'passwordExpire') {
-          router.replace(`/updatePwd?account=${data.account}&tenant=${data.tenantCode}`);
-        }
       }
-
       return result;
     },
     *updatePwd({ payload }, { call }) {

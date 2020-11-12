@@ -3,7 +3,6 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { Icon } from 'antd';
 import FullScreen from '@/components/FullScreen';
-import SelectModule from './components/SelectModule';
 import UserIcon from './components/UserIcon';
 
 import styles from './index.less';
@@ -29,8 +28,8 @@ class Header extends React.Component {
             float: 'left',
           }}
         >
-          <SelectModule />
           <span
+            style={{ marginLeft: 24 }}
             className={cls({ trigger: true, trigger_active: !activedKey })}
             onClick={this.handleHomeClick}
           >

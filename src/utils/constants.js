@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-05 10:05:18
+ * @Last Modified time: 2020-11-12 13:51:31
  */
 import { name } from '../../package.json';
 
@@ -104,6 +104,12 @@ const LOG_ACTION = {
   BY_TRANCE_ID: 'traceId',
 };
 
+const REQUEST_TYPE = {
+  POST: { key: 'POST', color: '#49cc90' },
+  GET: { key: 'GET', color: '#61affe' },
+  DELETE: { key: 'DELETE', color: '#f93e3e' },
+};
+
 export default {
   NoMenuPages,
   APP_BASE,
@@ -116,4 +122,5 @@ export default {
   LOG_ACTION,
   MOCKER_PATH,
   MANAGER_CONTEXT,
+  REQUEST_TYPE,
 };

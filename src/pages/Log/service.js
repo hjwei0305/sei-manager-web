@@ -12,7 +12,7 @@ const { SERVER_PATH } = constants;
  * @serviceName string
  */
 export async function getLogDetail(params) {
-  const url = `/sei-manager/log/detail`;
+  const url = `${SERVER_PATH}/sei-manager/log/detail`;
   return request({
     url,
     method: 'GET',
@@ -26,7 +26,7 @@ export async function getLogDetail(params) {
  * @serviceName string
  */
 export async function getTranceLog(params) {
-  const url = `/sei-manager/log/findByTraceId`;
+  const url = `${SERVER_PATH}/sei-manager/log/findByTraceId`;
   return request({
     url,
     method: 'GET',
@@ -38,7 +38,7 @@ export async function getTranceLog(params) {
  * 获取当前所有可用应用服务清单
  */
 export async function getServices() {
-  const url = `/sei-manager/application/getServices`;
+  const url = `${SERVER_PATH}/sei-manager/application/getServices`;
   return request({
     url,
     method: 'GET',

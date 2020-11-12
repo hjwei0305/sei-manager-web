@@ -123,9 +123,7 @@ class LoginForm extends Component {
       form,
       errorMsg,
       children,
-      showTenant,
       showVertifCode,
-      tenantCode,
       account,
       timeoutLogin,
     } = this.props;
@@ -138,21 +136,6 @@ class LoginForm extends Component {
         {errorMsg ? (
           <FormItem style={FormItemStyle}>
             {getFieldDecorator('errMessage')(<span className="errMessage">{errorMsg}</span>)}
-          </FormItem>
-        ) : null}
-        {showTenant ? (
-          <FormItem>
-            {getFieldDecorator('tenant', {
-              initialValue: tenantCode,
-              rules: [{ required: true, message: '请输入租户账号!' }],
-            })(
-              <Input
-                size="large"
-                disabled={loading || !!tenantCode}
-                prefix={<Icon type="user" style={colorStyle} />}
-                placeholder="租户账号"
-              />,
-            )}
           </FormItem>
         ) : null}
         <FormItem className="user-account">

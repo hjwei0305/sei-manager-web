@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-05 10:06:05
+ * @Last Modified time: 2020-11-11 18:12:28
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -54,11 +54,14 @@ export const bindingSocialAccount = data =>
  * tenant {string} 租户
  * id {string} 唯一值
  */
-export async function userLogin(params) {
-  return request.post(`${MOCKER_PATH}/sei-auth/auth/login`, params, {
+export async function userLogin(data) {
+  return request({
     headers: {
       needToken: false,
     },
+    url: `${SERVER_PATH}/sei-manager/user/login`,
+    method: 'POST',
+    data,
   });
 }
 
@@ -68,7 +71,7 @@ export async function userLogin(params) {
  */
 export async function userLogout(params) {
   return request({
-    url: `${SERVER_PATH}/sei-auth/auth/logout`,
+    url: `${SERVER_PATH}/sei-manager/user/logout`,
     method: 'POST',
     data: params.sid,
   });
