@@ -1,0 +1,46 @@
+@import '../../themes/vars.less';
+.container-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background-color: @page-background-color;
+  :global {
+    .left-content {
+      position: relative;
+      height: 100%;
+      .ant-card-head {
+        height: 60px;
+        padding: 0 8px 0 24px;
+        border-bottom-color: transparent;
+      }
+      .header-tool-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+        padding: 0 24px;
+      }
+      .ant-card-body {
+        height: calc(100% - 60px);
+        padding: 0;
+        .tree-body {
+          height: calc(100% - 60px);
+          padding: 0 0 0 24px;
+        }
+        .account-node {
+          display: flex;
+          align-items: center;
+          .title {
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+    .main-content {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      height: 100%;
+    }
+  }
+}

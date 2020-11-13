@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-11 18:12:28
+ * @Last Modified time: 2020-11-12 16:58:39
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -67,13 +67,11 @@ export async function userLogin(data) {
 
 /**
  * 用户退出
- * @param  {object} params {sid: ''}
  */
-export async function userLogout(params) {
+export async function userLogout() {
   return request({
     url: `${SERVER_PATH}/sei-manager/user/logout`,
     method: 'POST',
-    data: params.sid,
   });
 }
 
@@ -86,11 +84,6 @@ export async function getVerifyCode(reqId) {
       needToken: false,
     },
   });
-}
-
-/** 清除用户缓存 */
-export async function clearUserAuthCaches(userId) {
-  return request.post(`${SERVER_PATH}/sei-basic/user/clearUserAuthorizedCaches/${userId}`);
 }
 
 export const getPortrait = (params = {}) =>

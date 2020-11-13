@@ -35,18 +35,10 @@ class BasicLayout extends React.Component {
     });
     if (userId) {
       dispatch({
-        type: 'menu/updateState',
+        type: 'menu/getMenus',
         payload: {
-          menuTrees: [],
-          currMenuTree: null,
+          userId,
         },
-      }).then(() => {
-        dispatch({
-          type: 'menu/getMenus',
-          payload: {
-            userId,
-          },
-        });
       });
     }
     window.addEventListener('message', this.delegateTab, false);
@@ -222,8 +214,7 @@ class BasicLayout extends React.Component {
                   payload: {
                     activedMenu: currMenu,
                   },
-                });
-                // .then(() => router.push(currMenu.url));
+                }).then(() => router.push(currMenu.url));
               }}
               favoriteMenus={favoriteMenus}
               allLeafMenus={allLeafMenus}

@@ -44,6 +44,11 @@ const routes = [
             component: './Feature',
           },
           {
+            path: '/auth/menu',
+            name: '菜单管理',
+            component: './Menu',
+          },
+          {
             path: '/auth/user',
             name: '用户',
             component: './User',

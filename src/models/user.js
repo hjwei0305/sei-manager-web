@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-12 09:59:11
+ * @Last Modified time: 2020-11-12 16:59:01
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -12,7 +12,6 @@ import {
   userLogin,
   userLogout,
   bindingSocialAccount,
-  clearUserAuthCaches,
   getVerifyCode,
   getUserByXsid,
   updatePwd,
@@ -32,11 +31,9 @@ const {
   setCurrentUser,
   setSessionId,
   clearUserInfo,
-  getSessionId,
   setCurrentLocale,
   getCurrentLocale,
   adaptLocale,
-  getCurrentUser,
   setCurrentPolicy,
 } = userInfoOperation;
 
@@ -195,9 +192,7 @@ export default {
     },
     *userLogout(_, { put }) {
       router.replace('/user/login');
-      const user = getCurrentUser();
-      yield clearUserAuthCaches(user.userId);
-      yield userLogout({ sid: getSessionId() });
+      yield userLogout();
       clearUserInfo();
       yield put({
         type: 'updateState',

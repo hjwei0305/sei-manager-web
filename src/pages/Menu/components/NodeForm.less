@@ -1,0 +1,105 @@
+@import '../../../themes/vars.less';
+.node-form {
+  flex: 1 1;
+  height: 100%;
+  padding: 0;
+  background-color: @white;
+  :global {
+    .scrollbar-container {
+      width: 100%;
+    }
+    .base-view-body {
+      height: 100%;
+      background-color: @white;
+      .header {
+        height: 60px;
+        padding: 0 24px;
+        color: fade(@black, 85%);
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 60px;
+      }
+      .tool-bar-box {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+        padding: 0 16px;
+        background-color: @white;
+        border-bottom: 1px solid #eee;
+        .tool-action-box {
+          button {
+            margin-left: 8px;
+          }
+        }
+        .tool-right-box {
+          display: flex;
+          align-items: center;
+          .all-in-one-search {
+            width: 220px;
+          }
+          & > span,
+          & > .ant-select {
+            margin-left: 16px;
+          }
+          & > .ant-dropdown-trigger {
+            cursor: pointer;
+          }
+          button {
+            margin-left: 8px;
+          }
+        }
+      }
+      .form-box {
+        display: flex;
+        justify-content: flex-start;
+        height: calc(100% - 120px);
+        background-color: fade(@black, 1%);
+        .form-body {
+          width: 520px;
+          padding: 24px;
+          .box-item {
+            .title {
+              color: fade(@black, 85%);
+              &::before {
+                display: inline-block;
+                margin-right: 4px;
+                color: #f5222d;
+                font-size: 14px;
+                font-family: SimSun, sans-serif;
+                line-height: 1;
+                content: '*';
+              }
+            }
+            .app-icon-box {
+              height: 120px;
+              .app-icon {
+                text-align: center;
+                img {
+                  width: 44px;
+                  height: 44px;
+                  border-radius: 4px;
+                }
+              }
+              .tool-box {
+                width: 360px;
+                > * {
+                  width: 100%;
+                }
+                .desc {
+                  margin-top: 8px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.pop-confirm-box {
+  z-index: 1050;
+}

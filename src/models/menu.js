@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-28 15:01:58
+ * @Last Modified time: 2020-11-13 11:38:56
  */
 import { router } from 'umi';
 import { utils } from 'suid';
@@ -15,7 +15,7 @@ const { storage } = utils;
 
 const { NoMenuPages, RECENT_MENUS_KEY, RECENT_APP_EKY } = constants;
 const { getTreeLeaf, traverseCopyTrees } = treeOperation;
-const { getCurrentUser } = userInfoOperation;
+const { getCurrentUser, setCurrentAuth } = userInfoOperation;
 
 /** 是否刷新页面的时候的第一次路由 */
 let init = true;
@@ -105,10 +105,19 @@ export default {
 
   effects: {
     *getMenus(_, { put, call }) {
+      yield put({
+        type: '_updateState',
+        payload: {
+          menuTrees: [],
+          currMenuTree: null,
+        },
+      });
       const result = yield call(getMenu);
       const { success, data } = result || {};
       if (success) {
-        const menuTrees = traverseCopyTrees(data, adapterMenus);
+        const { menus, permissions } = data;
+        setCurrentAuth(permissions);
+        const menuTrees = traverseCopyTrees(menus, adapterMenus);
         let tmpCurrMenuTree = menuTrees[0];
         // 获取用户最后一次使用的应用如果有就默认作为当前应用
         const userInfo = getCurrentUser();
