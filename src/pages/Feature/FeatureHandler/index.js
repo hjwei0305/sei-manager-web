@@ -217,9 +217,7 @@ class FeatureHandler extends Component {
     return (
       <div className={cls(styles['feature-page-box'])}>
         <Card
-          title={
-            <BannerTitle title={`${get(selectedFeaturePage, 'name')}`} subTitle="页面功能权限" />
-          }
+          title={<BannerTitle title={`${get(selectedFeaturePage, 'name')}`} subTitle="功能权限" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />

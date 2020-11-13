@@ -4,7 +4,6 @@ import cls from 'classnames';
 import { router } from 'umi';
 import { Helmet } from 'react-helmet';
 import { ScrollBar } from 'suid';
-import { formatMessage } from 'umi-plugin-react/locale';
 import { userInfoOperation } from '@/utils';
 import ConfirmLoginModal from '@/pages/Login/ConfirmLoginModal';
 import Header from './components/Header';
@@ -183,12 +182,12 @@ class BasicLayout extends React.Component {
     } = menu;
     const isSubAppRouter = this.isSubAppRouter();
     let activedKey = '';
-    let title = formatMessage({ id: 'app.dashboard', desc: '平台首页' });
+    let title = '开发运维平台';
     if (activedMenu) {
       const { id, title: tempTitle, rootName } = activedMenu;
       activedKey = id;
       if (rootName) {
-        title = `${currMenuTree && currMenuTree.title}-${tempTitle}`;
+        title = `开发运维平台-${tempTitle}`;
       } else {
         title = tempTitle;
       }
@@ -218,8 +217,7 @@ class BasicLayout extends React.Component {
               }}
               favoriteMenus={favoriteMenus}
               allLeafMenus={allLeafMenus}
-              onLogoClick={this.handleLogoClick}
-              menuConfig={currMenuTree ? currMenuTree.children || [] : []}
+              menuConfig={currMenuTree ? currMenuTree || [] : []}
               onMenuClick={currMenu => {
                 this.handleTabs('open', {
                   activedMenu: currMenu,

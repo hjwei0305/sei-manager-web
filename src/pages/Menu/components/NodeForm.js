@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
-import { cloneDeep, get, isEqual } from 'lodash';
+import { get } from 'lodash';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Button, Form, Input, Popconfirm, InputNumber } from 'antd';
 import { ScrollBar, ExtIcon, ComboGrid, BannerTitle } from 'suid';
@@ -37,40 +37,17 @@ const formItemLayout = {
   },
 })
 class NodeForm extends PureComponent {
-  componentDidMount() {
-    const { editData } = this.props;
-    this.formEditData = cloneDeep(editData) || {};
-  }
-
-  componentDidUpdate(prevProps) {
-    const { editData } = this.props;
-    if (!isEqual(prevProps.editData, editData)) {
-      this.formEditData = cloneDeep(editData) || {};
-    }
-  }
-
   onFormSubmit = e => {
     e.stopPropagation();
-    const { form, saveMenu } = this.props;
-    let formData = null;
-    form.validateFields({ force: true }, (err, values) => {
-      if (!err) {
-        formData = values;
+    const { form, editData, saveMenu } = this.props;
+    form.validateFields({ force: true }, (err, formData) => {
+      if (err) {
+        return false;
       }
+      const params = { ...editData };
+      Object.assign(params, formData);
+      saveMenu(params);
     });
-    if (formData) {
-      Object.assign(this.formEditData, formData);
-      saveMenu(this.formEditData);
-    }
-  };
-
-  getInitValueByFields = (field, value) => {
-    const { editData } = this.props;
-    let tempData = value;
-    if (!tempData) {
-      tempData = get(editData, field);
-    }
-    return tempData;
   };
 
   handlerDelete = (e, id) => {
@@ -173,8 +150,8 @@ class NodeForm extends PureComponent {
     const { form, loading, editData } = this.props;
     const { getFieldDecorator } = form;
     const title = this.getFormTitle();
-    getFieldDecorator('featureId', { initialValue: this.getInitValueByFields('featureId') });
-    getFieldDecorator('featureCode', { initialValue: this.getInitValueByFields('featureCode') });
+    getFieldDecorator('featureId', { initialValue: get(editData, 'featureId') });
+    getFieldDecorator('featureCode', { initialValue: get(editData, 'featureCode') });
     const featureProps = {
       form,
       allowClear: true,
@@ -238,7 +215,7 @@ class NodeForm extends PureComponent {
               <Form {...formItemLayout} className="form-body" layout="vertical">
                 <FormItem label="菜单名称">
                   {getFieldDecorator('name', {
-                    initialValue: this.getInitValueByFields('name'),
+                    initialValue: get(editData, 'name'),
                     rules: [
                       {
                         required: true,
@@ -250,7 +227,7 @@ class NodeForm extends PureComponent {
                 {hasIcon ? (
                   <FormItem label="图标类名">
                     {getFieldDecorator('iconCls', {
-                      initialValue: this.getInitValueByFields('iconCls'),
+                      initialValue: get(editData, 'iconCls'),
                       rules: [
                         {
                           required: true,
@@ -262,7 +239,7 @@ class NodeForm extends PureComponent {
                 ) : null}
                 <FormItem label="序号">
                   {getFieldDecorator('rank', {
-                    initialValue: this.getInitValueByFields('rank'),
+                    initialValue: get(editData, 'rank'),
                     rules: [
                       {
                         required: true,
@@ -277,7 +254,7 @@ class NodeForm extends PureComponent {
                 {editData.children && editData.children.length === 0 && editData.parentId ? (
                   <FormItem label="菜单项">
                     {getFieldDecorator('featureName', {
-                      initialValue: this.getInitValueByFields('featureName'),
+                      initialValue: get(editData, 'featureName'),
                       rules: [
                         {
                           required: false,

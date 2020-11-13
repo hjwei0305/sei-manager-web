@@ -27,7 +27,10 @@ export class TempLoginLayout extends PureComponent {
     return (
       <>
         <Helmet>
-          <title>{formatMessage({ id: 'login.login', desc: '登录' })}</title>
+          <title>{`${formatMessage({ id: 'app.title', desc: '开发运维平台' })}-${formatMessage({
+            id: 'login.login',
+            desc: '登录',
+          })}`}</title>
           <meta name="description" content={formatMessage({ id: 'login.login', desc: '登录' })} />
         </Helmet>
         <div

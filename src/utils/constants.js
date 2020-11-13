@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-12 14:39:12
+ * @Last Modified time: 2020-11-13 14:42:56
  */
 import { name } from '../../package.json';
 
@@ -110,6 +110,13 @@ const REQUEST_TYPE = {
   DELETE: { key: 'DELETE', color: '#f93e3e' },
 };
 
+const ROLE_VIEW = {
+  CONFIG_STATION: 'config-station',
+  CONFIG_USER: 'config-user',
+  STATION: 'role-station',
+  USER: 'role-user',
+};
+
 export default {
   NoMenuPages,
   APP_BASE,
@@ -123,4 +130,5 @@ export default {
   MOCKER_PATH,
   MANAGER_CONTEXT,
   REQUEST_TYPE,
+  ROLE_VIEW,
 };

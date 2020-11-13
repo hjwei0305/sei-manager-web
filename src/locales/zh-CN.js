@@ -2,6 +2,7 @@ import pwa from './zh-CN/pwa';
 import login from './zh-CN/login';
 
 export default {
+  'app.title': '开发运维平台',
   'app.dashboard': '平台首页',
   'app.dashboard.custom': '自定义首页',
   'app.logout': '退出',

@@ -1,0 +1,31 @@
+@import '../../../../../../themes/vars.less';
+.user-panel-box {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background-color: @page-background-color;
+  :global {
+    .suid-list-card-tool-box {
+      button {
+        margin-right: 8px;
+      }
+    }
+    .org-box {
+      height: 100%;
+      background-color: @white;
+      .search-box {
+        position: relative;
+        height: 42px;
+        padding: 0 16px;
+        overflow: hidden;
+        line-height: 42px;
+        text-align: center;
+      }
+      .org-body {
+        height: ~'calc(100% - 42px)';
+        max-height: ~'calc(100% - 42px)';
+      }
+    }
+  }
+}

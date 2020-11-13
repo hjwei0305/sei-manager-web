@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-13 11:38:56
+ * @Last Modified time: 2020-11-13 14:58:52
  */
 import { router } from 'umi';
 import { utils } from 'suid';
@@ -13,7 +13,7 @@ import { traverseTrees } from '@/utils/tree';
 
 const { storage } = utils;
 
-const { NoMenuPages, RECENT_MENUS_KEY, RECENT_APP_EKY } = constants;
+const { NoMenuPages, RECENT_MENUS_KEY } = constants;
 const { getTreeLeaf, traverseCopyTrees } = treeOperation;
 const { getCurrentUser, setCurrentAuth } = userInfoOperation;
 
@@ -118,30 +118,17 @@ export default {
         const { menus, permissions } = data;
         setCurrentAuth(permissions);
         const menuTrees = traverseCopyTrees(menus, adapterMenus);
-        let tmpCurrMenuTree = menuTrees[0];
-        // 获取用户最后一次使用的应用如果有就默认作为当前应用
-        const userInfo = getCurrentUser();
-        if (userInfo && userInfo.userId) {
-          const key = `${RECENT_APP_EKY}_${userInfo.userId}`;
-          const recentApp = storage.localStorage.get(key);
-          if (recentApp) {
-            const recentMenuTree = menuTrees.filter(m => m.id === recentApp.id);
-            if (recentMenuTree.length === 1) {
-              [tmpCurrMenuTree] = recentMenuTree;
-            }
-          }
-        }
         const allLeafMenus = getTreeLeaf(menuTrees);
         const favoriteMenus = allLeafMenus.filter(item => item.favorite);
         const payload = {
           menuTrees,
           allLeafMenus,
           favoriteMenus,
-          currMenuTree: tmpCurrMenuTree,
+          currMenuTree: menuTrees,
         };
         if (initPathname) {
           const temp = allLeafMenus.concat(NoMenuPages).filter(item => item.url === initPathname);
-          let currMenuTree = menuTrees[0];
+          let currMenuTree = menuTrees;
           for (let i = menuTrees.length - 1; i >= 0; i -= 1) {
             const leafMenus = getTreeLeaf([menuTrees[i]]);
             // eslint-disable-next-line @typescript-eslint/no-loop-func
@@ -526,18 +513,10 @@ export default {
 
   reducers: {
     _updateState(state, { payload }) {
-      const { currMenuTree, menuTrees } = state;
       const { activedMenu } = payload;
-      const { id, activedRefresh, rootId } = activedMenu || {};
+      const { id, activedRefresh } = activedMenu || {};
       if (activedMenu && activedRefresh) {
         eventBus.emit(`${id}_refresh`);
-      }
-
-      if (currMenuTree && rootId && currMenuTree.id !== rootId) {
-        const tempArr = menuTrees.filter(item => item.id === rootId);
-        const [tempCurrMenuTree] = tempArr;
-        // eslint-disable-next-line no-param-reassign
-        payload.currMenuTree = tempCurrMenuTree;
       }
       return {
         ...state,

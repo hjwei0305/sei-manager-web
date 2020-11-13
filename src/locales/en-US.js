@@ -2,6 +2,7 @@ import pwa from './en-US/pwa';
 import login from './en-US/login';
 
 export default {
+  'app.title': 'DevOps Platform',
   'app.dashboard': 'Home',
   'app.dashboard.custom': 'Custom Dashboard',
   'app.logout': 'Logout',
