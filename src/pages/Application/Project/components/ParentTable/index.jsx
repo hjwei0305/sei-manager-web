@@ -4,9 +4,11 @@ import cls from 'classnames';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { utils, ExtIcon, ListCard, ComboList } from 'suid';
 import { get } from 'lodash';
+import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
+const { CI_SERVER_PATH } = constants;
 const { authAction } = utils;
 
 @connect(({ project, loading }) => ({ project, loading }))
@@ -142,7 +144,7 @@ class CascadeTableMaster extends Component {
       store: {
         type: 'GET',
         autoLoad: true,
-        url: `http://127.0.0.1:7001/appModule/findAll`,
+        url: `${CI_SERVER_PATH}/appModule/findAll`,
       },
       reader: {
         name: item => `${item.name}(${item.code})`,
@@ -218,7 +220,7 @@ class CascadeTableMaster extends Component {
       store: applicationId
         ? {
             type: 'GET',
-            url: `http://127.0.0.1:7001/project/findProjectByAppId`,
+            url: `${CI_SERVER_PATH}/project/findProjectByAppId`,
           }
         : null,
       searchProperties: ['name', 'description'],
@@ -347,7 +349,7 @@ class CascadeTableMaster extends Component {
       },
       store: {
         type: 'POST',
-        url: `http://127.0.0.1:7001/project/findAll`,
+        url: `${CI_SERVER_PATH}/project/findAll`,
       },
     };
   };

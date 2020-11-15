@@ -5,14 +5,15 @@
  * @Last Modified time: 2020-04-23 09:49:29
  */
 import { utils } from 'suid';
+import { constants } from '@/utils';
 
+const { CI_SERVER_PATH } = constants;
 const { request } = utils;
-const MockServerPath = 'http://127.0.0.1:7001';
 const contextPath = '/deploy';
 
 /** 保存父表格数据 */
 export async function saveParent(data) {
-  const url = `${MockServerPath}${contextPath}/save`;
+  const url = `${CI_SERVER_PATH}${contextPath}/save`;
   return request({
     url,
     method: 'POST',
@@ -22,7 +23,7 @@ export async function saveParent(data) {
 
 /** 保存字表行数据 */
 export async function saveChild(data) {
-  const url = `${MockServerPath}${contextPath}/saveJobItem`;
+  const url = `${CI_SERVER_PATH}${contextPath}/saveJobItem`;
   return request({
     url,
     method: 'POST',
@@ -32,7 +33,7 @@ export async function saveChild(data) {
 
 /** 删除父亲表格数据 */
 export async function delParentRow(params) {
-  const url = `${MockServerPath}${contextPath}/delete/${params.id}`;
+  const url = `${CI_SERVER_PATH}${contextPath}/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -41,7 +42,7 @@ export async function delParentRow(params) {
 
 /** 删除字表格数据 */
 export async function delChildRow(params) {
-  const url = `${MockServerPath}${contextPath}/deleteItem/${params.id}`;
+  const url = `${CI_SERVER_PATH}${contextPath}/deleteItem/${params.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -50,7 +51,7 @@ export async function delChildRow(params) {
 
 export const creatJenkinsJob = async data =>
   request({
-    url: 'http://127.0.0.1:7001/jenkins/createJob',
+    url: `${CI_SERVER_PATH}/jenkins/createJob`,
     method: 'POST',
     data,
   });

@@ -26,7 +26,7 @@ class AppModule extends Component {
     return (
       <PageWrapper loading={loading.global} className={cls(styles['container-box'])}>
         <CascadeLayout
-          title={['应用', `${currPRowData ? currPRowData.name : ''}`]}
+          title={['应用列表', `${currPRowData ? currPRowData.name : ''}`]}
           layout={[10, 14]}
           className={cls({
             hide_ele: isQuickCreate,

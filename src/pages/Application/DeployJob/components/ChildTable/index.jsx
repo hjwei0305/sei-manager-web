@@ -4,9 +4,11 @@ import cls from 'classnames';
 import { Button, Popconfirm } from 'antd';
 import { isEqual } from 'lodash';
 import { ExtTable, utils, ExtIcon } from 'suid';
+import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from '../../index.less';
 
+const { CI_SERVER_PATH } = constants;
 const { authAction } = utils;
 
 @connect(({ deployJob, loading }) => ({ deployJob, loading }))
@@ -287,7 +289,7 @@ class ChildTable extends Component {
       allowCancelSelect: true,
       store: {
         type: 'POST',
-        url: `http://127.0.0.1:7001/deploy/findItemsByJobId`,
+        url: `${CI_SERVER_PATH}/deploy/findItemsByJobId`,
       },
     };
   };

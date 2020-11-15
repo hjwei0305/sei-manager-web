@@ -3,9 +3,11 @@ import { connect } from 'dva';
 import cls from 'classnames';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { utils, ExtIcon, ExtTable } from 'suid';
+import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
+const { CI_SERVER_PATH } = constants;
 const { authAction } = utils;
 
 @connect(({ deployJob, loading }) => ({ deployJob, loading }))
@@ -232,7 +234,7 @@ class CascadeTableMaster extends Component {
       },
       store: {
         type: 'POST',
-        url: `http://127.0.0.1:7001/deploy/findAll`,
+        url: `${CI_SERVER_PATH}/deploy/findAll`,
       },
     };
   };

@@ -27,6 +27,8 @@ const getServerPath = () => {
 
 const MOCKER_PATH = 'http://202.98.157.34:8100/mock/5f98deffbd240382b5a7c400/sei-manager-web';
 
+const CI_SERVER_PATH = 'http://10.4.208.130:7001';
+
 /** 项目的站点基地址 */
 const APP_BASE = name;
 
@@ -131,4 +133,5 @@ export default {
   MANAGER_CONTEXT,
   REQUEST_TYPE,
   ROLE_VIEW,
+  CI_SERVER_PATH,
 };

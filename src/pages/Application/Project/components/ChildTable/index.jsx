@@ -5,11 +5,13 @@ import { Button, Badge } from 'antd';
 import { isEqual } from 'lodash';
 import { ExtTable, utils, ExtIcon } from 'suid';
 import moment from 'moment';
+import { constants } from '@/utils';
 import FormModal from './FormModal';
 import DeployDrawer from './DeployDrawer';
 import Logs from './Logs';
 import styles from '../../index.less';
 
+const { CI_SERVER_PATH } = constants;
 const accessToken = '59b1ca687d160740156091a5cf853408634b72bd98db4942da1be1647fad0b8a';
 const { authAction } = utils;
 
@@ -78,7 +80,7 @@ class ChildTable extends Component {
       type: 'project/save',
       payload: {
         ...rowData,
-        accessToken: '59b1ca687d160740156091a5cf853408634b72bd98db4942da1be1647fad0b8a',
+        accessToken,
       },
     }).then(res => {
       if (res.success) {
@@ -380,7 +382,7 @@ class ChildTable extends Component {
       bordered: false,
       cascadeParams: {
         projectId: currPRowData && currPRowData.id,
-        accessToken: '59b1ca687d160740156091a5cf853408634b72bd98db4942da1be1647fad0b8a',
+        accessToken,
       },
       selectedRowKeys,
       searchProperties: ['code', 'name'],
@@ -399,7 +401,7 @@ class ChildTable extends Component {
       allowCancelSelect: true,
       store: {
         type: 'POST',
-        url: `http://127.0.0.1:7001/tag/findByProjectId`,
+        url: `${CI_SERVER_PATH}/tag/findByProjectId`,
       },
     };
   };

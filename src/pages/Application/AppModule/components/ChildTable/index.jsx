@@ -4,9 +4,11 @@ import cls from 'classnames';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { isEqual } from 'lodash';
 import { ExtTable, utils, ExtIcon } from 'suid';
+import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from '../../index.less';
 
+const { CI_SERVER_PATH } = constants;
 const { authAction } = utils;
 
 @connect(({ appModule, loading }) => ({ appModule, loading }))
@@ -267,7 +269,7 @@ class ChildTable extends Component {
       allowCancelSelect: true,
       store: {
         type: 'GET',
-        url: `http://127.0.0.1:7001/project/findProjectByAppId`,
+        url: `${CI_SERVER_PATH}/project/findProjectByAppId`,
       },
     };
   };

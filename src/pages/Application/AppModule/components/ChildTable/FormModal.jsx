@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Select } from 'antd';
 import { ExtModal, ScrollBar, ComboList } from 'suid';
 import { get } from 'lodash';
+import { constants } from '@/utils';
 
+const { CI_SERVER_PATH } = constants;
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -30,7 +32,7 @@ class FormModal extends PureComponent {
       showSearch: false,
       store: {
         type: 'POST',
-        url: `http://127.0.0.1:7001/deploy/findAll`,
+        url: `${CI_SERVER_PATH}/deploy/findAll`,
       },
       reader: {
         name: 'name',

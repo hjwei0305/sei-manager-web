@@ -5,17 +5,17 @@
  * @Last Modified time: 2020-04-23 09:49:29
  */
 import { utils } from 'suid';
+import { constants } from '@/utils';
 
+const { CI_SERVER_PATH } = constants;
 const { request } = utils;
-const MockServerPath = 'http://127.0.0.1:7001';
 const project_contextPath = '/project';
 const app_contextPath = '/appModule';
-// const MockServerPath = 'http://rddgit.changhong.com:7300/mock/5e02d29836608e42d52b1d81/template-service';
 const contextPath = '/simple-master';
 
 /** 保存父表格数据 */
 export async function saveParent(data) {
-  const url = `${MockServerPath}${app_contextPath}/save`;
+  const url = `${CI_SERVER_PATH}${app_contextPath}/save`;
   return request({
     url,
     method: 'POST',
@@ -25,7 +25,7 @@ export async function saveParent(data) {
 
 /** 快速创建 */
 export async function quickCreate(data) {
-  const url = `${MockServerPath}${app_contextPath}/quickCreate`;
+  const url = `${CI_SERVER_PATH}${app_contextPath}/quickCreate`;
   return request({
     url,
     method: 'POST',
@@ -35,7 +35,7 @@ export async function quickCreate(data) {
 
 /** 保存字表行数据 */
 export async function saveChild(data) {
-  const url = `${MockServerPath}${project_contextPath}/save`;
+  const url = `${CI_SERVER_PATH}${project_contextPath}/save`;
   return request({
     url,
     method: 'POST',
@@ -45,7 +45,7 @@ export async function saveChild(data) {
 
 /** 删除父亲表格数据 */
 export async function delParentRow(params) {
-  const url = `${MockServerPath}${app_contextPath}/delete/${params.id}`;
+  const url = `${CI_SERVER_PATH}${app_contextPath}/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -54,7 +54,7 @@ export async function delParentRow(params) {
 
 /** 删除字表格数据 */
 export async function delChildRow(params) {
-  const url = `${MockServerPath}${contextPath}/delete/${params.id}`;
+  const url = `${CI_SERVER_PATH}${contextPath}/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -66,7 +66,7 @@ export async function delChildRow(params) {
  */
 export async function getGroups(data) {
   return request({
-    url: `${MockServerPath}${project_contextPath}/getProjectGroupList`,
+    url: `${CI_SERVER_PATH}${project_contextPath}/getProjectGroupList`,
     method: 'POST',
     data,
   });
