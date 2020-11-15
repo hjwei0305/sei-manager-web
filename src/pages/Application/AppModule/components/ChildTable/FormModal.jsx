@@ -172,12 +172,6 @@ class FormModal extends PureComponent {
               <FormItem label="部署配置">
                 {getFieldDecorator('jobName', {
                   initialValue: get(rowData, 'deployJob.name', ''),
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入部署配置',
-                    },
-                  ],
                 })(<ComboList disabled={!!isSaving} {...this.getComboListProps()} />)}
               </FormItem>
             </Form>
