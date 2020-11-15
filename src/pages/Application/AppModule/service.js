@@ -11,7 +11,6 @@ const { CI_SERVER_PATH } = constants;
 const { request } = utils;
 const project_contextPath = '/project';
 const app_contextPath = '/appModule';
-const contextPath = '/simple-master';
 
 /** 保存父表格数据 */
 export async function saveParent(data) {
@@ -54,7 +53,7 @@ export async function delParentRow(params) {
 
 /** 删除字表格数据 */
 export async function delChildRow(params) {
-  const url = `${CI_SERVER_PATH}${contextPath}/delete/${params.id}`;
+  const url = `${CI_SERVER_PATH}${project_contextPath}/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
