@@ -123,6 +123,19 @@ class FormModal extends PureComponent {
                   ],
                 })(<Input disabled={!!isSaving} onChange={this.handleValueChange} />)}
               </FormItem>
+              {form.getFieldValue('versionType') === 'release' ? (
+                <FormItem label="参考标签">
+                  {getFieldDecorator('refTag', {
+                    initialValue: get(rowData, 'refTag'),
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入参考标签',
+                      },
+                    ],
+                  })(<Input disabled={!!isSaving} />)}
+                </FormItem>
+              ) : null}
               <FormItem label="标签名称">
                 {getFieldDecorator('name', {
                   initialValue: get(rowData, 'name', 'bata'),

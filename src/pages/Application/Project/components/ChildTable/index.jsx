@@ -329,6 +329,13 @@ class ChildTable extends Component {
         required: true,
       },
       {
+        title: '关联标签',
+        dataIndex: 'refTag',
+        width: 120,
+        required: true,
+        render: refTag => refTag || '-',
+      },
+      {
         title: '发布状态',
         dataIndex: 'deploymentStatus',
         width: 120,
