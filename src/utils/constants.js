@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-13 14:42:56
+ * @Last Modified time: 2020-11-16 15:46:38
  */
 import { name } from '../../package.json';
 
@@ -119,6 +119,17 @@ const ROLE_VIEW = {
   USER: 'role-user',
 };
 
+/** 功能类型 */
+const FEATURE_TYPE = {
+  PAGE: 'Page',
+  OPERATE: 'Operate',
+};
+
+const USER_ACTION = {
+  RESET_PASSWORD: 'reset-password',
+  FEATURE_ROLE: 'feature-role',
+};
+
 export default {
   NoMenuPages,
   APP_BASE,
@@ -133,5 +144,7 @@ export default {
   MANAGER_CONTEXT,
   REQUEST_TYPE,
   ROLE_VIEW,
+  FEATURE_TYPE,
+  USER_ACTION,
   CI_SERVER_PATH,
 };

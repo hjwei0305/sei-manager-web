@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter } from 'umi';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { Button, Popconfirm, Tag } from 'antd';
@@ -9,9 +8,8 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 
-@withRouter
 @connect(({ labelLibrary, loading }) => ({ labelLibrary, loading }))
 class LabelLibrary extends Component {
   state = {
@@ -26,7 +24,6 @@ class LabelLibrary extends Component {
 
   handleEvent = (type, row) => {
     const { dispatch } = this.props;
-
     switch (type) {
       case 'add':
       case 'edit':
@@ -189,7 +186,7 @@ class LabelLibrary extends Component {
       searchProperties: ['name', 'remark'],
       store: {
         type: 'POST',
-        url: `${MANAGER_CONTEXT}/labelLibrary/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/labelLibrary/findByPage`,
       },
     };
   };

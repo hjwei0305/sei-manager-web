@@ -1,48 +1,43 @@
 import React, { Component } from 'react';
 import cls from 'classnames';
-import { isEqual } from 'lodash';
+import { isEqual, without, uniqBy, get } from 'lodash';
 import { connect } from 'dva';
 import { Button, Input, Drawer, Tree, Empty, Tooltip } from 'antd';
-import { ScrollBar, ListLoader, ExtIcon, ComboList } from 'suid';
-import { constants } from '@/utils';
-import styles from './UnAssignFeatureItem.less';
+import { ScrollBar, ListLoader, ExtIcon } from 'suid';
+import { constants, getAllParentIdsByNode, getAllChildIdsByNode } from '@/utils';
+import styles from './UnAssignFeature.less';
 
-const { FEATURE_TYPE, SERVER_PATH } = constants;
+const { FEATURE_TYPE } = constants;
 const { Search } = Input;
 const { TreeNode } = Tree;
 const childFieldKey = 'children';
 const hightLightColor = '#f50';
 
 @connect(({ featureRole, loading }) => ({ featureRole, loading }))
-class UnAssignFeatureItem extends Component {
+class UnAssignFeature extends Component {
   constructor(props) {
     super(props);
     this.state = {
       allValue: '',
-      appModuleId: '',
-      appModuleName: '',
       checkedKeys: [],
-      pageKeys: [],
       unAssignListData: [],
     };
   }
 
   componentDidUpdate(prevProps) {
-    const { featureRole, showAssignFeature } = this.props;
-    if (!isEqual(prevProps.featureRole.currentRole, featureRole.currentRole)) {
+    const { featureRole } = this.props;
+    const { showAssignFeature } = featureRole;
+    if (!isEqual(prevProps.featureRole.selectedFeatureRole, featureRole.selectedFeatureRole)) {
       this.setState({
         checkedKeys: [],
         unAssignListData: [],
       });
     }
-    if (!isEqual(prevProps.showAssignFeature, showAssignFeature) && showAssignFeature === true) {
-      this.setState(
-        {
-          checkedKeys: [],
-          pageKeys: [],
-        },
-        this.getUnAssignData,
-      );
+    if (
+      !isEqual(prevProps.featureRole.showAssignFeature, showAssignFeature) &&
+      showAssignFeature === true
+    ) {
+      this.setState({ checkedKeys: [] }, this.getUnAssignData);
     }
     if (!isEqual(prevProps.featureRole.unAssignListData, featureRole.unAssignListData)) {
       this.setState(
@@ -60,15 +55,13 @@ class UnAssignFeatureItem extends Component {
   }
 
   getUnAssignData = () => {
-    const { appModuleId } = this.state;
     const { featureRole, dispatch } = this.props;
-    const { currentRole } = featureRole;
-    if (currentRole && appModuleId) {
+    const { selectedFeatureRole } = featureRole;
+    if (selectedFeatureRole) {
       dispatch({
         type: 'featureRole/getUnAssignedFeatureItemList',
         payload: {
-          appModuleId,
-          featureRoleId: currentRole.id,
+          featureRoleId: selectedFeatureRole.id,
         },
       });
     }
@@ -77,29 +70,45 @@ class UnAssignFeatureItem extends Component {
   assignFeatureItem = e => {
     e.stopPropagation();
     const { featureRole, dispatch } = this.props;
-    const { currentRole } = featureRole;
-    const { checkedKeys, pageKeys } = this.state;
-    if (checkedKeys.length > 0) {
-      const childIds = checkedKeys.concat(pageKeys);
+    const { selectedFeatureRole } = featureRole;
+    const { checkedKeys: childIds } = this.state;
+    if (childIds.length > 0) {
       dispatch({
         type: 'featureRole/assignFeatureItem',
         payload: {
-          parentId: currentRole.id,
+          parentId: selectedFeatureRole.id,
           childIds,
         },
         callback: res => {
           if (res.success) {
             this.handlerClose(true);
+            this.refreshAssignData();
           }
         },
       });
     }
   };
 
-  handlerClose = refresh => {
-    const { closeAssignFeatureItem } = this.props;
-    if (closeAssignFeatureItem) {
-      closeAssignFeatureItem(refresh);
+  handlerClose = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'featureRole/updateState',
+      payload: {
+        showAssignFeature: false,
+      },
+    });
+  };
+
+  refreshAssignData = () => {
+    const { featureRole, dispatch } = this.props;
+    const { selectedFeatureRole } = featureRole;
+    if (selectedFeatureRole) {
+      dispatch({
+        type: 'featureRole/getAssignFeatureItem',
+        payload: {
+          parentId: selectedFeatureRole.id,
+        },
+      });
     }
   };
 
@@ -112,14 +121,29 @@ class UnAssignFeatureItem extends Component {
     this.setState({ unAssignListData });
   };
 
-  handlerCheckedChange = (checkedKeys, { halfCheckedKeys: pageKeys }) => {
-    this.setState({ checkedKeys, pageKeys });
+  handlerCheckedChange = (checkedKeys, e) => {
+    const { unAssignListData } = this.state;
+    const { checked: nodeChecked } = e;
+    const nodeId = get(e, 'node.props.eventKey', null) || null;
+    const { checked } = checkedKeys;
+    let originCheckedKeys = [...checked];
+    const pids = getAllParentIdsByNode(unAssignListData, nodeId);
+    const cids = getAllChildIdsByNode(unAssignListData, nodeId);
+    if (nodeChecked) {
+      // 选中：所有父节点选中，及所有子节点选中
+      originCheckedKeys.push(...pids);
+      originCheckedKeys.push(...cids);
+    } else {
+      // 取消：父节点状态不变，所有子节点取消选中
+      originCheckedKeys = without(originCheckedKeys, ...cids);
+    }
+    const checkedData = uniqBy([...originCheckedKeys], id => id);
+    this.setState({ checkedKeys: checkedData });
   };
 
   onCancelBatchAssignedFeatureItem = () => {
     this.setState({
       checkedKeys: [],
-      pageKeys: [],
     });
   };
 
@@ -172,16 +196,6 @@ class UnAssignFeatureItem extends Component {
   renderNodeIcon = featureType => {
     let icon = null;
     switch (featureType) {
-      case FEATURE_TYPE.APP_MODULE:
-        icon = (
-          <ExtIcon
-            type="appstore"
-            tooltip={{ title: '应用模块' }}
-            antd
-            style={{ color: '#13c2c2' }}
-          />
-        );
-        break;
       case FEATURE_TYPE.PAGE:
         icon = <ExtIcon type="doc" tooltip={{ title: '页面' }} style={{ color: '#722ed1' }} />;
         break;
@@ -247,6 +261,7 @@ class UnAssignFeatureItem extends Component {
         defaultExpandAll
         blockNode
         showIcon
+        checkStrictly
         autoExpandParent={false}
         switcherIcon={<ExtIcon type="down" antd style={{ fontSize: 12 }} />}
         onCheck={this.handlerCheckedChange}
@@ -258,32 +273,12 @@ class UnAssignFeatureItem extends Component {
   };
 
   render() {
-    const { showAssignFeature, loading } = this.props;
+    const { featureRole, loading } = this.props;
+    const { showAssignFeature } = featureRole;
     const assigning = loading.effects['featureRole/assignFeatureItem'];
-    const { checkedKeys, appModuleName, allValue, appModuleId } = this.state;
+    const { checkedKeys, allValue } = this.state;
     const checkCount = checkedKeys.length;
     const loadingUnAssigned = loading.effects['featureRole/getUnAssignedFeatureItemList'];
-    const appModulePros = {
-      style: { width: 180 },
-      placeholder: '请选择应用模块',
-      store: {
-        url: `${SERVER_PATH}/sei-basic/tenantAppModule/getTenantAppModules`,
-      },
-      value: appModuleName,
-      afterSelect: item => {
-        this.setState(
-          {
-            appModuleId: item.id,
-            appModuleName: item.name,
-          },
-          this.getUnAssignData,
-        );
-      },
-      reader: {
-        name: 'name',
-        description: 'code',
-      },
-    };
     return (
       <Drawer
         width={520}
@@ -291,17 +286,23 @@ class UnAssignFeatureItem extends Component {
         getContainer={false}
         placement="right"
         visible={showAssignFeature}
-        title="分配功能项"
+        title="分配权限"
         className={cls(styles['feature-item-box'])}
         onClose={this.handlerClose}
         style={{ position: 'absolute' }}
       >
         <div className="header-tool-box">
-          <div className="app-box">
-            <span className="label">应用模块</span>
-            <ComboList {...appModulePros} />
-          </div>
           <div className="tool-search-box">
+            <Button
+              style={{ marginLeft: 8 }}
+              className="refresh"
+              type="reload"
+              antd
+              loading={loadingUnAssigned}
+              onClick={this.getUnAssignData}
+            >
+              刷新
+            </Button>
             <Search
               placeholder="输入名称关键字查询"
               value={allValue}
@@ -310,16 +311,6 @@ class UnAssignFeatureItem extends Component {
               onPressEnter={this.handlerSearch}
               style={{ width: 172 }}
             />
-            {appModuleId ? (
-              <ExtIcon
-                style={{ marginLeft: 8 }}
-                className="refresh"
-                type="reload"
-                antd
-                spin={loadingUnAssigned}
-                onClick={this.getUnAssignData}
-              />
-            ) : null}
           </div>
           <Drawer
             placement="top"
@@ -356,4 +347,4 @@ class UnAssignFeatureItem extends Component {
   }
 }
 
-export default UnAssignFeatureItem;
+export default UnAssignFeature;

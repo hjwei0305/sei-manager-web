@@ -32,7 +32,7 @@ class GroupEdit extends Component {
     return (
       <Popover
         trigger="click"
-        placement="leftTop"
+        placement="rightTop"
         visible={visible}
         key="form-popover-box"
         destroyTooltipOnHide

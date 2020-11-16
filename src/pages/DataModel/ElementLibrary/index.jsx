@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter } from 'umi';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { Button, Popconfirm, Tag } from 'antd';
@@ -9,9 +8,8 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 
-@withRouter
 @connect(({ elementLibrary, loading }) => ({ elementLibrary, loading }))
 class ElementLibrary extends Component {
   state = {
@@ -212,7 +210,7 @@ class ElementLibrary extends Component {
       remotePaging: true,
       store: {
         type: 'POST',
-        url: `${MANAGER_CONTEXT}/elementLibrary/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/elementLibrary/findByPage`,
       },
     };
   };

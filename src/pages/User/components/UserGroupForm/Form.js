@@ -1,14 +1,11 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
-import { toUpper, trim } from 'lodash';
+import { get } from 'lodash';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Form, Input } from 'antd';
-import { ComboList, utils } from 'suid';
-import { constants } from '@/utils';
+import { BannerTitle } from 'suid';
 import styles from './Form.less';
 
-const { objectAssignAppend } = utils;
-const { SERVER_PATH } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -21,14 +18,6 @@ const formItemLayout = {
 
 @Form.create()
 class FeatureGroupForm extends PureComponent {
-  constructor(props) {
-    super(props);
-    const { groupData } = this.props;
-    this.state = {
-      currentAppModuleCode: groupData ? groupData.appModuleCode : '',
-    };
-  }
-
   handlerFormSubmit = () => {
     const { form, saveFeatureGroup, groupData, handlerPopoverHide } = this.props;
     const { validateFields, getFieldsValue } = form;
@@ -36,69 +25,26 @@ class FeatureGroupForm extends PureComponent {
       if (errors) {
         return;
       }
-      const data = objectAssignAppend(getFieldsValue(), groupData || {});
-      data.code = `${data.appModuleCode}-${toUpper(trim(data.code))}`;
-      saveFeatureGroup(data, handlerPopoverHide);
+      const params = { ...groupData };
+      Object.assign(params, getFieldsValue());
+      saveFeatureGroup(params, handlerPopoverHide);
     });
   };
 
-  getCode = () => {
-    const { groupData } = this.props;
-    let newCode = '';
-    if (groupData) {
-      const { code, appModuleCode } = groupData;
-      newCode = code.substring(appModuleCode.length + 1);
-    }
-    return newCode;
-  };
-
   render() {
-    const { currentAppModuleCode } = this.state;
     const { form, groupData, saving } = this.props;
     const { getFieldDecorator } = form;
-    const title = groupData ? '编辑功能项组' : '新建功能项组';
-    getFieldDecorator('appModuleId', { initialValue: groupData ? groupData.appModuleId : '' });
-    getFieldDecorator('appModuleCode', { initialValue: groupData ? groupData.appModuleCode : '' });
-    const appModuleProps = {
-      form,
-      name: 'appModuleName',
-      field: ['appModuleId', 'appModuleCode'],
-      searchPlaceHolder: '输入名称关键字查询',
-      store: {
-        url: `${SERVER_PATH}/sei-basic/appModule/findAllUnfrozen`,
-      },
-      afterSelect: item => {
-        this.setState({ currentAppModuleCode: item.code });
-      },
-      reader: {
-        name: 'name',
-        field: ['id', 'code'],
-      },
-    };
+    const title = groupData ? '编辑' : '新建';
     return (
       <div key="form-box" className={cls(styles['form-box'])}>
         <div className="base-view-body">
           <div className="header">
-            <span className="title">{title}</span>
+            <BannerTitle title={title} subTitle="用户组" />
           </div>
           <Form {...formItemLayout}>
-            <FormItem label="应用模块">
-              {getFieldDecorator('appModuleName', {
-                initialValue: groupData ? groupData.appModuleName : '',
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({
-                      id: 'feature.group.appModule.required',
-                      defaultMessage: '请选择应用模块',
-                    }),
-                  },
-                ],
-              })(<ComboList {...appModuleProps} />)}
-            </FormItem>
             <FormItem label={formatMessage({ id: 'global.name', defaultMessage: '名称' })}>
               {getFieldDecorator('name', {
-                initialValue: groupData ? groupData.name : '',
+                initialValue: get(groupData, 'name'),
                 rules: [
                   {
                     required: true,
@@ -112,7 +58,7 @@ class FeatureGroupForm extends PureComponent {
             </FormItem>
             <FormItem label="代码">
               {getFieldDecorator('code', {
-                initialValue: this.getCode(),
+                initialValue: get(groupData, 'code'),
                 rules: [
                   {
                     required: true,
@@ -122,17 +68,7 @@ class FeatureGroupForm extends PureComponent {
                     }),
                   },
                 ],
-              })(
-                <Input
-                  disabled={!!groupData}
-                  addonBefore={`${currentAppModuleCode}-`}
-                  maxLength={30}
-                  placeholder={formatMessage({
-                    id: 'global.code.tip',
-                    defaultMessage: '规则:名称各汉字首字母大写',
-                  })}
-                />,
-              )}
+              })(<Input maxLength={30} />)}
             </FormItem>
             <FormItem wrapperCol={{ span: 4, offset: 5 }} className="btn-submit">
               <Button type="primary" loading={saving} onClick={this.handlerFormSubmit}>

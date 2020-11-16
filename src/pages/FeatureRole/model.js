@@ -3,7 +3,6 @@ import { utils, message } from 'suid';
 import {
   delFeatureRole,
   saveFeatureRole,
-  getFeatureRoleList,
   assignFeatureItem,
   removeAssignedFeatureItem,
   getUnAssignedFeatureItemList,
@@ -23,31 +22,19 @@ export default modelExtend(model, {
   namespace: 'featureRole',
 
   state: {
-    listData: [],
-    currentRole: null,
+    currentFeatureRole: null,
+    selectedFeatureRole: null,
+    showRoleFormModal: false,
     showAssignFeature: false,
-    showConfigStation: false,
-    showConfigUser: false,
     assignListData: [],
     unAssignListData: [],
+
+    showConfigStation: false,
+    showConfigUser: false,
     assignUserData: [],
     assinStationData: [],
   },
   effects: {
-    *getFeatureRoleList({ payload }, { call, put }) {
-      const re = yield call(getFeatureRoleList, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            showAssignFeature: false,
-            listData: re.data,
-          },
-        });
-      } else {
-        message.error(re.message);
-      }
-    },
     *saveFeatureRole({ payload, callback }, { call, put }) {
       const re = yield call(saveFeatureRole, payload);
       message.destroy();
@@ -56,7 +43,7 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            currentRole: re.data,
+            selectedFeatureRole: re.data,
           },
         });
       } else {
@@ -74,7 +61,8 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            currentRole: null,
+            currentFeatureRole: null,
+            selectedFeatureRole: null,
           },
         });
       } else {
@@ -84,17 +72,11 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *assignFeatureItem({ payload, callback }, { call, put }) {
+    *assignFeatureItem({ payload, callback }, { call }) {
       const re = yield call(assignFeatureItem, payload);
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.assign-success', defaultMessage: '分配成功' }));
-        yield put({
-          type: 'updateState',
-          payload: {
-            showAssignFeature: false,
-          },
-        });
       } else {
         message.error(re.message);
       }

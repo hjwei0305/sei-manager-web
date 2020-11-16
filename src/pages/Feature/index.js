@@ -180,7 +180,7 @@ class Feature extends Component {
     const { currentFeaturePage, showPageFormModal, showPageHandler, selectedFeaturePage } = feature;
     const { listData } = this.state;
     const selectedKeys = selectedFeaturePage ? [selectedFeaturePage.id] : [];
-    const featureGroupprops = {
+    const featurePageProps = {
       className: 'left-content',
       title: '页面功能项',
       showSearch: false,
@@ -218,7 +218,7 @@ class Feature extends Component {
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
           <Sider width={420} className="auto-height" theme="light">
-            <ListCard {...featureGroupprops} />
+            <ListCard {...featurePageProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
             {showPageHandler ? (
