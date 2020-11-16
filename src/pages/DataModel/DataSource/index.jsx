@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 @withRouter
 @connect(({ dataSource, loading }) => ({ dataSource, loading }))
 class DataSource extends Component {
@@ -206,7 +206,7 @@ class DataSource extends Component {
       searchPlaceHolder: '请输入代码和描述进行搜索',
       store: {
         type: 'POST',
-        url: `${MANAGER_CONTEXT}/dataSource/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/dataSource/findByPage`,
       },
     };
   };

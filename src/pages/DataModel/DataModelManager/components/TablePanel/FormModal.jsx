@@ -3,7 +3,7 @@ import { Form, Input } from 'antd';
 import { ExtModal, ComboGrid } from 'suid';
 import { constants } from '@/utils';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -37,7 +37,7 @@ class FormModal extends PureComponent {
       store: {
         type: 'POST',
         autoLoad: false,
-        url: `${MANAGER_CONTEXT}/dataSource/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/dataSource/findByPage`,
       },
       columns: [
         {

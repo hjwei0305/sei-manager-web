@@ -9,7 +9,7 @@ import PageWrapper from '@/components/PageWrapper';
 import EditModal from './EditModal';
 import styles from './index.less';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 
 @withRouter
 @connect(({ dataType, loading }) => ({ dataType, loading }))
@@ -240,7 +240,7 @@ class DataType extends Component {
       remotePaging: true,
       store: {
         type: 'POST',
-        url: `${MANAGER_CONTEXT}/dataType/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/dataType/findByPage`,
       },
     };
   };

@@ -8,7 +8,7 @@ import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from '../../index.less';
 
-const { MANAGER_CONTEXT } = constants;
+const { SERVER_PATH } = constants;
 
 @connect(({ dataModelManager, loading }) => ({ dataModelManager, loading }))
 class ConfigModelFields extends Component {
@@ -276,7 +276,7 @@ class ConfigModelFields extends Component {
       toolBar: toolBarProps,
       store: {
         type: 'GET',
-        url: `${MANAGER_CONTEXT}/dataModel/getDataModelFields?modelId=${dataModel.id}`,
+        url: `${SERVER_PATH}/sei-manager/dataModel/getDataModelFields?modelId=${dataModel.id}`,
       },
       searchProperties: ['fieldName'],
       searchPlaceHolder: '输入字段名进行搜索',
