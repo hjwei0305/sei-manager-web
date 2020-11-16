@@ -73,13 +73,15 @@ class DeployDrawer extends Component {
     if (onDeploy) {
       onDeploy({
         tagId: tag.id,
-        jobName: jobItem.name || 'test_node_jenkins_pipline_pc',
+        jobName: jobItem.name,
         parameters: {
           PROJECT_NAME: project.name,
           PROJECT_VERSION: '0.0.1',
           PROJECT_GIT_PATH: project.gitUrl,
-          BRANCH: 'dev',
-          // BRANCH: tag.name,
+          BETA_VERSION: tag.refTag,
+          RELEASE_VERSION: tag.name,
+          // BRANCH: 'dev',
+          BRANCH: tag.name,
         },
       });
     }
