@@ -34,7 +34,7 @@ class Logs extends Component {
           const { deploymentStatus, buildLog } = data;
           this.setState(
             {
-              buildLog,
+              buildLog: buildLog || '暂无日志',
               deploymentStatus,
             },
             () => {
