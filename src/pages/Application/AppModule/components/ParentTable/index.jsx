@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { Button, Popconfirm, Tooltip } from 'antd';
-import { utils, ExtIcon, ExtTable } from 'suid';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { Button, Popconfirm, Input } from 'antd';
+import { utils, ExtIcon, ListCard } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
 const { CI_SERVER_PATH } = constants;
 const { authAction } = utils;
+const { Search } = Input;
 
 @connect(({ appModule, loading }) => ({ appModule, loading }))
 class CascadeTableMaster extends Component {
+  static listCardRef;
+
   state = {
     delRowId: null,
   };
@@ -68,7 +72,8 @@ class CascadeTableMaster extends Component {
     });
   };
 
-  del = record => {
+  del = (record, e) => {
+    e.stopPropagation();
     const { dispatch, appModule } = this.props;
     const { currPRowData } = appModule;
     this.setState(
@@ -116,23 +121,6 @@ class CascadeTableMaster extends Component {
     });
   };
 
-  renderDelBtn = row => {
-    const { loading } = this.props;
-    const { delRowId } = this.state;
-    if (loading.effects['appModule/delPRow'] && delRowId === row.id) {
-      return <ExtIcon className="del-loading" type="loading" antd />;
-    }
-    return (
-      <ExtIcon
-        onClick={e => e.stopPropagation()}
-        tooltip={{ title: '删除' }}
-        className="del"
-        type="delete"
-        antd
-      />
-    );
-  };
-
   handleQuickCreate = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -157,113 +145,109 @@ class CascadeTableMaster extends Component {
   };
 
   reloadData = () => {
-    if (this.tableRef) {
-      this.tableRef.remoteDataRefresh();
+    if (this.listCardRef) {
+      this.listCardRef.remoteDataRefresh();
     }
   };
 
-  getExtableProps = () => {
+  handlerAppSelect = (keys, items) => {
     const { dispatch } = this.props;
-    const columns = [
-      {
-        title: '操作',
-        key: 'operation',
-        width: 90,
-        align: 'center',
-        dataIndex: 'id',
-        className: 'action',
-        required: true,
-        render: (_, record) => {
-          return (
-            <>
-              <div className="action-box" onClick={e => e.stopPropagation()}>
-                {authAction(
-                  <ExtIcon
-                    key="edit"
-                    className="edit"
-                    onClick={e => this.edit(record, e)}
-                    type="edit"
-                    ignore="true"
-                    tooltip={{ title: '编辑' }}
-                    antd
-                  />,
-                )}
-                {record.frozen ? null : (
-                  <Popconfirm
-                    key="delete"
-                    placement="topLeft"
-                    title="确定要删除吗？"
-                    onCancel={e => e.stopPropagation()}
-                    onConfirm={e => {
-                      this.del(record);
-                      e.stopPropagation();
-                    }}
-                  >
-                    {this.renderDelBtn(record)}
-                  </Popconfirm>
-                )}
-              </div>
-            </>
-          );
-        },
+    const currPRowData = keys.length === 1 ? items[0] : null;
+    dispatch({
+      type: 'appModule/updateState',
+      payload: {
+        currPRowData,
       },
-      {
-        title: '代码',
-        dataIndex: 'code',
-        width: 120,
-        required: true,
-      },
-      {
-        title: '名称',
-        dataIndex: 'name',
-        width: 160,
-        required: true,
-        render: (text, record) => <Tooltip title={record.className}>{text}</Tooltip>,
-      },
-    ];
+    });
+  };
 
-    const toolBarProps = {
-      left: (
-        <>
-          {/* {authAction(
-            <Button key="add" type="primary" onClick={this.add} ignore="true">
-              新建
-            </Button>,
-          )} */}
-          {authAction(
-            <Button key="quickCreate" type="primary" onClick={this.handleQuickCreate} ignore="true">
-              新建
-            </Button>,
+  handlerSearchChange = v => {
+    this.listCardRef.handlerSearchChange(v);
+  };
+
+  handlerPressEnter = () => {
+    this.listCardRef.handlerPressEnter();
+  };
+
+  handlerSearch = v => {
+    this.listCardRef.handlerSearch(v);
+  };
+
+  renderCustomTool = () => (
+    <>
+      <div>
+        {authAction(
+          <Button type="primary" ignore="true" onClick={this.handleQuickCreate}>
+            新建
+          </Button>,
+        )}
+      </div>
+      <Search
+        allowClear
+        placeholder="输入名称关键字查询"
+        onChange={e => this.handlerSearchChange(e.target.value)}
+        onSearch={this.handlerSearch}
+        onPressEnter={this.handlerPressEnter}
+        style={{ width: 180 }}
+      />
+    </>
+  );
+
+  renderItemAction = item => {
+    const { loading } = this.props;
+    const { delRowId } = this.state;
+    return (
+      <>
+        <div className="tool-action" onClick={e => e.stopPropagation()}>
+          <ExtIcon
+            className={cls('action-item')}
+            type="edit"
+            antd
+            onClick={e => this.edit(item, e)}
+          />
+          {item.frozen ? null : (
+            <Popconfirm
+              title={formatMessage({
+                id: 'global.delete.confirm',
+                defaultMessage: '确定要删除吗?',
+              })}
+              onConfirm={e => this.del(item, e)}
+            >
+              {loading.effects['featureRole/delFeatureRole'] && delRowId === item.id ? (
+                <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
+              ) : (
+                <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
+              )}
+            </Popconfirm>
           )}
-          <Button onClick={this.reloadData}>刷新</Button>
-        </>
-      ),
-    };
-    return {
-      bordered: false,
-      // remotePaging: true,
-      searchProperties: ['code', 'name'],
-      columns,
-      toolBar: toolBarProps,
-      onSelectRow: (_, selectedRows) => {
-        dispatch({
-          type: 'appModule/updatePageState',
-          payload: {
-            currPRowData: selectedRows[0],
-          },
-        });
-      },
-      store: {
-        type: 'GET',
-        url: `${CI_SERVER_PATH}/appModule/findAll`,
-      },
-    };
+        </div>
+      </>
+    );
   };
 
   render() {
+    const { appModule } = this.props;
+    const { currPRowData } = appModule;
+    const selectedKeys = currPRowData ? [currPRowData.id] : [];
+    const listCardProps = {
+      className: 'left-content',
+      showSearch: false,
+      onSelectChange: this.handlerAppSelect,
+      customTool: this.renderCustomTool,
+      onListCardRef: ref => (this.listCardRef = ref),
+      selectedKeys,
+      itemField: {
+        title: item => item.name,
+        description: item => item.code,
+      },
+      store: {
+        url: `${CI_SERVER_PATH}/appModule/findAll`,
+      },
+      itemTool: this.renderItemAction,
+    };
     return (
       <div className={cls(styles['container-box'])}>
-        <ExtTable onTableRef={inst => (this.tableRef = inst)} {...this.getExtableProps()} />
+        <ListCard {...listCardProps} />
         <FormModal {...this.getFormModalProps()} />
       </div>
     );

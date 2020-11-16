@@ -239,7 +239,7 @@ class ChildTable extends Component {
       left: (
         <Fragment>
           {authAction(
-            <Button key="add" type="primary" onClick={this.add} ignore="true">
+            <Button key="add" type="primary" ghost onClick={this.add} ignore="true">
               新建
             </Button>,
           )}

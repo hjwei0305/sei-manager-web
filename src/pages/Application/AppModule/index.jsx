@@ -27,7 +27,7 @@ class AppModule extends Component {
       <PageWrapper loading={loading.global} className={cls(styles['container-box'])}>
         <CascadeLayout
           title={['应用列表', `${currPRowData ? currPRowData.name : ''}`]}
-          layout={[10, 14]}
+          layout={[6, 18]}
           className={cls({
             hide_ele: isQuickCreate,
           })}
