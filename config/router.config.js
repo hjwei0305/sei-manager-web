@@ -113,6 +113,27 @@ const routes = [
           },
         ],
       },
+      {
+        path: '/app',
+        namd: '数据模型',
+        routes: [
+          {
+            path: '/app/deployJob',
+            name: '部署配置',
+            component: './Application/DeployJob',
+          },
+          {
+            path: '/app/project',
+            name: '部署配置',
+            component: './Application/Project',
+          },
+          {
+            path: '/app/appModule',
+            name: '部署配置',
+            component: './Application/AppModule',
+          },
+        ],
+      },
     ],
   },
 ];

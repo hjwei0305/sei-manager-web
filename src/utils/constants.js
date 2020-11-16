@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-16 15:12:55
+ * @Last Modified time: 2020-11-16 15:46:38
  */
 import { name } from '../../package.json';
 
@@ -26,6 +26,8 @@ const getServerPath = () => {
 };
 
 const MOCKER_PATH = 'http://202.98.157.34:8100/mock/5f98deffbd240382b5a7c400/sei-manager-web';
+
+const CI_SERVER_PATH = 'http://10.4.208.130:7001';
 
 /** 项目的站点基地址 */
 const APP_BASE = name;
@@ -144,4 +146,5 @@ export default {
   ROLE_VIEW,
   FEATURE_TYPE,
   USER_ACTION,
+  CI_SERVER_PATH,
 };
