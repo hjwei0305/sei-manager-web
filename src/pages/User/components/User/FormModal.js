@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { toUpper, trim } from 'lodash';
+import { get } from 'lodash';
 import { Form, Input, Switch } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { ExtModal } from 'suid';
@@ -16,113 +16,83 @@ const formItemLayout = {
 
 @Form.create()
 class FormModal extends PureComponent {
-  handlerFormSubmit = () => {
-    const { form, save, currentUser, currentUserGroup } = this.props;
+  onFormSubmit = () => {
+    const { form, save, currentUser, userGroup } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
       }
       const params = {
-        userGroupId: currentUserGroup.id,
-        userGroupCode: currentUserGroup.code,
-        userGroupName: currentUserGroup.name,
+        userGroupId: userGroup.id,
       };
       Object.assign(params, currentUser || {});
+      Object.assign(params);
       Object.assign(params, formData);
-      params.code = `${params.userGroupCode}-${toUpper(trim(params.code))}`;
       save(params);
     });
   };
 
-  getCode = () => {
-    const { currentUser } = this.props;
-    let newCode = '';
-    if (currentUser) {
-      const { code, userGroupCode } = currentUser;
-      newCode = code.substring(userGroupCode.length + 1);
+  handlerCloseModal = () => {
+    const { closeFormModal } = this.props;
+    if (closeFormModal) {
+      closeFormModal();
     }
-    return newCode;
   };
 
   render() {
-    const {
-      form,
-      currentUser,
-      closeFormModal,
-      saving,
-      showFormModal,
-      currentUserGroup,
-    } = this.props;
+    const { form, currentUser, saving, showFormModal } = this.props;
     const { getFieldDecorator } = form;
     const title = currentUser
       ? formatMessage({
-          id: 'user.page.edit',
-          defaultMessage: '修改菜单项',
+          id: 'global.edit',
+          defaultMessage: '编辑',
         })
-      : formatMessage({ id: 'user.page.add', defaultMessage: '新建菜单项' });
+      : formatMessage({ id: 'global.add', defaultMessage: '新建' });
     return (
       <ExtModal
         destroyOnClose
-        onCancel={closeFormModal}
+        onCancel={this.handlerCloseModal}
         visible={showFormModal}
         centered
-        bodyStyle={{ paddingBottom: 0 }}
         confirmLoading={saving}
-        onOk={this.handlerFormSubmit}
+        maskClosable={false}
+        width={420}
         title={title}
+        onOk={this.onFormSubmit}
       >
         <Form {...formItemLayout} layout="horizontal">
-          <FormItem label={formatMessage({ id: 'global.name', defaultMessage: '名称' })}>
-            {getFieldDecorator('name', {
-              initialValue: currentUser ? currentUser.name : '',
+          <FormItem label="用户编号">
+            {getFieldDecorator('code', {
+              initialValue: get(currentUser, 'code', null),
+              rules: [
+                {
+                  required: true,
+                  message: '用户编号不能为空',
+                },
+                {
+                  pattern: '^[A-Za-z0-9]{1,10}$',
+                  message: '允许输入字母和数字,且不超过10个字符!',
+                },
+              ],
+            })(<Input autoComplete="off" />)}
+          </FormItem>
+          <FormItem label="用户姓名">
+            {getFieldDecorator('userName', {
+              initialValue: get(currentUser, 'userName', null),
               rules: [
                 {
                   required: true,
                   message: formatMessage({
                     id: 'global.name.required',
-                    defaultMessage: '名称不能为空',
+                    defaultMessage: '用户姓名不能为空',
                   }),
                 },
               ],
-            })(<Input />)}
+            })(<Input autoComplete="off" />)}
           </FormItem>
-          <FormItem label={formatMessage({ id: 'global.code', defaultMessage: '代码' })}>
-            {getFieldDecorator('code', {
-              initialValue: this.getCode(),
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({
-                    id: 'global.code.required',
-                    defaultMessage: '代码不能为空',
-                  }),
-                },
-              ],
-            })(
-              <Input
-                addonBefore={`${currentUserGroup.code}-`}
-                maxLength={50 - `${currentUserGroup.code}-`.length}
-                placeholder={formatMessage({
-                  id: 'global.code.tip',
-                  defaultMessage: '规则:名称各汉字首字母大写',
-                })}
-              />,
-            )}
-          </FormItem>
-          <FormItem label="页面路由地址">
-            {getFieldDecorator('groupCode', {
-              initialValue: currentUser ? currentUser.groupCode : '',
-              rules: [
-                {
-                  required: true,
-                  message: '页面路由地址不能为空',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem label={formatMessage({ id: 'user.tenantCanUse', defaultMessage: '租户可用' })}>
-            {getFieldDecorator('tenantCanUse', {
-              initialValue: currentUser ? currentUser.tenantCanUse || false : false,
+          <FormItem label="冻结">
+            {getFieldDecorator('frozen', {
+              initialValue: get(currentUser, 'frozen', false),
               valuePropName: 'checked',
             })(<Switch size="small" />)}
           </FormItem>

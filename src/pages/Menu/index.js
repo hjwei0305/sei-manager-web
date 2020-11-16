@@ -69,6 +69,18 @@ class AppMenu extends Component {
     }
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'appMenu/updateState',
+      payload: {
+        treeData: [],
+        currentNode: null,
+        showMove: false,
+      },
+    });
+  }
+
   addParent = e => {
     e.stopPropagation();
     const { dispatch } = this.props;

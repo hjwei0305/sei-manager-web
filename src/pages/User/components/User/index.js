@@ -1,37 +1,36 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Popconfirm, Button, Card, Tag } from 'antd';
-import { ExtTable, ExtIcon } from 'suid';
-import { BannerTitle } from '@/components';
+import { Button, Card, Tag } from 'antd';
+import { ExtTable, ExtIcon, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
+import ResetModal from './ResetModal';
+import ExtAction from './ExtAction';
 import styles from './index.less';
 
-const { SERVER_PATH } = constants;
+const { MOCKER_PATH, USER_ACTION } = constants;
 
-@connect(({ user, userGroup, loading }) => ({ user, userGroup, loading }))
-class FeaturePage extends Component {
-  static pageTableRef;
+@connect(({ authUser, loading }) => ({ authUser, loading }))
+class AuthUser extends Component {
+  static tableRef;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      delRowId: null,
-    };
-  }
+  static propTypes = {
+    userGroup: PropTypes.object.isRequired,
+  };
 
   reloadData = () => {
-    if (this.pageTableRef) {
-      this.pageTableRef.remoteDataRefresh();
+    if (this.tableRef) {
+      this.tableRef.remoteDataRefresh();
     }
   };
 
   add = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/updateState',
+      type: 'authUser/updateState',
       payload: {
         showFormModal: true,
         currentUser: null,
@@ -42,20 +41,9 @@ class FeaturePage extends Component {
   edit = currentUser => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/updateState',
+      type: 'authUser/updateState',
       payload: {
         showFormModal: true,
-        currentUser,
-      },
-    });
-  };
-
-  showFeatureItem = currentUser => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/updateState',
-      payload: {
-        showFeatureItem: true,
         currentUser,
       },
     });
@@ -64,85 +52,78 @@ class FeaturePage extends Component {
   save = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/saveFeature',
+      type: 'authUser/save',
       payload: {
         ...data,
       },
       callback: res => {
         if (res.success) {
+          this.closeFormModal();
           this.reloadData();
         }
       },
     });
   };
 
-  del = record => {
-    const { dispatch } = this.props;
-    this.setState(
-      {
-        delRowId: record.id,
-      },
-      () => {
-        dispatch({
-          type: 'user/delFeature',
-          payload: {
-            id: record.id,
-          },
-          callback: res => {
-            if (res.success) {
-              this.setState({
-                delRowId: null,
-              });
-              this.reloadData();
-            }
-          },
-        });
-      },
-    );
-  };
-
-  closeFormModal = () => {
+  resetPassword = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/updateState',
+      type: 'authUser/resetPassword',
       payload: {
-        showFormModal: false,
-        currentUser: null,
+        ...data,
+      },
+      callback: res => {
+        if (res.success) {
+          this.closeFormModal();
+        }
       },
     });
   };
 
-  renderDelBtn = row => {
-    const { loading } = this.props;
-    const { delRowId } = this.state;
-    if (loading.effects['user/delFeature'] && delRowId === row.id) {
-      return <ExtIcon className="del-loading" type="loading" antd />;
+  closeFormModal = (currentOrgNode = null) => {
+    const { dispatch } = this.props;
+    const st = {
+      showFormModal: false,
+      showResetPasswordModal: false,
+      showConfigFeatrueRole: false,
+      currentUser: null,
+    };
+    if (currentOrgNode) {
+      st.currentOrgNode = currentOrgNode;
     }
-    return <ExtIcon className="del" type="delete" antd />;
+    dispatch({
+      type: 'authUser/updateState',
+      payload: {
+        ...st,
+      },
+    });
   };
 
-  renderName = row => {
-    let tag;
-    if (row.tenantCanUse) {
-      tag = (
-        <Tag color="green" style={{ marginLeft: 8 }}>
-          租户可用
-        </Tag>
-      );
+  handlerAction = (key, authUser) => {
+    const { dispatch } = this.props;
+    const payload = { currentUser: authUser };
+    const extData = {};
+    switch (key) {
+      case USER_ACTION.RESET_PASSWORD:
+        extData.showResetPasswordModal = true;
+        break;
+      case USER_ACTION.FEATURE_ROLE:
+        extData.showConfigFeatrueRole = true;
+        break;
+      default:
     }
-    return (
-      <>
-        {row.name}
-        {tag}
-      </>
-    );
+    dispatch({
+      type: 'authUser/updateState',
+      payload: {
+        ...payload,
+        ...extData,
+      },
+    });
   };
 
   render() {
-    const { loading, userGroup, user } = this.props;
-    const { currentFeatureGroup } = userGroup;
-    const { appModuleName, name } = currentFeatureGroup;
-    const { showFormModal, currentUser } = user;
+    const { loading, authUser, userGroup } = this.props;
+    const { showFormModal, showResetPasswordModal, currentUser, treeData } = authUser;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -152,46 +133,36 @@ class FeaturePage extends Component {
         dataIndex: 'id',
         className: 'action',
         required: true,
-        render: (text, record) => (
+        render: (_text, record) => (
           <span className={cls('action-box')}>
             <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
-            <Popconfirm
-              placement="topLeft"
-              title={formatMessage({
-                id: 'global.delete.confirm',
-                defaultMessage: '确定要删除吗?',
-              })}
-              onConfirm={() => this.del(record)}
-            >
-              {this.renderDelBtn(record)}
-            </Popconfirm>
-            <ExtIcon
-              className="edit"
-              onClick={() => this.showFeatureItem(record)}
-              type="safety"
-              tooltip={{ title: '页面功能项' }}
-              antd
-            />
+            <ExtAction employeeData={record} onAction={this.handlerAction} />
           </span>
         ),
       },
       {
-        title: formatMessage({ id: 'global.code', defaultMessage: '代码' }),
+        title: '用户编号',
         dataIndex: 'code',
-        width: 200,
-        optional: true,
+        width: 120,
       },
       {
-        title: formatMessage({ id: 'global.name', defaultMessage: '名称' }),
-        dataIndex: 'name',
-        width: 320,
+        title: '用户姓名',
+        dataIndex: 'userName',
+        width: 180,
         required: true,
-        render: (_text, record) => this.renderName(record),
-      },
-      {
-        title: '页面路由地址',
-        dataIndex: 'groupCode',
-        width: 380,
+        render: (text, record) => {
+          if (record.frozen) {
+            return (
+              <>
+                {text}
+                <Tag color="red" style={{ marginLeft: 8 }}>
+                  已冻结
+                </Tag>
+              </>
+            );
+          }
+          return text;
+        },
       },
     ];
     const toolBarProps = {
@@ -210,35 +181,42 @@ class FeaturePage extends Component {
       bordered: false,
       toolBar: toolBarProps,
       columns,
-      cascadeParams: { userGroupId: currentFeatureGroup ? currentFeatureGroup.id : null },
-      onTableRef: ref => (this.pageTableRef = ref),
+      cascadeParams: { userGroupId: userGroup ? userGroup.id : null },
+      onTableRef: ref => (this.tableRef = ref),
+      remotePaging: true,
+      searchPlaceHolder: '请输入用户编号或姓名关键字查询',
+      searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-basic/user/findByFeatureGroupAndType?featureTypes=Page`,
-      },
-      sort: {
-        field: { code: 'asc', name: null, groupCode: null },
+        type: 'POST',
+        url: `${MOCKER_PATH}/sei-manager/user/getUserList`,
       },
     };
     const formModalProps = {
       save: this.save,
+      userGroup,
       currentUser,
       showFormModal,
-      currentFeatureGroup,
+      orgData: treeData,
       closeFormModal: this.closeFormModal,
-      saving: loading.effects['user/saveFeature'],
+      saving: loading.effects['authUser/save'],
+    };
+    const resetModalProps = {
+      save: this.resetPassword,
+      currentUser,
+      showModal: showResetPasswordModal,
+      closeModal: this.closeFormModal,
+      saving: loading.effects['authUser/resetPassword'],
     };
     return (
-      <div className={cls(styles['user-page-box'])}>
-        <Card
-          title={<BannerTitle title={`${appModuleName} > ${name}`} subTitle="用户列表" />}
-          bordered={false}
-        >
+      <div className={cls(styles['authUser-box'])}>
+        <Card title={<BannerTitle title={userGroup.name} subTitle="用户列表" />} bordered={false}>
           <ExtTable {...extTableProps} />
         </Card>
         <FormModal {...formModalProps} />
+        <ResetModal {...resetModalProps} />
       </div>
     );
   }
 }
 
-export default FeaturePage;
+export default AuthUser;

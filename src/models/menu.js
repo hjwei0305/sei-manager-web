@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-13 14:58:52
+ * @Last Modified time: 2020-11-13 15:33:38
  */
 import { router } from 'umi';
 import { utils } from 'suid';
@@ -128,18 +128,7 @@ export default {
         };
         if (initPathname) {
           const temp = allLeafMenus.concat(NoMenuPages).filter(item => item.url === initPathname);
-          let currMenuTree = menuTrees;
-          for (let i = menuTrees.length - 1; i >= 0; i -= 1) {
-            const leafMenus = getTreeLeaf([menuTrees[i]]);
-            // eslint-disable-next-line @typescript-eslint/no-loop-func
-            const isCurrMenuTree = leafMenus.some(item => item.url === initPathname);
-            if (isCurrMenuTree) {
-              currMenuTree = menuTrees[i];
-              break;
-            }
-          }
           let activedMenu = null;
-
           if (temp && temp.length) {
             [activedMenu] = temp;
           }
@@ -152,7 +141,6 @@ export default {
             payload.visibleTabData = [activedMenu];
           }
           payload.activedMenu = activedMenu;
-          payload.currMenuTree = currMenuTree;
           initPathname = '';
         }
 

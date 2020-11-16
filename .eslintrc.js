@@ -41,5 +41,6 @@ module.exports = {
     'no-unused-expressions': 0,
     'consistent-return': 0,
     'react/no-find-dom-node': 0,
+    'no-restricted-syntax': 0,
   },
 };

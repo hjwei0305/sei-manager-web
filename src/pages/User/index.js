@@ -6,15 +6,17 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { Input, Empty, Popconfirm, Layout } from 'antd';
 import { ExtIcon, ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
+import { constants } from '@/utils';
 import GroupAdd from './components/UserGroupForm/Add';
 import GroupEdit from './components/UserGroupForm/Edit';
 import UserList from './components/User';
 import styles from './index.less';
 
+const { MOCKER_PATH } = constants;
 const { Search } = Input;
 const { Sider, Content } = Layout;
 
-@connect(({ userGroup, user, loading }) => ({ userGroup, user, loading }))
+@connect(({ userGroup, authUser, loading }) => ({ userGroup, authUser, loading }))
 class User extends Component {
   static listCardRef = null;
 
@@ -90,17 +92,11 @@ class User extends Component {
 
   handlerGroupSelect = (keys, items) => {
     const { dispatch } = this.props;
-    const currentUserGroup = keys.length === 1 ? items[0] : null;
+    const selectedUserGroup = keys.length === 1 ? items[0] : null;
     dispatch({
       type: 'userGroup/updateState',
       payload: {
-        currentUserGroup,
-      },
-    });
-    dispatch({
-      type: 'user/updateState',
-      payload: {
-        currentPageRow: null,
+        selectedUserGroup,
       },
     });
   };
@@ -121,7 +117,7 @@ class User extends Component {
     <>
       <Search
         allowClear
-        placeholder="输入代码、名称、应用模块关键字查询"
+        placeholder="输入代码、名称关键字查询"
         onChange={e => this.handlerSearchChange(e.target.value)}
         onSearch={this.handlerSearch}
         onPressEnter={this.handlerPressEnter}
@@ -153,26 +149,15 @@ class User extends Component {
     );
   };
 
-  renderTitle = item => (
-    <>
-      {item.name}
-      <span style={{ marginLeft: 8, fontSize: 12, color: '#999' }}>{item.code}</span>
-    </>
-  );
-
   render() {
     const { loading, userGroup } = this.props;
-    const { currentUserGroup } = userGroup;
-    const { listData } = this.state;
-    const listLoading = loading.effects['userGroup/queryUserGroupList'];
+    const { currentUserGroup, selectedUserGroup } = userGroup;
     const saving = loading.effects['userGroup/saveUserGroup'];
     const selectedKeys = currentUserGroup ? [currentUserGroup.id] : [];
     const userGroupProps = {
       className: 'left-content',
       title: '用户组',
       showSearch: false,
-      loading: listLoading,
-      dataSource: listData,
       onSelectChange: this.handlerGroupSelect,
       customTool: this.renderCustomTool,
       onListCardRef: ref => (this.listCardRef = ref),
@@ -180,13 +165,13 @@ class User extends Component {
       selectedKeys,
       extra: <GroupAdd saving={saving} saveUserGroup={this.saveUserGroup} />,
       itemField: {
-        title: this.renderTitle,
-        description: item => item.appModuleName,
+        title: item => item.name,
+        description: item => item.code,
+      },
+      store: {
+        url: `${MOCKER_PATH}/sei-manager/user/getUserGroupList`,
       },
       itemTool: this.renderItemAction,
-    };
-    const userListProps = {
-      currentUserGroup,
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -195,8 +180,8 @@ class User extends Component {
             <ListCard {...userGroupProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
-            {currentUserGroup ? (
-              <UserList {...userListProps} />
+            {selectedUserGroup ? (
+              <UserList userGroup={selectedUserGroup} />
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="可选择左边列表项进行相应的操作" />

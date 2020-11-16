@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { isEqual } from 'lodash';
+import { isEqual, get, uniqBy, without } from 'lodash';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import { Card, Popconfirm, Button, Drawer, Empty, Tree, Input, Tooltip } from 'antd';
-import { ScrollBar, ListLoader, ExtIcon } from 'suid';
-import { BannerTitle } from '@/components';
-import { constants } from '@/utils';
-import RoleView from './RoleView';
+import { ScrollBar, ListLoader, ExtIcon, BannerTitle } from 'suid';
+import { constants, getAllChildIdsByNode } from '@/utils';
 import styles from './AssignedFeature.less';
 
 const { FEATURE_TYPE } = constants;
@@ -18,7 +16,7 @@ const childFieldKey = 'children';
 const hightLightColor = '#f50';
 
 @connect(({ featureRole, loading }) => ({ featureRole, loading }))
-class FeaturePage extends Component {
+class AssignedFeature extends Component {
   constructor(props) {
     super(props);
     const { featureRole } = props;
@@ -39,8 +37,8 @@ class FeaturePage extends Component {
 
   componentDidUpdate(prevProps) {
     const { featureRole } = this.props;
-    const { assignListData, currentRole } = featureRole;
-    if (!isEqual(prevProps.featureRole.currentRole, currentRole)) {
+    const { assignListData, selectedFeatureRole } = featureRole;
+    if (!isEqual(prevProps.featureRole.selectedFeatureRole, selectedFeatureRole)) {
       this.setState(
         {
           delRowId: null,
@@ -63,12 +61,12 @@ class FeaturePage extends Component {
 
   getAssignData = () => {
     const { featureRole, dispatch } = this.props;
-    const { currentRole } = featureRole;
-    if (currentRole) {
+    const { selectedFeatureRole } = featureRole;
+    if (selectedFeatureRole) {
       dispatch({
         type: 'featureRole/getAssignFeatureItem',
         payload: {
-          featureRoleId: currentRole.id,
+          parentId: selectedFeatureRole.id,
         },
       });
     }
@@ -86,11 +84,11 @@ class FeaturePage extends Component {
 
   assignFeatureItem = childIds => {
     const { featureRole, dispatch } = this.props;
-    const { currentRole } = featureRole;
+    const { selectedFeatureRole } = featureRole;
     dispatch({
       type: 'featureRole/assignFeatureItem',
       payload: {
-        parentId: currentRole.id,
+        parentId: selectedFeatureRole.id,
         childIds,
       },
       callback: res => {
@@ -103,7 +101,7 @@ class FeaturePage extends Component {
 
   removeAssignFeatureItem = childIds => {
     const { featureRole, dispatch } = this.props;
-    const { currentRole } = featureRole;
+    const { selectedFeatureRole } = featureRole;
     if (childIds.length === 1) {
       this.setState({
         delRowId: childIds[0],
@@ -112,7 +110,7 @@ class FeaturePage extends Component {
     dispatch({
       type: 'featureRole/removeAssignedFeatureItem',
       payload: {
-        parentId: currentRole.id,
+        parentId: selectedFeatureRole.id,
         childIds,
       },
       callback: res => {
@@ -210,8 +208,22 @@ class FeaturePage extends Component {
     this.setState({ assignListData, expandedKeys, autoExpandParent: true });
   };
 
-  handlerCheckedChange = checkedKeys => {
-    this.setState({ checkedKeys });
+  handlerCheckedChange = (checkedKeys, e) => {
+    const { assignListData } = this.state;
+    const { checked: nodeChecked } = e;
+    const nodeId = get(e, 'node.props.eventKey', null) || null;
+    const { checked } = checkedKeys;
+    let originCheckedKeys = [...checked];
+    const cids = getAllChildIdsByNode(assignListData, nodeId);
+    if (nodeChecked) {
+      // 选中：所有子节点选中
+      originCheckedKeys.push(...cids);
+    } else {
+      // 取消：父节点状态不变，所有子节点取消选中
+      originCheckedKeys = without(originCheckedKeys, ...cids);
+    }
+    const checkedData = uniqBy([...originCheckedKeys], id => id);
+    this.setState({ checkedKeys: checkedData });
   };
 
   handlerExpand = expandedKeys => {
@@ -239,16 +251,6 @@ class FeaturePage extends Component {
   renderNodeIcon = featureType => {
     let icon = null;
     switch (featureType) {
-      case FEATURE_TYPE.APP_MODULE:
-        icon = (
-          <ExtIcon
-            type="appstore"
-            tooltip={{ title: '应用模块' }}
-            antd
-            style={{ color: '#13c2c2' }}
-          />
-        );
-        break;
       case FEATURE_TYPE.PAGE:
         icon = <ExtIcon type="doc" tooltip={{ title: '页面' }} style={{ color: '#722ed1' }} />;
         break;
@@ -295,12 +297,7 @@ class FeaturePage extends Component {
       const nodeTitle = (
         <>
           <Tooltip {...this.getTooltip(item.code)}>{title}</Tooltip>
-          <div className="action-box">
-            {item.featureType === FEATURE_TYPE.PAGE || item.featureType === FEATURE_TYPE.OPERATE ? (
-              <RoleView feature={item} />
-            ) : null}
-            {this.renderRemoveBtn(item)}
-          </div>
+          <div className="action-box">{this.renderRemoveBtn(item)}</div>
         </>
       );
       if (readerChildren && readerChildren.length > 0) {
@@ -323,7 +320,6 @@ class FeaturePage extends Component {
 
   renderTree = () => {
     const { checkedKeys, assignListData, expandedKeys, autoExpandParent } = this.state;
-    console.log(expandedKeys);
     if (assignListData.length === 0) {
       return (
         <div className="blank-empty">
@@ -338,6 +334,7 @@ class FeaturePage extends Component {
         defaultExpandAll
         blockNode
         showIcon
+        checkStrictly
         autoExpandParent={autoExpandParent}
         expandedKeys={expandedKeys}
         switcherIcon={<ExtIcon type="down" antd style={{ fontSize: 12 }} />}
@@ -352,23 +349,26 @@ class FeaturePage extends Component {
 
   render() {
     const { featureRole, loading } = this.props;
-    const { currentRole } = featureRole;
+    const { selectedFeatureRole } = featureRole;
     const { checkedKeys, allValue } = this.state;
     const hasSelected = checkedKeys.length > 0;
     const loadingAssigned = loading.effects['featureRole/getAssignFeatureItem'];
     return (
       <div className={cls(styles['assigned-feature-box'])}>
-        <Card title={<BannerTitle title={currentRole.name} subTitle="功能权限" />} bordered={false}>
+        <Card
+          title={<BannerTitle title={selectedFeatureRole.name} subTitle="功能权限" />}
+          bordered={false}
+        >
           <div className={cls('tool-box')}>
             <Button
-              icon="plus"
               type="primary"
+              ghost
               loading={loading.effects['featureRole/getUnAssignedFeatureItemList']}
               onClick={this.showAssignFeature}
             >
-              我要分配功能项
+              分配权限
             </Button>
-            <Button onClick={this.getAssignData} loading={loadingAssigned} icon="reload">
+            <Button onClick={this.getAssignData} loading={loadingAssigned}>
               <FormattedMessage id="global.refresh" defaultMessage="刷新" />
             </Button>
             <div className="tool-search-box">
@@ -419,4 +419,4 @@ class FeaturePage extends Component {
   }
 }
 
-export default FeaturePage;
+export default AssignedFeature;

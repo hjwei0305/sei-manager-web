@@ -3,15 +3,14 @@ import { constants } from '../../utils';
 
 const { request } = utils;
 
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, MOCKER_PATH } = constants;
 
 /** 获取用户组列表 */
-export async function getUserGroupList(params) {
-  const url = `${SERVER_PATH}/sei-basic/userGroup/findAll`;
+export async function getUserGroupList() {
+  const url = `${MOCKER_PATH}/sei-manager/authUser/getUserGroupList`;
   return request({
     url,
     method: 'GET',
-    params,
   });
 }
 
@@ -36,7 +35,7 @@ export async function delUserGroup(params) {
 
 /** 用户保存 */
 export async function saveUser(data) {
-  const url = `${SERVER_PATH}/sei-basic/user/save`;
+  const url = `${SERVER_PATH}/sei-basic/authUser/save`;
   return request({
     url,
     method: 'POST',
@@ -46,7 +45,7 @@ export async function saveUser(data) {
 
 /** 用户删除 */
 export async function delUser(params) {
-  const url = `${SERVER_PATH}/sei-basic/user/delete/${params.id}`;
+  const url = `${SERVER_PATH}/sei-basic/authUser/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -55,7 +54,7 @@ export async function delUser(params) {
 
 /** 获取用户列表 */
 export async function getUserItemList(params) {
-  const url = `${SERVER_PATH}/sei-basic/user/findChildByUserId`;
+  const url = `${SERVER_PATH}/sei-basic/authUser/findChildByUserId`;
   return request({
     url,
     method: 'GET',

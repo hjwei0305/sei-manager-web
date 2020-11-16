@@ -3,53 +3,11 @@ import { constants } from '@/utils';
 
 const { request } = utils;
 
-const { SERVER_PATH } = constants;
-
-/** 获取功能角色组列表 */
-export async function getRoleGroupList(params) {
-  const url = `${SERVER_PATH}/sei-basic/featureRoleGroup/findAll`;
-  return request({
-    url,
-    method: 'GET',
-    params,
-  });
-}
-
-/** 功能角色组保存 */
-export async function saveRoleGroup(data) {
-  const url = `${SERVER_PATH}/sei-basic/featureRoleGroup/save`;
-  return request({
-    url,
-    method: 'POST',
-    data,
-  });
-}
-
-/** 功能角色组删除 */
-export async function delRoleGroup(data) {
-  const url = `${SERVER_PATH}/sei-basic/featureRoleGroup/delete/${data.id}`;
-  return request({
-    url,
-    method: 'DELETE',
-  });
-}
-
-/**
- * 根据角色组id获取功能角色列表
- * param roleGroupId
- */
-export async function getFeatureRoleList(params) {
-  const url = `${SERVER_PATH}/sei-basic/featureRole/findByFeatureRoleGroup`;
-  return request({
-    url,
-    method: 'GET',
-    params,
-  });
-}
+const { SERVER_PATH, MOCKER_PATH } = constants;
 
 /** 功能角色保存 */
 export async function saveFeatureRole(data) {
-  const url = `${SERVER_PATH}/sei-basic/featureRole/save`;
+  const url = `${SERVER_PATH}/sei-manager/role/save`;
   return request({
     url,
     method: 'POST',
@@ -59,7 +17,7 @@ export async function saveFeatureRole(data) {
 
 /** 功能角色删除 */
 export async function delFeatureRole(data) {
-  const url = `${SERVER_PATH}/sei-basic/featureRole/delete/${data.id}`;
+  const url = `${SERVER_PATH}/sei-manager/role/delete/${data.id}`;
   return request({
     url,
     method: 'DELETE',
@@ -71,7 +29,7 @@ export async function delFeatureRole(data) {
  * @featureRoleId 功能角色Id
  */
 export async function getAssignFeatureItem(params) {
-  const url = `${SERVER_PATH}/sei-basic/featureRoleFeature/getFeatureTree`;
+  const url = `${MOCKER_PATH}/sei-manager/featureRoleFeature/getRelationsByParentId`;
   return request({
     url,
     params,
@@ -104,7 +62,7 @@ export async function removeAssignedFeatureItem(data) {
  * @featureRoleId 功能角色id
  */
 export async function getUnAssignedFeatureItemList(params) {
-  const url = `${SERVER_PATH}/sei-basic/featureRoleFeature/getUnassignedFeatureTree`;
+  const url = `${MOCKER_PATH}/sei-manager/featureRoleFeature/getUnassignedFeatureTree`;
   return request({
     url,
     method: 'GET',
