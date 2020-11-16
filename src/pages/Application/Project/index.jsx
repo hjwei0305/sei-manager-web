@@ -19,7 +19,7 @@ class Project extends Component {
     return (
       <PageWrapper loading={loading.global} className={cls(styles['container-box'])}>
         <CascadeLayout
-          title={['工程', `${currPRowData ? currPRowData.name : ''}`]}
+          title={['项目', `${currPRowData ? currPRowData.name : ''}`]}
           layout={[7, 17]}
         >
           <ParentTable slot="left" />
