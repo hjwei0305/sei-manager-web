@@ -368,7 +368,7 @@ class AssignedFeature extends Component {
             >
               分配权限
             </Button>
-            <Button onClick={this.getAssignData} loading={loadingAssigned}>
+            <Button onClick={this.getAssignData}>
               <FormattedMessage id="global.refresh" defaultMessage="刷新" />
             </Button>
             <div className="tool-search-box">
