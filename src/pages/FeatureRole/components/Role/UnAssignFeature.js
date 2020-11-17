@@ -76,7 +76,7 @@ class UnAssignFeature extends Component {
       dispatch({
         type: 'featureRole/assignFeatureItem',
         payload: {
-          parentId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
           childIds,
         },
         callback: res => {

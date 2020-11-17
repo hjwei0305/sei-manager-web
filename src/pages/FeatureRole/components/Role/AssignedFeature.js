@@ -88,7 +88,7 @@ class AssignedFeature extends Component {
     dispatch({
       type: 'featureRole/assignFeatureItem',
       payload: {
-        parentId: selectedFeatureRole.id,
+        roleId: selectedFeatureRole.id,
         childIds,
       },
       callback: res => {
@@ -110,7 +110,7 @@ class AssignedFeature extends Component {
     dispatch({
       type: 'featureRole/removeAssignedFeatureItem',
       payload: {
-        parentId: selectedFeatureRole.id,
+        roleId: selectedFeatureRole.id,
         childIds,
       },
       callback: res => {
