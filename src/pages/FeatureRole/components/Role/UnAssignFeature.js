@@ -298,7 +298,6 @@ class UnAssignFeature extends Component {
               className="refresh"
               type="reload"
               antd
-              loading={loadingUnAssigned}
               onClick={this.getUnAssignData}
             >
               刷新
