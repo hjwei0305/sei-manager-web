@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cls from 'classnames';
 import { isEqual, without, uniqBy, get } from 'lodash';
 import { connect } from 'dva';
-import { Button, Input, Drawer, Tree, Empty, Tooltip } from 'antd';
+import { Button, Input, Drawer, Tree, Empty } from 'antd';
 import { ScrollBar, ListLoader, ExtIcon } from 'suid';
 import { constants, getAllParentIdsByNode, getAllChildIdsByNode } from '@/utils';
 import styles from './UnAssignFeature.less';
@@ -180,19 +180,6 @@ class UnAssignFeature extends Component {
     return { unAssignListData: newData };
   };
 
-  getTooltip = code => {
-    return {
-      placement: 'top',
-      title: (
-        <>
-          代码
-          <br />
-          <span style={{ fontSize: 12, color: '#d2d2d2' }}>{code}</span>
-        </>
-      ),
-    };
-  };
-
   renderNodeIcon = featureType => {
     let icon = null;
     switch (featureType) {
@@ -226,17 +213,17 @@ class UnAssignFeature extends Component {
         ) : (
           <span>{readerValue}</span>
         );
-      const nodeTitle = <Tooltip {...this.getTooltip(item.code)}>{title}</Tooltip>;
+      const nodeTitle = title;
       if (readerChildren && readerChildren.length > 0) {
         return (
-          <TreeNode title={nodeTitle} key={item.id} icon={this.renderNodeIcon(item.featureType)}>
+          <TreeNode title={nodeTitle} key={item.id} icon={this.renderNodeIcon(item.type)}>
             {this.renderTreeNodes(readerChildren)}
           </TreeNode>
         );
       }
       return (
         <TreeNode
-          icon={this.renderNodeIcon(item.featureType)}
+          icon={this.renderNodeIcon(item.type)}
           switcherIcon={<span />}
           title={nodeTitle}
           key={item.id}

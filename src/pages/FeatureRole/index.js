@@ -138,16 +138,13 @@ class Role extends Component {
 
   renderCustomTool = () => (
     <>
-      <Button type="primary" onClick={this.add}>
-        新建
-      </Button>
       <Search
         allowClear
         placeholder="输入名称关键字查询"
         onChange={e => this.handlerSearchChange(e.target.value)}
         onSearch={this.handlerSearch}
         onPressEnter={this.handlerPressEnter}
-        style={{ width: 180 }}
+        style={{ width: '100%' }}
       />
     </>
   );
@@ -198,6 +195,11 @@ class Role extends Component {
       store: {
         url: `${SERVER_PATH}/sei-manager/role/findAll`,
       },
+      extra: (
+        <Button type="link" icon="plus" onClick={this.add}>
+          新建
+        </Button>
+      ),
       itemTool: this.renderItemAction,
     };
     const formModalProps = {

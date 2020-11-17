@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-16 15:46:38
+ * @Last Modified time: 2020-11-17 17:04:58
  */
 import { name } from '../../package.json';
 
@@ -121,8 +121,8 @@ const ROLE_VIEW = {
 
 /** 功能类型 */
 const FEATURE_TYPE = {
-  PAGE: 'Page',
-  OPERATE: 'Operate',
+  PAGE: 1,
+  OPERATE: 2,
 };
 
 const USER_ACTION = {

@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import cls from 'classnames';
 import { isEqual, get, uniqBy, without } from 'lodash';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
-import { Card, Popconfirm, Button, Drawer, Empty, Tree, Input, Tooltip } from 'antd';
+import { Card, Popconfirm, Button, Drawer, Empty, Tree, Input } from 'antd';
 import { ScrollBar, ListLoader, ExtIcon, BannerTitle } from 'suid';
 import { constants, getAllChildIdsByNode } from '@/utils';
 import styles from './AssignedFeature.less';
@@ -262,19 +262,6 @@ class AssignedFeature extends Component {
     return icon;
   };
 
-  getTooltip = code => {
-    return {
-      placement: 'top',
-      title: (
-        <>
-          代码
-          <br />
-          <span style={{ fontSize: 12, color: '#d2d2d2' }}>{code}</span>
-        </>
-      ),
-    };
-  };
-
   renderTreeNodes = treeData => {
     const { allValue } = this.state;
     const searchValue = allValue || '';
@@ -296,20 +283,20 @@ class AssignedFeature extends Component {
         );
       const nodeTitle = (
         <>
-          <Tooltip {...this.getTooltip(item.code)}>{title}</Tooltip>
+          {title}
           <div className="action-box">{this.renderRemoveBtn(item)}</div>
         </>
       );
       if (readerChildren && readerChildren.length > 0) {
         return (
-          <TreeNode title={nodeTitle} key={item.id} icon={this.renderNodeIcon(item.featureType)}>
+          <TreeNode title={nodeTitle} key={item.id} icon={this.renderNodeIcon(item.type)}>
             {this.renderTreeNodes(readerChildren)}
           </TreeNode>
         );
       }
       return (
         <TreeNode
-          icon={this.renderNodeIcon(item.featureType)}
+          icon={this.renderNodeIcon(item.type)}
           switcherIcon={<span />}
           title={nodeTitle}
           key={item.id}
@@ -362,7 +349,6 @@ class AssignedFeature extends Component {
           <div className={cls('tool-box')}>
             <Button
               type="primary"
-              ghost
               loading={loading.effects['featureRole/getUnAssignedFeatureItemList']}
               onClick={this.showAssignFeature}
             >
