@@ -8,6 +8,7 @@ import CascadeLayout from '@/components/Layout/CascadeLayout';
 import ParentTable from './components/ParentTable';
 import QuickCreate from './components/ParentTable/QuickCreate';
 import ChildTable from './components/ChildTable';
+import QuickCreateChild from './components/ChildTable/QuickCreate';
 import styles from './index.less';
 
 @withRouter
@@ -21,7 +22,7 @@ class AppModule extends Component {
 
   render() {
     const { appModule, loading } = this.props;
-    const { currPRowData, isQuickCreate } = appModule;
+    const { currPRowData, isQuickCreate, isQuickCreateChild } = appModule;
 
     return (
       <PageWrapper loading={loading.global} className={cls(styles['container-box'])}>
@@ -29,7 +30,7 @@ class AppModule extends Component {
           title={['应用列表', `${currPRowData ? currPRowData.name : ''}`]}
           layout={[6, 18]}
           className={cls({
-            hide_ele: isQuickCreate,
+            hide_ele: isQuickCreate || isQuickCreateChild,
           })}
         >
           <ParentTable slot="left" onRef={inst => (this.appRef = inst)} />
@@ -40,6 +41,7 @@ class AppModule extends Component {
           )}
         </CascadeLayout>
         {isQuickCreate ? <QuickCreate onSaveSuccess={this.hanldeSaveSuccess} /> : null}
+        {isQuickCreateChild ? <QuickCreateChild onSaveSuccess={this.hanldeSaveSuccess} /> : null}
       </PageWrapper>
     );
   }

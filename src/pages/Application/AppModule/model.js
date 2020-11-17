@@ -13,6 +13,7 @@ import {
   delChildRow,
   getGroups,
   quickCreate,
+  quickCreateChild,
 } from './service';
 
 const { dvaModel } = utils;
@@ -31,6 +32,7 @@ export default modelExtend(model, {
     cVisible: false,
     groups: [],
     isQuickCreate: false,
+    isQuickCreateChild: false,
   },
   effects: {
     *updatePageState({ payload }, { put }) {
@@ -82,6 +84,18 @@ export default modelExtend(model, {
     },
     *quickCreate({ payload }, { call }) {
       const result = yield call(quickCreate, payload);
+      const { success, message: msg } = result || {};
+      message.destroy();
+      if (success) {
+        message.success(msg);
+      } else {
+        message.error(msg);
+      }
+
+      return result;
+    },
+    *quickCreateChild({ payload }, { call }) {
+      const result = yield call(quickCreateChild, payload);
       const { success, message: msg } = result || {};
       message.destroy();
       if (success) {

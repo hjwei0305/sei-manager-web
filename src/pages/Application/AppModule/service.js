@@ -42,6 +42,16 @@ export async function saveChild(data) {
   });
 }
 
+/** 快速创建 */
+export async function quickCreateChild(data) {
+  const url = `${CI_SERVER_PATH}${project_contextPath}/quickCreate`;
+  return request({
+    url,
+    method: 'POST',
+    data,
+  });
+}
+
 /** 删除父亲表格数据 */
 export async function delParentRow(params) {
   const url = `${CI_SERVER_PATH}${app_contextPath}/delete/${params.id}`;
