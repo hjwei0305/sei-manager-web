@@ -61,7 +61,7 @@ class UnAssignFeature extends Component {
       dispatch({
         type: 'featureRole/getUnAssignedFeatureItemList',
         payload: {
-          featureRoleId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
         },
       });
     }

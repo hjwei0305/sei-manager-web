@@ -66,7 +66,7 @@ class AssignedFeature extends Component {
       dispatch({
         type: 'featureRole/getAssignFeatureItem',
         payload: {
-          parentId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
         },
       });
     }

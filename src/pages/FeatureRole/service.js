@@ -29,7 +29,7 @@ export async function delFeatureRole(data) {
  * @featureRoleId 功能角色Id
  */
 export async function getAssignFeatureItem(params) {
-  const url = `${SERVER_PATH}/sei-manager/roleFeature/getRelationsByParentId`;
+  const url = `${SERVER_PATH}/sei-manager/roleFeature/getFeatureTree`;
   return request({
     url,
     params,
