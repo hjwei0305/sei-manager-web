@@ -3,7 +3,7 @@ import { constants } from '@/utils';
 
 const { request } = utils;
 
-const { SERVER_PATH, MOCKER_PATH } = constants;
+const { SERVER_PATH } = constants;
 
 /** 功能角色保存 */
 export async function saveFeatureRole(data) {
@@ -61,7 +61,7 @@ export async function removeAssignedFeatureItem(data) {
  * @featureRoleId 功能角色id
  */
 export async function getUnAssignedFeatureItemList(params) {
-  const url = `${MOCKER_PATH}/sei-manager/roleFeature/getUnassignedFeatureTree`;
+  const url = `${SERVER_PATH}/sei-manager/roleFeature/getUnassignedFeatureTree`;
   return request({
     url,
     method: 'GET',
