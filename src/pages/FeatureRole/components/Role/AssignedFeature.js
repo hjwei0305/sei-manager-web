@@ -391,7 +391,6 @@ class AssignedFeature extends Component {
               visible={hasSelected}
             >
               <Button
-                ghost
                 onClick={this.onCancelBatchRemoveAssignedFeatureItem}
                 disabled={loading.effects['featureRole/removeAssignedFeatureItem']}
               >
@@ -402,6 +401,7 @@ class AssignedFeature extends Component {
                 onConfirm={this.batchRemoveAssignedFeatureItem}
               >
                 <Button
+                  ghost
                   type="danger"
                   loading={loading.effects['featureRole/removeAssignedFeatureItem']}
                 >
