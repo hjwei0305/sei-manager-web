@@ -61,7 +61,7 @@ class UnAssignFeature extends Component {
       dispatch({
         type: 'featureRole/getUnAssignedFeatureItemList',
         payload: {
-          parentId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
         },
       });
     }
@@ -106,7 +106,7 @@ class UnAssignFeature extends Component {
       dispatch({
         type: 'featureRole/getAssignFeatureItem',
         payload: {
-          parentId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
         },
       });
     }
@@ -323,6 +323,7 @@ class UnAssignFeature extends Component {
           >
             <Button
               type="danger"
+              ghost
               onClick={this.onCancelBatchAssignedFeatureItem}
               disabled={assigning}
             >

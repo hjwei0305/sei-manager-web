@@ -66,7 +66,7 @@ class AssignedFeature extends Component {
       dispatch({
         type: 'featureRole/getAssignFeatureItem',
         payload: {
-          parentId: selectedFeatureRole.id,
+          roleId: selectedFeatureRole.id,
         },
       });
     }
@@ -391,6 +391,7 @@ class AssignedFeature extends Component {
               visible={hasSelected}
             >
               <Button
+                ghost
                 onClick={this.onCancelBatchRemoveAssignedFeatureItem}
                 disabled={loading.effects['featureRole/removeAssignedFeatureItem']}
               >
