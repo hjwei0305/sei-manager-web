@@ -6,6 +6,7 @@ import { isEqual } from 'lodash';
 import { ExtTable, utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
+import QuickCreate from './QuickCreate';
 import styles from '../../index.less';
 
 const { CI_SERVER_PATH } = constants;
@@ -16,6 +17,14 @@ class ChildTable extends Component {
   state = {
     delRowId: null,
     selectedRowKeys: [],
+  };
+
+  dispatchAction = ({ type, payload }) => {
+    const { dispatch } = this.props;
+    return dispatch({
+      type,
+      payload,
+    });
   };
 
   reloadData = () => {
@@ -64,6 +73,15 @@ class ChildTable extends Component {
       },
     });
     e.stopPropagation();
+  };
+
+  handleQuickCreate = () => {
+    this.dispatchAction({
+      type: 'appModule/updatePageState',
+      payload: {
+        isQuickCreateChild: true,
+      },
+    });
   };
 
   del = record => {
@@ -239,8 +257,13 @@ class ChildTable extends Component {
       left: (
         <Fragment>
           {authAction(
-            <Button key="add" type="primary" ghost onClick={this.add} ignore="true">
+            <Button key="add" type="primary" ghost onClick={this.handleQuickCreate} ignore="true">
               新建
+            </Button>,
+          )}
+          {authAction(
+            <Button key="add" onClick={this.add} ignore="true">
+              录入
             </Button>,
           )}
           <Button onClick={this.reloadData}>刷新</Button>
@@ -292,6 +315,7 @@ class ChildTable extends Component {
       <div className={cls(styles['container-box'])}>
         <ExtTable onTableRef={inst => (this.tableRef = inst)} {...this.getExtableProps()} />
         <FormModal {...this.getFormModalProps()} />
+        <QuickCreate />
       </div>
     );
   }
