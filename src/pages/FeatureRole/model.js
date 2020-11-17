@@ -6,13 +6,7 @@ import {
   assignFeatureItem,
   removeAssignedFeatureItem,
   getUnAssignedFeatureItemList,
-  getAssignedEmployeesByFeatureRole,
-  getAssignedPositionsByFeatureRole,
   getAssignFeatureItem,
-  unAssignStation,
-  assignStation,
-  unAssignUser,
-  assignUser,
 } from './service';
 
 const { dvaModel } = utils;
@@ -130,80 +124,6 @@ export default modelExtend(model, {
         });
       } else {
         message.error(re.message);
-      }
-    },
-    *getAssignedEmployeesByFeatureRole({ payload }, { call, put }) {
-      const re = yield call(getAssignedEmployeesByFeatureRole, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            assignUserData: re.data,
-          },
-        });
-      } else {
-        message.error(re.message);
-      }
-    },
-    *getAssignedPositionsByFeatureRole({ payload }, { call, put }) {
-      const re = yield call(getAssignedPositionsByFeatureRole, payload);
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            assinStationData: re.data,
-          },
-        });
-      } else {
-        message.error(re.message);
-      }
-    },
-    *assignStation({ payload, callback }, { call }) {
-      const re = yield call(assignStation, payload);
-      message.destroy();
-      if (re.success) {
-        message.success(re.message);
-      } else {
-        message.error(re.message);
-      }
-      if (callback && callback instanceof Function) {
-        callback(re);
-      }
-    },
-    *unAssignStation({ payload, callback }, { call }) {
-      const re = yield call(unAssignStation, payload);
-      message.destroy();
-      if (re.success) {
-        message.success(re.message);
-      } else {
-        message.error(re.message);
-      }
-      if (callback && callback instanceof Function) {
-        callback(re);
-      }
-    },
-    *assignUser({ payload, callback }, { call }) {
-      const re = yield call(assignUser, payload);
-      message.destroy();
-      if (re.success) {
-        message.success(re.message);
-      } else {
-        message.error(re.message);
-      }
-      if (callback && callback instanceof Function) {
-        callback(re);
-      }
-    },
-    *unAssignUser({ payload, callback }, { call }) {
-      const re = yield call(unAssignUser, payload);
-      message.destroy();
-      if (re.success) {
-        message.success(re.message);
-      } else {
-        message.error(re.message);
-      }
-      if (callback && callback instanceof Function) {
-        callback(re);
       }
     },
   },

@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Button, Form, Input, Popconfirm, InputNumber } from 'antd';
-import { ScrollBar, ExtIcon, ComboGrid, BannerTitle } from 'suid';
+import { ScrollBar, ExtIcon, ComboList, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import styles from './NodeForm.less';
 
@@ -151,29 +151,14 @@ class NodeForm extends PureComponent {
     const { getFieldDecorator } = form;
     const title = this.getFormTitle();
     getFieldDecorator('featureId', { initialValue: get(editData, 'featureId') });
-    getFieldDecorator('featureCode', { initialValue: get(editData, 'featureCode') });
     const featureProps = {
       form,
       allowClear: true,
       remotePaging: true,
       name: 'featureName',
-      field: ['featureId', 'featureCode'],
-      searchPlaceHolder: '输入代码或名称关键字查询',
-      searchProperties: ['name', 'code'],
-      searchWidth: 220,
-      width: 420,
-      columns: [
-        {
-          title: '名称',
-          width: 160,
-          dataIndex: 'name',
-        },
-        {
-          title: '页面地址',
-          width: 220,
-          dataIndex: 'url',
-        },
-      ],
+      field: ['featureId'],
+      searchPlaceHolder: '输入名称关键字查询',
+      searchProperties: ['name'],
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/feature/findByFilters`,
@@ -189,7 +174,8 @@ class NodeForm extends PureComponent {
       },
       reader: {
         name: 'name',
-        field: ['id', 'code'],
+        description: 'url',
+        field: ['id'],
       },
     };
     const hasIcon = (!editData.id && !editData.parentId) || editData.nodeLevel === 0;
@@ -261,7 +247,7 @@ class NodeForm extends PureComponent {
                           message: '菜单项不能为空',
                         },
                       ],
-                    })(<ComboGrid {...featureProps} />)}
+                    })(<ComboList {...featureProps} />)}
                   </FormItem>
                 ) : null}
               </Form>
