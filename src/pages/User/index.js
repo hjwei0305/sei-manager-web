@@ -1,88 +1,93 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { isEqual } from 'lodash';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { Input, Empty, Popconfirm, Layout } from 'antd';
-import { ExtIcon, ListCard } from 'suid';
-import empty from '@/assets/item_empty.svg';
+import { Button, Popconfirm } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { ExtTable, utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
-import GroupAdd from './components/UserGroupForm/Add';
-import GroupEdit from './components/UserGroupForm/Edit';
-import UserList from './components/User';
+import FormModal from './FormModal';
 import styles from './index.less';
 
-const { MOCKER_PATH } = constants;
-const { Search } = Input;
-const { Sider, Content } = Layout;
+const { USER_BTN_KEY } = constants;
+const { authAction } = utils;
 
-@connect(({ userGroup, authUser, loading }) => ({ userGroup, authUser, loading }))
-class User extends Component {
-  static listCardRef = null;
-
+@connect(({ userList, loading }) => ({ userList, loading }))
+class UserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listData: [],
-      delGroupId: null,
+      delRowId: null,
     };
   }
 
-  componentDidUpdate() {
-    const { userGroup } = this.props;
-    const { listData: stateListData } = this.state;
-    if (!isEqual(stateListData, userGroup.listData)) {
-      const { listData } = userGroup;
-      this.setState({
-        listData,
-      });
-    }
-  }
-
-  reloadUserGroupData = () => {
+  reloadData = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userGroup/queryUserGroupList',
+      type: 'userList/queryList',
     });
   };
 
-  saveUserGroup = (data, handlerPopoverHide) => {
+  add = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userGroup/saveUserGroup',
+      type: 'userList/updateState',
+      payload: {
+        showModal: true,
+        rowData: null,
+      },
+    });
+  };
+
+  edit = rowData => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userList/updateState',
+      payload: {
+        showModal: true,
+        rowData,
+      },
+    });
+  };
+
+  save = data => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userList/save',
       payload: {
         ...data,
       },
       callback: res => {
         if (res.success) {
           dispatch({
-            type: 'userGroup/queryUserGroupList',
+            type: 'userList/updateState',
+            payload: {
+              showModal: false,
+            },
           });
-          if (handlerPopoverHide) handlerPopoverHide();
+          this.reloadData();
         }
       },
     });
   };
 
-  delUserGroup = (data, e) => {
-    if (e) e.stopPropagation();
+  del = record => {
     const { dispatch } = this.props;
     this.setState(
       {
-        delGroupId: data.id,
+        delRowId: record.id,
       },
       () => {
         dispatch({
-          type: 'userGroup/delUserGroup',
+          type: 'userList/del',
           payload: {
-            id: data.id,
+            id: record.id,
           },
           callback: res => {
             if (res.success) {
               this.setState({
-                delGroupId: null,
+                delRowId: null,
               });
-              this.reloadUserGroupData();
+              this.reloadData();
             }
           },
         });
@@ -90,107 +95,134 @@ class User extends Component {
     );
   };
 
-  handlerGroupSelect = (keys, items) => {
+  closeFormModal = () => {
     const { dispatch } = this.props;
-    const selectedUserGroup = keys.length === 1 ? items[0] : null;
     dispatch({
-      type: 'userGroup/updateState',
+      type: 'userList/updateState',
       payload: {
-        selectedUserGroup,
+        showModal: false,
+        rowData: null,
       },
     });
   };
 
-  handlerSearchChange = v => {
-    this.listCardRef.handlerSearchChange(v);
-  };
-
-  handlerPressEnter = () => {
-    this.listCardRef.handlerPressEnter();
-  };
-
-  handlerSearch = v => {
-    this.listCardRef.handlerSearch(v);
-  };
-
-  renderCustomTool = () => (
-    <>
-      <Search
-        allowClear
-        placeholder="输入代码、名称关键字查询"
-        onChange={e => this.handlerSearchChange(e.target.value)}
-        onSearch={this.handlerSearch}
-        onPressEnter={this.handlerPressEnter}
-        style={{ width: '100%' }}
-      />
-    </>
-  );
-
-  renderItemAction = item => {
+  renderDelBtn = row => {
     const { loading } = this.props;
-    const { delGroupId } = this.state;
-    const saving = loading.effects['userGroup/saveUserGroup'];
-    return (
-      <>
-        <div className="tool-action" onClick={e => e.stopPropagation()}>
-          <GroupEdit saving={saving} saveUserGroup={this.saveUserGroup} groupData={item} />
-          <Popconfirm
-            title={formatMessage({ id: 'global.delete.confirm', defaultMessage: '确定要删除吗?' })}
-            onConfirm={e => this.delUserGroup(item, e)}
-          >
-            {loading.effects['userGroup/delUserGroup'] && delGroupId === item.id ? (
-              <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
-            ) : (
-              <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
-            )}
-          </Popconfirm>
-        </div>
-      </>
-    );
+    const { delRowId } = this.state;
+    if (loading.effects['userList/del'] && delRowId === row.id) {
+      return <ExtIcon className="del-loading" type="loading" antd />;
+    }
+    return <ExtIcon className="del" type="delete" antd />;
   };
 
   render() {
-    const { loading, userGroup } = this.props;
-    const { currentUserGroup, selectedUserGroup } = userGroup;
-    const saving = loading.effects['userGroup/saveUserGroup'];
-    const selectedKeys = currentUserGroup ? [currentUserGroup.id] : [];
-    const userGroupProps = {
-      className: 'left-content',
-      title: '用户组',
-      showSearch: false,
-      onSelectChange: this.handlerGroupSelect,
-      customTool: this.renderCustomTool,
-      onListCardRef: ref => (this.listCardRef = ref),
-      searchProperties: ['code', 'name'],
-      selectedKeys,
-      extra: <GroupAdd saving={saving} saveUserGroup={this.saveUserGroup} />,
-      itemField: {
-        title: item => item.name,
-        description: item => item.code,
+    const { userList, loading } = this.props;
+    const { showModal, rowData } = userList;
+    const columns = [
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 100,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        render: (text, record) => (
+          <span className={cls('action-box')}>
+            {authAction(
+              <ExtIcon
+                key={USER_BTN_KEY.EDIT}
+                className="edit"
+                onClick={() => this.edit(record)}
+                type="edit"
+                ignore="true"
+                antd
+              />,
+            )}
+            <Popconfirm
+              key={USER_BTN_KEY.DELETE}
+              placement="topLeft"
+              title={formatMessage({
+                id: 'global.delete.confirm',
+                defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+              })}
+              onConfirm={() => this.del(record)}
+            >
+              {this.renderDelBtn(record)}
+            </Popconfirm>
+          </span>
+        ),
       },
-      store: {
-        url: `${MOCKER_PATH}/sei-manager/user/getUserGroupList`,
+      {
+        title: formatMessage({ id: 'global.rank', defaultMessage: '序号' }),
+        dataIndex: 'rank',
+        width: 80,
       },
-      itemTool: this.renderItemAction,
+      {
+        title: formatMessage({ id: 'global.code', defaultMessage: '代码' }),
+        dataIndex: 'code',
+        width: 160,
+        required: true,
+      },
+      {
+        title: formatMessage({ id: 'global.name', defaultMessage: '名称' }),
+        dataIndex: 'name',
+        width: 220,
+        required: true,
+      },
+      {
+        title: formatMessage({ id: 'userList.apiBaseAddress', defaultMessage: '服务名' }),
+        dataIndex: 'apiBaseAddress',
+        width: 160,
+      },
+      {
+        title: formatMessage({ id: 'userList.webBaseAddress', defaultMessage: 'WEB基地址' }),
+        dataIndex: 'webBaseAddress',
+        width: 220,
+      },
+      {
+        title: formatMessage({ id: 'global.remark', defaultMessage: '说明' }),
+        dataIndex: 'remark',
+        width: 320,
+        optional: true,
+      },
+    ];
+    const formModalProps = {
+      save: this.save,
+      rowData,
+      showModal,
+      closeFormModal: this.closeFormModal,
+      saving: loading.effects['userList/save'],
+    };
+    const toolBarProps = {
+      left: (
+        <>
+          {authAction(
+            <Button key={USER_BTN_KEY.CREATE} type="primary" onClick={this.add} ignore="true">
+              <FormattedMessage id="global.add" defaultMessage="新建" />
+            </Button>,
+          )}
+          <Button onClick={this.reloadData}>
+            <FormattedMessage id="global.refresh" defaultMessage="刷新" />
+          </Button>
+        </>
+      ),
+    };
+    const tableProps = {
+      toolBar: toolBarProps,
+      columns,
+      searchWidth: 260,
+      sort: {
+        field: { rank: 'asc', code: null, name: null },
+      },
     };
     return (
       <div className={cls(styles['container-box'])}>
-        <Layout className="auto-height">
-          <Sider width={320} className="auto-height" theme="light">
-            <ListCard {...userGroupProps} />
-          </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
-            {selectedUserGroup ? (
-              <UserList userGroup={selectedUserGroup} />
-            ) : (
-              <div className="blank-empty">
-                <Empty image={empty} description="可选择左边列表项进行相应的操作" />
-              </div>
-            )}
-          </Content>
-        </Layout>
+        <ExtTable {...tableProps} />
+        <FormModal {...formModalProps} />
       </div>
     );
   }
 }
-export default User;
+
+export default UserList;

@@ -54,7 +54,12 @@ const routes = [
             component: './FeatureRole',
           },
           {
-            path: '/auth/user',
+            path: '/auth/userGroup',
+            name: '用户组',
+            component: './UserGroup',
+          },
+          {
+            path: '/auth/userList',
             name: '用户',
             component: './User',
           },

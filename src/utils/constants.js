@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-17 17:04:58
+ * @Last Modified time: 2020-11-18 09:12:01
  */
 import { name } from '../../package.json';
 
@@ -130,6 +130,11 @@ const USER_ACTION = {
   FEATURE_ROLE: 'feature-role',
 };
 
+const USER_BTN_KEY = {
+  EDIT: 'USER_EDIT',
+  DELETE: 'USER_DELETE',
+};
+
 export default {
   NoMenuPages,
   APP_BASE,
@@ -147,4 +152,5 @@ export default {
   FEATURE_TYPE,
   USER_ACTION,
   CI_SERVER_PATH,
+  USER_BTN_KEY,
 };
