@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { Button, Popconfirm } from 'antd';
+import { Button, Popconfirm, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
-const { USER_BTN_KEY } = constants;
+const { USER_BTN_KEY, SERVER_PATH } = constants;
 const { authAction } = utils;
 
 @connect(({ userList, loading }) => ({ userList, loading }))
 class UserList extends Component {
+  static tableRef;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -21,10 +23,9 @@ class UserList extends Component {
   }
 
   reloadData = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userList/queryList',
-    });
+    if (this.tableRef) {
+      this.tableRef.remoteDataRefresh();
+    }
   };
 
   add = () => {
@@ -49,21 +50,30 @@ class UserList extends Component {
     });
   };
 
-  save = data => {
+  createdSave = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userList/save',
+      type: 'userList/createdSave',
       payload: {
         ...data,
       },
       callback: res => {
         if (res.success) {
-          dispatch({
-            type: 'userList/updateState',
-            payload: {
-              showModal: false,
-            },
-          });
+          this.reloadData();
+        }
+      },
+    });
+  };
+
+  editSave = data => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userList/editSave',
+      payload: {
+        ...data,
+      },
+      callback: res => {
+        if (res.success) {
           this.reloadData();
         }
       },
@@ -112,7 +122,40 @@ class UserList extends Component {
     if (loading.effects['userList/del'] && delRowId === row.id) {
       return <ExtIcon className="del-loading" type="loading" antd />;
     }
-    return <ExtIcon className="del" type="delete" antd />;
+    if (row.admin) {
+      return <ExtIcon className="disabled" type="delete" antd />;
+    }
+    return (
+      <Popconfirm
+        key={USER_BTN_KEY.DELETE}
+        placement="topLeft"
+        title={formatMessage({
+          id: 'global.delete.confirm',
+          defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+        })}
+        onConfirm={() => this.del(row)}
+      >
+        <ExtIcon className="del" type="delete" antd />
+      </Popconfirm>
+    );
+  };
+
+  renderAccount = (t, row) => {
+    return (
+      <>
+        {t}
+        {row.admin ? (
+          <Tag color="blue" style={{ marginLeft: 8 }}>
+            管理员
+          </Tag>
+        ) : null}
+        {row.status === 0 ? (
+          <Tag color="red" style={{ marginLeft: 8 }}>
+            已禁用
+          </Tag>
+        ) : null}
+      </>
+    );
   };
 
   render() {
@@ -139,60 +182,44 @@ class UserList extends Component {
                 antd
               />,
             )}
-            <Popconfirm
-              key={USER_BTN_KEY.DELETE}
-              placement="topLeft"
-              title={formatMessage({
-                id: 'global.delete.confirm',
-                defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-              })}
-              onConfirm={() => this.del(record)}
-            >
-              {this.renderDelBtn(record)}
-            </Popconfirm>
+            {this.renderDelBtn(record)}
           </span>
         ),
       },
       {
-        title: formatMessage({ id: 'global.rank', defaultMessage: '序号' }),
-        dataIndex: 'rank',
-        width: 80,
+        title: '账号',
+        dataIndex: 'account',
+        width: 220,
+        required: true,
+        render: this.renderAccount,
       },
       {
-        title: formatMessage({ id: 'global.code', defaultMessage: '代码' }),
-        dataIndex: 'code',
+        title: '昵称',
+        dataIndex: 'nickname',
         width: 160,
         required: true,
       },
       {
-        title: formatMessage({ id: 'global.name', defaultMessage: '名称' }),
-        dataIndex: 'name',
-        width: 220,
-        required: true,
+        title: 'phone',
+        dataIndex: '手机号',
+        width: 180,
+        render: t => t || '-',
       },
       {
-        title: formatMessage({ id: 'userList.apiBaseAddress', defaultMessage: '服务名' }),
-        dataIndex: 'apiBaseAddress',
-        width: 160,
-      },
-      {
-        title: formatMessage({ id: 'userList.webBaseAddress', defaultMessage: 'WEB基地址' }),
-        dataIndex: 'webBaseAddress',
-        width: 220,
-      },
-      {
-        title: formatMessage({ id: 'global.remark', defaultMessage: '说明' }),
-        dataIndex: 'remark',
-        width: 320,
-        optional: true,
+        title: '电子邮箱',
+        dataIndex: 'email',
+        width: 360,
+        render: t => t || '-',
       },
     ];
     const formModalProps = {
-      save: this.save,
+      createdSave: this.createdSave,
+      editSave: this.editSave,
       rowData,
       showModal,
       closeFormModal: this.closeFormModal,
-      saving: loading.effects['userList/save'],
+      editSaving: loading.effects['userList/editSave'],
+      createdSaving: loading.effects['userList/createdSave'],
     };
     const toolBarProps = {
       left: (
@@ -211,9 +238,17 @@ class UserList extends Component {
     const tableProps = {
       toolBar: toolBarProps,
       columns,
+      showSearchTooltip: true,
+      searchPlaceHolder: '昵称、账号、手机号、电子邮箱',
+      searchProperties: ['nickname', 'account', 'phone', 'email'],
       searchWidth: 260,
+      store: {
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
+      },
+      onTableRef: ref => (this.tableRef = ref),
       sort: {
-        field: { rank: 'asc', code: null, name: null },
+        field: { nickname: null, phone: null },
       },
     };
     return (

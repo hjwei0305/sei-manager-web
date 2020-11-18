@@ -1,6 +1,6 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { del, save } from './service';
+import { del, editSave, createdSave } from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -13,11 +13,35 @@ export default modelExtend(model, {
     showModal: false,
   },
   effects: {
-    *save({ payload, callback }, { call }) {
-      const re = yield call(save, payload);
+    *createdSave({ payload, callback }, { call, put }) {
+      const re = yield call(createdSave, payload);
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
+        yield put({
+          type: 'updateState',
+          payload: {
+            showModal: false,
+          },
+        });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *editSave({ payload, callback }, { call, put }) {
+      const re = yield call(editSave, payload);
+      message.destroy();
+      if (re.success) {
+        message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
+        yield put({
+          type: 'updateState',
+          payload: {
+            showModal: false,
+          },
+        });
       } else {
         message.error(re.message);
       }
