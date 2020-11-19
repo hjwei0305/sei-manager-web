@@ -3,20 +3,11 @@ import { constants } from '@/utils';
 
 const { request } = utils;
 
-const { SERVER_PATH, MOCKER_PATH } = constants;
-
-/** 获取用户组列表 */
-export async function getUserGroupList() {
-  const url = `${MOCKER_PATH}/sei-manager/authUser/getUserGroupList`;
-  return request({
-    url,
-    method: 'GET',
-  });
-}
+const { SERVER_PATH } = constants;
 
 /** 用户组保存 */
 export async function saveUserGroup(data) {
-  const url = `${SERVER_PATH}/sei-basic/userGroup/save`;
+  const url = `${SERVER_PATH}/sei-manager/userGroup/save`;
   return request({
     url,
     method: 'POST',
@@ -26,16 +17,16 @@ export async function saveUserGroup(data) {
 
 /** 用户组删除 */
 export async function delUserGroup(params) {
-  const url = `${SERVER_PATH}/sei-basic/userGroup/delete/${params.id}`;
+  const url = `${SERVER_PATH}/sei-manager/userGroup/delete/${params.id}`;
   return request({
     url,
     method: 'DELETE',
   });
 }
 
-/** 用户保存 */
-export async function saveUser(data) {
-  const url = `${SERVER_PATH}/sei-basic/authUser/save`;
+/** 为用户组分配用户 */
+export async function assignUsers(data) {
+  const url = `${SERVER_PATH}/sei-manager/userGroupUser/insertRelations`;
   return request({
     url,
     method: 'POST',
@@ -43,21 +34,12 @@ export async function saveUser(data) {
   });
 }
 
-/** 用户删除 */
-export async function delUser(params) {
-  const url = `${SERVER_PATH}/sei-basic/authUser/delete/${params.id}`;
+/** 用户组移除已分配的用户 */
+export async function removeAssignedUsers(data) {
+  const url = `${SERVER_PATH}/sei-manager/userGroupUser/removeRelations`;
   return request({
     url,
     method: 'DELETE',
-  });
-}
-
-/** 获取用户列表 */
-export async function getUserItemList(params) {
-  const url = `${SERVER_PATH}/sei-basic/authUser/findChildByUserId`;
-  return request({
-    url,
-    method: 'GET',
-    params,
+    data,
   });
 }

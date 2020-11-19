@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { Button, Popconfirm, Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
@@ -14,13 +14,6 @@ const { authAction } = utils;
 @connect(({ userList, loading }) => ({ userList, loading }))
 class UserList extends Component {
   static tableRef;
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      delRowId: null,
-    };
-  }
 
   reloadData = () => {
     if (this.tableRef) {
@@ -80,31 +73,6 @@ class UserList extends Component {
     });
   };
 
-  del = record => {
-    const { dispatch } = this.props;
-    this.setState(
-      {
-        delRowId: record.id,
-      },
-      () => {
-        dispatch({
-          type: 'userList/del',
-          payload: {
-            id: record.id,
-          },
-          callback: res => {
-            if (res.success) {
-              this.setState({
-                delRowId: null,
-              });
-              this.reloadData();
-            }
-          },
-        });
-      },
-    );
-  };
-
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -116,30 +84,6 @@ class UserList extends Component {
     });
   };
 
-  renderDelBtn = row => {
-    const { loading } = this.props;
-    const { delRowId } = this.state;
-    if (loading.effects['userList/del'] && delRowId === row.id) {
-      return <ExtIcon className="del-loading" type="loading" antd />;
-    }
-    if (row.admin) {
-      return <ExtIcon className="disabled" type="delete" antd />;
-    }
-    return (
-      <Popconfirm
-        key={USER_BTN_KEY.DELETE}
-        placement="topLeft"
-        title={formatMessage({
-          id: 'global.delete.confirm',
-          defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-        })}
-        onConfirm={() => this.del(row)}
-      >
-        <ExtIcon className="del" type="delete" antd />
-      </Popconfirm>
-    );
-  };
-
   renderAccount = (t, row) => {
     return (
       <>
@@ -149,7 +93,7 @@ class UserList extends Component {
             管理员
           </Tag>
         ) : null}
-        {row.status === 0 ? (
+        {row.status === false ? (
           <Tag color="red" style={{ marginLeft: 8 }}>
             已禁用
           </Tag>
@@ -182,7 +126,6 @@ class UserList extends Component {
                 antd
               />,
             )}
-            {this.renderDelBtn(record)}
           </span>
         ),
       },
@@ -200,8 +143,8 @@ class UserList extends Component {
         required: true,
       },
       {
-        title: 'phone',
-        dataIndex: '手机号',
+        title: '手机号',
+        dataIndex: 'phone',
         width: 180,
         render: t => t || '-',
       },

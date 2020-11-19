@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { isEqual } from 'lodash';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Input, Empty, Popconfirm, Layout } from 'antd';
 import { ExtIcon, ListCard } from 'suid';
@@ -9,34 +8,25 @@ import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
 import GroupAdd from './components/UserGroupForm/Add';
 import GroupEdit from './components/UserGroupForm/Edit';
-import UserList from './components/User';
+import AssignedUser from './components/AssignedUser';
+import UnAssignUsers from './components/UnAssignUsers';
 import styles from './index.less';
 
-const { MOCKER_PATH } = constants;
+const { SERVER_PATH } = constants;
 const { Search } = Input;
 const { Sider, Content } = Layout;
 
-@connect(({ userGroup, authUser, loading }) => ({ userGroup, authUser, loading }))
+@connect(({ userGroup, loading }) => ({ userGroup, loading }))
 class UserGroup extends Component {
   static listCardRef = null;
+
+  static assignedUserRef = null;
 
   constructor(props) {
     super(props);
     this.state = {
-      listData: [],
       delGroupId: null,
     };
-  }
-
-  componentDidUpdate() {
-    const { userGroup } = this.props;
-    const { listData: stateListData } = this.state;
-    if (!isEqual(stateListData, userGroup.listData)) {
-      const { listData } = userGroup;
-      this.setState({
-        listData,
-      });
-    }
   }
 
   reloadUserGroupData = () => {
@@ -55,9 +45,7 @@ class UserGroup extends Component {
       },
       callback: res => {
         if (res.success) {
-          dispatch({
-            type: 'userGroup/queryUserGroupList',
-          });
+          this.reloadUserGroupData();
           if (handlerPopoverHide) handlerPopoverHide();
         }
       },
@@ -113,6 +101,37 @@ class UserGroup extends Component {
     this.listCardRef.handlerSearch(v);
   };
 
+  closeAssignUsers = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userGroup/updateState',
+      payload: {
+        showAssign: false,
+      },
+    });
+  };
+
+  assignUsers = childIds => {
+    const { userGroup, dispatch } = this.props;
+    const { selectedUserGroup } = userGroup;
+    dispatch({
+      type: 'userGroup/assignUsers',
+      payload: {
+        parentId: selectedUserGroup.id,
+        childIds,
+      },
+      callback: res => {
+        if (res.success && this.assignedUserRef) {
+          this.assignedUserRef.reloadData();
+        }
+      },
+    });
+  };
+
+  handlerAssignedRef = ref => {
+    this.assignedUserRef = ref;
+  };
+
   renderCustomTool = () => (
     <>
       <Search
@@ -151,9 +170,9 @@ class UserGroup extends Component {
 
   render() {
     const { loading, userGroup } = this.props;
-    const { currentUserGroup, selectedUserGroup } = userGroup;
+    const { selectedUserGroup, showAssign } = userGroup;
     const saving = loading.effects['userGroup/saveUserGroup'];
-    const selectedKeys = currentUserGroup ? [currentUserGroup.id] : [];
+    const selectedKeys = selectedUserGroup ? [selectedUserGroup.id] : [];
     const userGroupProps = {
       className: 'left-content',
       title: '用户组',
@@ -161,17 +180,23 @@ class UserGroup extends Component {
       onSelectChange: this.handlerGroupSelect,
       customTool: this.renderCustomTool,
       onListCardRef: ref => (this.listCardRef = ref),
-      searchProperties: ['code', 'name'],
+      searchProperties: ['description', 'name'],
       selectedKeys,
       extra: <GroupAdd saving={saving} saveUserGroup={this.saveUserGroup} />,
       itemField: {
         title: item => item.name,
-        description: item => item.code,
+        description: item => item.description,
       },
       store: {
-        url: `${MOCKER_PATH}/sei-manager/user/getUserGroupList`,
+        url: `${SERVER_PATH}/sei-manager/userGroup/findAll`,
       },
       itemTool: this.renderItemAction,
+    };
+    const unAssignUsersProps = {
+      selectedUserGroup,
+      showAssign,
+      closeAssignUsers: this.closeAssignUsers,
+      assignUsers: this.assignUsers,
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -181,7 +206,7 @@ class UserGroup extends Component {
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
             {selectedUserGroup ? (
-              <UserList userGroup={selectedUserGroup} />
+              <AssignedUser onRef={this.handlerAssignedRef} />
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="可选择左边列表项进行相应的操作" />
@@ -189,6 +214,7 @@ class UserGroup extends Component {
             )}
           </Content>
         </Layout>
+        {selectedUserGroup ? <UnAssignUsers {...unAssignUsersProps} /> : null}
       </div>
     );
   }

@@ -36,9 +36,9 @@ class FormModal extends PureComponent {
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
       if (formData.status) {
-        Object.assign(params, { status: 0 });
+        Object.assign(params, { status: false });
       } else {
-        Object.assign(params, { status: 1 });
+        Object.assign(params, { status: true });
       }
       if (params.id) {
         editSave(params);
@@ -62,7 +62,6 @@ class FormModal extends PureComponent {
     const { form, rowData, closeFormModal, editSaving, createdSaving, showModal } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改' : '新建';
-    const status = get(rowData, 'status', 1) || 1;
     return (
       <ExtModal
         destroyOnClose
@@ -84,7 +83,7 @@ class FormModal extends PureComponent {
                   message: '账号不能为空',
                 },
               ],
-            })(<Input maxLength={30} />)}
+            })(<Input disabled={!!get(rowData, 'account')} />)}
           </FormItem>
           <FormItem label="昵称">
             {getFieldDecorator('nickname', {
@@ -124,7 +123,7 @@ class FormModal extends PureComponent {
           </FormItem>
           <FormItem label="禁用">
             {getFieldDecorator('status', {
-              initialValue: status === 0,
+              initialValue: !get(rowData, 'status', false),
               valuePropName: 'checked',
             })(<Switch size="small" disabled={get(rowData, 'admin')} />)}
           </FormItem>

@@ -24,12 +24,3 @@ export async function editSave(data) {
     data,
   });
 }
-
-/** 用户删除 */
-export async function del(params) {
-  const url = `${SERVER_PATH}/sei-manager/user/delete/${params.id}`;
-  return request({
-    url,
-    method: 'DELETE',
-  });
-}

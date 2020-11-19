@@ -9,17 +9,17 @@ import styles from './Form.less';
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
-    span: 5,
+    span: 6,
   },
   wrapperCol: {
-    span: 19,
+    span: 18,
   },
 };
 
 @Form.create()
 class FeatureGroupForm extends PureComponent {
   handlerFormSubmit = () => {
-    const { form, saveFeatureGroup, groupData, handlerPopoverHide } = this.props;
+    const { form, saveUserGroup, groupData, handlerPopoverHide } = this.props;
     const { validateFields, getFieldsValue } = form;
     validateFields(errors => {
       if (errors) {
@@ -27,7 +27,7 @@ class FeatureGroupForm extends PureComponent {
       }
       const params = { ...groupData };
       Object.assign(params, getFieldsValue());
-      saveFeatureGroup(params, handlerPopoverHide);
+      saveUserGroup(params, handlerPopoverHide);
     });
   };
 
@@ -42,7 +42,7 @@ class FeatureGroupForm extends PureComponent {
             <BannerTitle title={title} subTitle="用户组" />
           </div>
           <Form {...formItemLayout}>
-            <FormItem label={formatMessage({ id: 'global.name', defaultMessage: '名称' })}>
+            <FormItem label="用户组名称">
               {getFieldDecorator('name', {
                 initialValue: get(groupData, 'name'),
                 rules: [
@@ -56,21 +56,18 @@ class FeatureGroupForm extends PureComponent {
                 ],
               })(<Input />)}
             </FormItem>
-            <FormItem label="代码">
-              {getFieldDecorator('code', {
-                initialValue: get(groupData, 'code'),
+            <FormItem label="用户组描述">
+              {getFieldDecorator('description', {
+                initialValue: get(groupData, 'description'),
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({
-                      id: 'global.code.required',
-                      defaultMessage: '代码不能为空',
-                    }),
+                    message: '用户组描述不能为空',
                   },
                 ],
               })(<Input maxLength={30} />)}
             </FormItem>
-            <FormItem wrapperCol={{ span: 4, offset: 5 }} className="btn-submit">
+            <FormItem wrapperCol={{ span: 4, offset: 6 }} className="btn-submit">
               <Button type="primary" loading={saving} onClick={this.handlerFormSubmit}>
                 <FormattedMessage id="global.save" defaultMessage="保存" />
               </Button>
