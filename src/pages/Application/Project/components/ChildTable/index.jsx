@@ -456,12 +456,14 @@ class ChildTable extends Component {
 
   getLogsDrawerProps = () => {
     const { project } = this.props;
-    const { currCRowData } = project;
+    const { currCRowData, currPRowData } = project;
     const { logDrawerVisible } = this.state;
 
     return {
       key: currCRowData && currCRowData.id,
       tag: currCRowData,
+      getJobItems: this.getJobItems,
+      project: currPRowData,
       visible: logDrawerVisible,
       onClose: this.handleCloseLogDrawer,
     };
@@ -469,13 +471,15 @@ class ChildTable extends Component {
 
   render() {
     const { logDrawerVisible, drawerVisible } = this.state;
+    const { project } = this.props;
+    const { currCRowData } = project;
 
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable onTableRef={inst => (this.tableRef = inst)} {...this.getExtableProps()} />
         <FormModal {...this.getFormModalProps()} />
         {drawerVisible ? <DeployDrawer {...this.getDeployDrawerProps()} /> : null}
-        {logDrawerVisible ? <Logs {...this.getLogsDrawerProps()} /> : null}
+        {logDrawerVisible && currCRowData ? <Logs {...this.getLogsDrawerProps()} /> : null}
       </div>
     );
   }
