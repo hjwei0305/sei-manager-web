@@ -165,7 +165,7 @@ class Logs extends Component {
   getStepStatus = () => {
     const { tag } = this.props;
     if (tag) {
-      const { buildLog } = this.state;
+      const { buildLog = '' } = this.state;
       const matchReg = buildLog.match(reg[tag.versionType]) || [];
       const currBuildSteps = [];
       matchReg.forEach(step => {
