@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
+import { get } from 'lodash';
 import { Button, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
+import ExtAction from './ExtAction';
+import AssignRole from './AssignRole';
 import styles from './index.less';
 
 const { USER_BTN_KEY, SERVER_PATH } = constants;
@@ -80,7 +83,58 @@ class UserList extends Component {
       payload: {
         showModal: false,
         rowData: null,
+        currentAssignUser: null,
+        showAssignedRoleModal: false,
       },
+    });
+  };
+
+  handlerAction = (key, user) => {
+    const { dispatch } = this.props;
+    const payload = { currentAssignUser: user };
+    const extData = {};
+    switch (key) {
+      case USER_BTN_KEY.ASSIGN_ROLE:
+        extData.showAssignedRoleModal = true;
+        break;
+      default:
+    }
+    dispatch({
+      type: 'userList/updateState',
+      payload: {
+        ...payload,
+        ...extData,
+      },
+    });
+  };
+
+  assignRoles = (keys, callback) => {
+    const {
+      userList: { currentAssignUser },
+      dispatch,
+    } = this.props;
+    const data = { parentId: get(currentAssignUser, 'id', null), childIds: keys };
+    dispatch({
+      type: 'userList/assignRoles',
+      payload: {
+        ...data,
+      },
+      callback,
+    });
+  };
+
+  removeAssignedRoles = (keys, callback) => {
+    const {
+      userList: { currentAssignUser },
+      dispatch,
+    } = this.props;
+    const data = { parentId: get(currentAssignUser, 'id', null), childIds: keys };
+    dispatch({
+      type: 'userList/removeAssignedRoles',
+      payload: {
+        ...data,
+      },
+      callback,
     });
   };
 
@@ -104,7 +158,7 @@ class UserList extends Component {
 
   render() {
     const { userList, loading } = this.props;
-    const { showModal, rowData } = userList;
+    const { showModal, rowData, showAssignedRoleModal, currentAssignUser } = userList;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -126,6 +180,7 @@ class UserList extends Component {
                 antd
               />,
             )}
+            <ExtAction userData={record} onAction={this.handlerAction} />
           </span>
         ),
       },
@@ -178,6 +233,15 @@ class UserList extends Component {
         </>
       ),
     };
+    const assignRoleProps = {
+      closeModal: this.closeFormModal,
+      showModal: showAssignedRoleModal,
+      currentUser: currentAssignUser,
+      assignRoles: this.assignRoles,
+      removeAssignedRoles: this.removeAssignedRoles,
+      assignLoading: loading.effects['userList/assignRoles'],
+      removeAssignedLoading: loading.effects['userList/removeAssignedRoles'],
+    };
     const tableProps = {
       toolBar: toolBarProps,
       columns,
@@ -198,6 +262,7 @@ class UserList extends Component {
       <div className={cls(styles['container-box'])}>
         <ExtTable {...tableProps} />
         <FormModal {...formModalProps} />
+        <AssignRole {...assignRoleProps} />
       </div>
     );
   }

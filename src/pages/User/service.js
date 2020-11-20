@@ -24,3 +24,23 @@ export async function editSave(data) {
     data,
   });
 }
+
+/** 为用户组分配角色 */
+export async function assignRoles(data) {
+  const url = `${SERVER_PATH}/sei-manager/userRole/insertRelations`;
+  return request({
+    url,
+    method: 'POST',
+    data,
+  });
+}
+
+/** 移除用户已分配的角色 */
+export async function removeAssignedRoles(data) {
+  const url = `${SERVER_PATH}/sei-manager/userRole/removeRelations`;
+  return request({
+    url,
+    method: 'DELETE',
+    data,
+  });
+}

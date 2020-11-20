@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-18 09:12:01
+ * @Last Modified time: 2020-11-20 13:32:15
  */
 import { name } from '../../package.json';
 
@@ -133,6 +133,7 @@ const USER_ACTION = {
 const USER_BTN_KEY = {
   EDIT: 'USER_EDIT',
   DELETE: 'USER_DELETE',
+  ASSIGN_ROLE: 'USER_ASSIGN_ROLE',
 };
 
 export default {
