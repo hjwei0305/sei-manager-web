@@ -74,7 +74,7 @@ class NavLeft extends React.Component {
     if (mode !== 'iframe') {
       return (
         <>
-          <Link to={item.url}>
+          <Link to={item.url || '#'}>
             {item.iconType ? <Icon type={item.iconType} /> : null}
             <span>{item.title}</span>
           </Link>

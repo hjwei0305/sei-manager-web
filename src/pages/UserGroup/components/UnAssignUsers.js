@@ -18,6 +18,7 @@ class UnAssignUsers extends Component {
     showAssign: PropTypes.bool,
     closeAssignUsers: PropTypes.func,
     assignUsers: PropTypes.func,
+    assignLoading: PropTypes.bool,
   };
 
   constructor(props) {
@@ -29,11 +30,7 @@ class UnAssignUsers extends Component {
 
   assignUsers = () => {
     const { assignUsers } = this.props;
-    const { checkedList } = this.state;
-    const childIds = [];
-    if (Object.keys(checkedList).length > 0) {
-      Object.keys(checkedList).forEach(key => childIds.push(key));
-    }
+    const { selectedRowKeys: childIds } = this.state;
     if (assignUsers) {
       assignUsers(childIds);
     }
@@ -72,9 +69,15 @@ class UnAssignUsers extends Component {
 
   renderCustomTool = () => {
     const { selectedRowKeys } = this.state;
+    const { assignLoading } = this.props;
     return (
       <>
-        <Button type="primary" disabled={selectedRowKeys.length === 0}>
+        <Button
+          type="primary"
+          onClick={this.assignUsers}
+          loading={assignLoading}
+          disabled={selectedRowKeys.length === 0}
+        >
           {`确定( ${selectedRowKeys.length} )`}
         </Button>
         <Search
@@ -94,8 +97,9 @@ class UnAssignUsers extends Component {
       showSearch: false,
       onSelectChange: this.handlerSelectRow,
       searchProperties: ['nickname', 'phone', 'email'],
+      checkbox: true,
       itemField: {
-        title: item => item.name,
+        title: item => item.nickname,
         description: item => item.email,
         extra: item => <span style={{ fontSize: 12 }}>{item.phone}</span>,
       },

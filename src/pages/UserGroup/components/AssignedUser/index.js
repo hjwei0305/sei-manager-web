@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Tag, Drawer, Popconfirm } from 'antd';
-import { ExtTable, ExtIcon, BannerTitle } from 'suid';
+import { ExtTable, BannerTitle } from 'suid';
 import { constants } from '@/utils';
-import ExtAction from './ExtAction';
 import styles from './index.less';
 
 const { SERVER_PATH, USER_ACTION } = constants;
@@ -20,6 +19,13 @@ class AssignedUser extends Component {
     this.state = {
       selectedRowKeys: [],
     };
+  }
+
+  componentDidMount() {
+    const { onRef } = this.props;
+    if (onRef) {
+      onRef(this);
+    }
   }
 
   reloadData = () => {
@@ -72,9 +78,10 @@ class AssignedUser extends Component {
     });
   };
 
-  removeAssignedUsers = childIds => {
+  removeAssignedUsers = () => {
     const { userGroup, dispatch } = this.props;
     const { selectedUserGroup } = userGroup;
+    const { selectedRowKeys: childIds } = this.state;
     dispatch({
       type: 'userGroup/removeAssignedUsers',
       payload: {
@@ -116,21 +123,20 @@ class AssignedUser extends Component {
     const { selectedUserGroup } = userGroup;
     const hasSelected = selectedRowKeys.length > 0;
     const columns = [
-      {
-        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
-        key: 'operation',
-        width: 120,
-        align: 'center',
-        dataIndex: 'id',
-        className: 'action',
-        required: true,
-        render: (_text, record) => (
-          <span className={cls('action-box')}>
-            <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
-            <ExtAction employeeData={record} onAction={this.handlerAction} />
-          </span>
-        ),
-      },
+      // {
+      //   title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+      //   key: 'operation',
+      //   width: 80,
+      //   align: 'center',
+      //   dataIndex: 'id',
+      //   className: 'action',
+      //   required: true,
+      //   render: (_text, record) => (
+      //     <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
+      //       <ExtAction userData={record} onAction={this.handlerAction} />
+      //     </span>
+      //   ),
+      // },
       {
         title: '昵称',
         dataIndex: 'nickname',
@@ -173,15 +179,11 @@ class AssignedUser extends Component {
             <Button onClick={this.onCancelBatchRemoveAssigned} disabled={removeLoading}>
               取消
             </Button>
-            <Popconfirm
-              title="确定要移除选择的用户吗？"
-              onConfirm={this.batchRemoveAssignedAppModuleItem}
-            >
+            <Popconfirm title="确定要移除选择的成员吗？" onConfirm={this.removeAssignedUsers}>
               <Button type="danger" loading={removeLoading}>
-                移除成员
+                {`移除成员( ${selectedRowKeys.length} )`}
               </Button>
             </Popconfirm>
-            <span className={cls('select')}>{`已选择 ${selectedRowKeys.length} 个成员`}</span>
           </Drawer>
         </>
       ),
@@ -190,13 +192,15 @@ class AssignedUser extends Component {
       bordered: false,
       toolBar: toolBarProps,
       columns,
+      checkbox: true,
+      selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
       onTableRef: ref => (this.tableRef = ref),
       searchPlaceHolder: '输入昵称、手机、邮箱关键字',
       searchProperties: ['nickname', 'phone', 'email'],
       searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-manager/userGroupUser/getRelationsByParentId`,
+        url: `${SERVER_PATH}/sei-manager/userGroupUser/getChildrenFromParentId`,
       },
       cascadeParams: {
         parentId: get(selectedUserGroup, 'id'),

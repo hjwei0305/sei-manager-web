@@ -37,9 +37,9 @@ class ExtAction extends PureComponent {
       selectedKeys: '',
       menuShow: false,
     });
-    const { onAction, employeeData } = this.props;
+    const { onAction, userData } = this.props;
     if (onAction) {
-      onAction(e.key, employeeData);
+      onAction(e.key, userData);
     }
   };
 

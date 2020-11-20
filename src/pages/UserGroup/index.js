@@ -197,6 +197,7 @@ class UserGroup extends Component {
       showAssign,
       closeAssignUsers: this.closeAssignUsers,
       assignUsers: this.assignUsers,
+      assignLoading: loading.effects['userGroup/assignUsers'],
     };
     return (
       <div className={cls(styles['container-box'])}>
