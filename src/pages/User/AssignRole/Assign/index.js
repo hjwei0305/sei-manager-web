@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-20 13:26:48
+ * @Last Modified time: 2020-11-20 16:02:36
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -117,7 +117,7 @@ class FeatureRoleAssign extends Component {
         parentId: get(currentUser, 'id', null),
       },
       store: {
-        url: `${SERVER_PATH}/sei-manager/userRole/getChildrenFromParentId`,
+        url: `${SERVER_PATH}/sei-manager/userRole/getUnassigned`,
       },
       onListCardRef: ref => (this.listCardRef = ref),
       onSelectChange: this.handerAssignUserSelectChange,

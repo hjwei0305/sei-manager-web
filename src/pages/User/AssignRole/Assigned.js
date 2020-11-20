@@ -141,7 +141,7 @@ class FeatureRoleAssigned extends PureComponent {
         description: item => item.description,
       },
       store: {
-        url: `${SERVER_PATH}/sei-manager/userRole/getUnassigned`,
+        url: `${SERVER_PATH}/sei-manager/userRole/getChildrenFromParentId`,
         params: {
           parentId: positionId,
         },
