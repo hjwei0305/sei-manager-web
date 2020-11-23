@@ -35,6 +35,27 @@ const routes = [
         component: './Dashboard',
       },
       {
+        path: '/deploy',
+        namd: '部署管理',
+        routes: [
+          {
+            path: '/deploy/certificate',
+            name: '凭证管理',
+            component: './Certificate',
+          },
+          {
+            path: '/deploy/serverNode',
+            name: '服务器节点管理',
+            component: './ServerNode',
+          },
+          {
+            path: '/deploy/deployStage',
+            name: '部署阶段管理',
+            component: './DeployStage',
+          },
+        ],
+      },
+      {
         path: '/auth',
         namd: '后台配置',
         routes: [

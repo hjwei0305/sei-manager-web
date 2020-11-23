@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@umijs/plugin-qiankun": "^1.5.1",
+    "ace-builds": "^1.4.12",
     "antd": "^3.23.6",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.3.1",
@@ -39,6 +40,7 @@
     "rc-resize-observer": "^0.2.1",
     "rc-trigger": "^2.6.2",
     "react": "^16.8.6",
+    "react-ace": "^9.2.0",
     "react-color": "^2.18.1",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
