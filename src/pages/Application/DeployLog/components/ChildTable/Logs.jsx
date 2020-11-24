@@ -3,7 +3,7 @@ import { Drawer, Steps, Descriptions, Tag } from 'antd';
 import { ScrollBar, ListLoader } from 'suid';
 import { get } from 'lodash';
 import cls from 'classnames';
-import { findTagById } from '../../service';
+import { findLogById } from '../../service';
 import styles from './logs.less';
 
 const { Step } = Steps;
@@ -78,6 +78,7 @@ const buildSteps = {
 };
 
 const reg = {
+  dev: /(Pre Git)|(Install Dependency Package)|(Build Project)|(Generate Image)|(Deploy Project)/g,
   beta: /(Pre Git)|(Install Dependency Package)|(Build Project)|(Generate Image)|(Deploy Project)/g,
   release: /(Pull Beta Image)|(Tag Release Image)|(Push Release Image)|(Remove Local Image)|(Deploy Project)/g,
 };
@@ -90,30 +91,21 @@ class Logs extends Component {
   };
 
   componentDidMount() {
-    const { getJobItems, tag } = this.props;
-    const versionType = get(tag, 'versionType', '');
-    if (getJobItems) {
-      getJobItems().then(result => {
-        const { data: jobItems, success } = result;
-        if (success) {
-          let jobItem = null;
-          jobItems.forEach(it => {
-            if (versionType === 'beta' && it.deployEnv === 'test') {
-              jobItem = it;
-            }
-
-            if (versionType === 'release' && it.deployEnv === 'prod') {
-              jobItem = it;
-            }
-          });
-
-          this.setState({
-            jobItem,
-          });
+    const { deployLog, project } = this.props;
+    const jobItems = get(project, 'deployJob.deployJobItems', null);
+    if (jobItems) {
+      let jobItem = null;
+      jobItems.forEach(it => {
+        if (it.deployEnv === 'dev') {
+          jobItem = it;
         }
       });
+
+      this.setState({
+        jobItem,
+      });
     }
-    if (tag) {
+    if (deployLog) {
       this.getLogs(0);
     }
   }
@@ -122,14 +114,14 @@ class Logs extends Component {
     clearTimeout(this.logref);
   }
 
-  findTagById = () => {
-    const { tag } = this.props;
-    return findTagById({ id: tag.id });
+  findLogById = () => {
+    const { deployLog } = this.props;
+    return findLogById({ id: deployLog.id });
   };
 
   getLogs = (time = 2000) => {
     this.logref = setTimeout(() => {
-      this.findTagById().then(result => {
+      this.findLogById().then(result => {
         const { success, data } = result;
         if (success) {
           const { deploymentStatus, buildLog } = data;
@@ -154,8 +146,7 @@ class Logs extends Component {
 
   getHeader = () => {
     const { jobItem } = this.state;
-    const { project, tag } = this.props;
-    console.log('Logs -> getHeader -> project', project);
+    const { project } = this.props;
     const jobName = get(project, 'deployJob.name', '');
     const jobItemName = get(jobItem, 'name', '');
     const deployEnv = get(jobItem, 'deployEnv', '');
@@ -167,9 +158,9 @@ class Logs extends Component {
         <Descriptions.Item label="项目分类">{project.type}</Descriptions.Item>
         <Descriptions.Item label="项目分组">{project.groupName}</Descriptions.Item>
         <Descriptions.Item label="项目地址">{project.gitUrl}</Descriptions.Item>
-        <Descriptions.Item label="分支描述">{tag.description}</Descriptions.Item>
+        {/* <Descriptions.Item label="分支描述">{deployLog.description}</Descriptions.Item> */}
         <Descriptions.Item label="部署分支">
-          <Tag color="green">{tag.name}</Tag>
+          <Tag color="green">dev</Tag>
         </Descriptions.Item>
         <Descriptions.Item label="部署任务">
           <Tag color={jobName ? 'green' : 'red'}>{jobName}</Tag>
@@ -185,10 +176,10 @@ class Logs extends Component {
   };
 
   getStepStatus = () => {
-    const { tag } = this.props;
-    if (tag) {
+    const { deployLog } = this.props;
+    if (deployLog) {
       const { buildLog = '' } = this.state;
-      const matchReg = (buildLog || '').match(reg[tag.versionType]) || [];
+      const matchReg = (buildLog || '').match(reg.dev) || [];
       const currBuildSteps = [];
       matchReg.forEach(step => {
         if (step && !currBuildSteps.includes(step)) {
@@ -203,7 +194,7 @@ class Logs extends Component {
   };
 
   render() {
-    const { visible, onClose, tag } = this.props;
+    const { visible, onClose } = this.props;
     const { buildLog, deploymentStatus } = this.state;
     return (
       <Drawer title="实时日志" width="100%" visible={visible} onClose={onClose} destroyOnClose>
@@ -212,7 +203,7 @@ class Logs extends Component {
           <div className={cls('build-step')}>
             {deploymentStatus !== 0 ? (
               <Steps>
-                {buildSteps[tag.versionType].map(({ title, description }, idx) => {
+                {buildSteps.dev.map(({ title, description }, idx) => {
                   const currBuildSteps = this.getStepStatus();
                   const len = currBuildSteps.length;
                   let status = 'wait';

@@ -158,6 +158,11 @@ const routes = [
             name: '部署配置',
             component: './Application/AppModule',
           },
+          {
+            path: '/app/deployLog',
+            name: '开发部署日志',
+            component: './Application/DeployLog',
+          },
         ],
       },
     ],
