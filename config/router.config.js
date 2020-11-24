@@ -53,6 +53,11 @@ const routes = [
             name: '部署阶段管理',
             component: './DeployStage',
           },
+          {
+            path: '/deploy/deployTemplate',
+            name: '部署模板管理',
+            component: './DeployTemplate',
+          },
         ],
       },
       {

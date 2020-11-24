@@ -6,70 +6,70 @@ import { Input, Empty, Popconfirm, Layout } from 'antd';
 import { ExtIcon, ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
-import GroupAdd from './components/UserGroupForm/Add';
-import GroupEdit from './components/UserGroupForm/Edit';
-import AssignedUser from './components/AssignedUser';
-import UnAssignUsers from './components/UnAssignUsers';
+import TemplateAdd from './components/DeployTemplateForm/Add';
+import TemplateEdit from './components/DeployTemplateForm/Edit';
+import AssignedStage from './components/AssignedStage';
+import UnAssignStage from './components/UnAssignStage';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
 const { Search } = Input;
 const { Sider, Content } = Layout;
 
-@connect(({ userGroup, loading }) => ({ userGroup, loading }))
-class UserGroup extends Component {
+@connect(({ deployTemplate, loading }) => ({ deployTemplate, loading }))
+class DeployTemplate extends Component {
   static listCardRef = null;
 
-  static assignedUserRef = null;
+  static assignedStageRef = null;
 
   constructor(props) {
     super(props);
     this.state = {
-      delGroupId: null,
+      delId: null,
     };
   }
 
-  reloadUserGroupData = () => {
+  reloadTemplateData = () => {
     if (this.listCardRef) {
       this.listCardRef.remoteDataRefresh();
     }
   };
 
-  saveUserGroup = (data, handlerPopoverHide) => {
+  saveDeployTemplate = (data, handlerPopoverHide) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userGroup/saveUserGroup',
+      type: 'deployTemplate/saveDeployTemplate',
       payload: {
         ...data,
       },
       callback: res => {
         if (res.success) {
-          this.reloadUserGroupData();
+          this.reloadTemplateData();
           if (handlerPopoverHide) handlerPopoverHide();
         }
       },
     });
   };
 
-  delUserGroup = (data, e) => {
+  delDeployTemplate = (data, e) => {
     if (e) e.stopPropagation();
     const { dispatch } = this.props;
     this.setState(
       {
-        delGroupId: data.id,
+        delId: data.id,
       },
       () => {
         dispatch({
-          type: 'userGroup/delUserGroup',
+          type: 'deployTemplate/delDeployTemplate',
           payload: {
             id: data.id,
           },
           callback: res => {
             if (res.success) {
               this.setState({
-                delGroupId: null,
+                delId: null,
               });
-              this.reloadUserGroupData();
+              this.reloadTemplateData();
             }
           },
         });
@@ -77,13 +77,13 @@ class UserGroup extends Component {
     );
   };
 
-  handlerGroupSelect = (keys, items) => {
+  handlerSelect = (keys, items) => {
     const { dispatch } = this.props;
-    const selectedUserGroup = keys.length === 1 ? items[0] : null;
+    const selectedTemplate = keys.length === 1 ? items[0] : null;
     dispatch({
-      type: 'userGroup/updateState',
+      type: 'deployTemplate/updateState',
       payload: {
-        selectedUserGroup,
+        selectedTemplate,
       },
     });
   };
@@ -100,42 +100,42 @@ class UserGroup extends Component {
     this.listCardRef.handlerSearch(v);
   };
 
-  closeAssignUsers = () => {
+  closeAssignStages = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userGroup/updateState',
+      type: 'deployTemplate/updateState',
       payload: {
         showAssign: false,
       },
     });
   };
 
-  assignUsers = childIds => {
-    const { userGroup, dispatch } = this.props;
-    const { selectedUserGroup } = userGroup;
+  assignStages = childIds => {
+    const { deployTemplate, dispatch } = this.props;
+    const { selectedTemplate } = deployTemplate;
     dispatch({
-      type: 'userGroup/assignUsers',
+      type: 'deployTemplate/assignStages',
       payload: {
-        parentId: selectedUserGroup.id,
+        parentId: selectedTemplate.id,
         childIds,
       },
       callback: res => {
-        if (res.success && this.assignedUserRef) {
-          this.assignedUserRef.reloadData();
+        if (res.success && this.assignedStageRef) {
+          this.assignedStageRef.reloadData();
         }
       },
     });
   };
 
   handlerAssignedRef = ref => {
-    this.assignedUserRef = ref;
+    this.assignedStageRef = ref;
   };
 
   renderCustomTool = () => (
     <>
       <Search
         allowClear
-        placeholder="输入代码、名称关键字查询"
+        placeholder="输入名称、描述关键字查询"
         onChange={e => this.handlerSearchChange(e.target.value)}
         onSearch={this.handlerSearch}
         onPressEnter={this.handlerPressEnter}
@@ -146,17 +146,21 @@ class UserGroup extends Component {
 
   renderItemAction = item => {
     const { loading } = this.props;
-    const { delGroupId } = this.state;
-    const saving = loading.effects['userGroup/saveUserGroup'];
+    const { delId } = this.state;
+    const saving = loading.effects['deployTemplate/saveDeployTemplate'];
     return (
       <>
         <div className="tool-action" onClick={e => e.stopPropagation()}>
-          <GroupEdit saving={saving} saveUserGroup={this.saveUserGroup} groupData={item} />
+          <TemplateEdit
+            saving={saving}
+            saveDeployTemplate={this.saveDeployTemplate}
+            templateData={item}
+          />
           <Popconfirm
             title={formatMessage({ id: 'global.delete.confirm', defaultMessage: '确定要删除吗?' })}
-            onConfirm={e => this.delUserGroup(item, e)}
+            onConfirm={e => this.delDeployTemplate(item, e)}
           >
-            {loading.effects['userGroup/delUserGroup'] && delGroupId === item.id ? (
+            {loading.effects['deployTemplate/delDeployTemplate'] && delId === item.id ? (
               <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
             ) : (
               <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
@@ -168,45 +172,47 @@ class UserGroup extends Component {
   };
 
   render() {
-    const { loading, userGroup } = this.props;
-    const { selectedUserGroup, showAssign } = userGroup;
-    const saving = loading.effects['userGroup/saveUserGroup'];
-    const selectedKeys = selectedUserGroup ? [selectedUserGroup.id] : [];
-    const userGroupProps = {
+    const { loading, deployTemplate } = this.props;
+    const { selectedTemplate, showAssign } = deployTemplate;
+    const saving = loading.effects['deployTemplate/saveDeployTemplate'];
+    const selectedKeys = selectedTemplate ? [selectedTemplate.id] : [];
+    const deployTemplateProps = {
       className: 'left-content',
-      title: '用户组',
+      title: '部署模板',
       showSearch: false,
-      onSelectChange: this.handlerGroupSelect,
+      onSelectChange: this.handlerSelect,
       customTool: this.renderCustomTool,
       onListCardRef: ref => (this.listCardRef = ref),
-      searchProperties: ['description', 'name'],
+      searchProperties: ['remark', 'name'],
       selectedKeys,
-      extra: <GroupAdd saving={saving} saveUserGroup={this.saveUserGroup} />,
+      extra: <TemplateAdd saving={saving} saveDeployTemplate={this.saveDeployTemplate} />,
       itemField: {
         title: item => item.name,
-        description: item => item.description,
+        description: item => item.remark,
       },
+      remotePaging: true,
       store: {
-        url: `${SERVER_PATH}/sei-manager/userGroup/findAll`,
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/deployTemplate/findByPage`,
       },
       itemTool: this.renderItemAction,
     };
-    const unAssignUsersProps = {
-      selectedUserGroup,
+    const unAssignStagesProps = {
+      selectedTemplate,
       showAssign,
-      closeAssignUsers: this.closeAssignUsers,
-      assignUsers: this.assignUsers,
-      assignLoading: loading.effects['userGroup/assignUsers'],
+      closeAssignStages: this.closeAssignStages,
+      assignStages: this.assignStages,
+      assignLoading: loading.effects['deployTemplate/assignStages'],
     };
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
           <Sider width={320} className="auto-height" theme="light">
-            <ListCard {...userGroupProps} />
+            <ListCard {...deployTemplateProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
-            {selectedUserGroup ? (
-              <AssignedUser onRef={this.handlerAssignedRef} />
+            {selectedTemplate ? (
+              <AssignedStage onRef={this.handlerAssignedRef} />
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="可选择左边列表项进行相应的操作" />
@@ -214,9 +220,9 @@ class UserGroup extends Component {
             )}
           </Content>
         </Layout>
-        {selectedUserGroup ? <UnAssignUsers {...unAssignUsersProps} /> : null}
+        {selectedTemplate ? <UnAssignStage {...unAssignStagesProps} /> : null}
       </div>
     );
   }
 }
-export default UserGroup;
+export default DeployTemplate;

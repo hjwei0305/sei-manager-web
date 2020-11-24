@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Popover } from 'antd';
 import cls from 'classnames';
+import { Popover } from 'antd';
+import { ExtIcon } from 'suid';
 import Form from './Form';
 import styles from './index.less';
 
-class GroupAdd extends Component {
+class GroupEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,14 +40,12 @@ class GroupAdd extends Component {
         overlayClassName={cls(styles['form-popover-box'])}
         content={<Form {...popoverProps} />}
       >
-        <span className={cls('form-popover-box-trigger')}>
-          <Button icon="plus" type="link">
-            用户组
-          </Button>
+        <span className={cls('form-popover-box-trigger', 'action-item')}>
+          <ExtIcon type="edit" antd />
         </span>
       </Popover>
     );
   }
 }
 
-export default GroupAdd;
+export default GroupEdit;
