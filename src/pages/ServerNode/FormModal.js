@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import { Form, Input } from 'antd';
 import { ExtModal, ComboList } from 'suid';
+import { constants } from '../../utils';
 
+const { SERVER_PATH } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -28,34 +30,26 @@ class FormModal extends PureComponent {
     });
   };
 
-  getEnvRemark = key => {
-    const { evnData } = this.props;
-    const env = evnData.filter(e => e.key === key);
-    if (env.length === 1) {
-      return env[0].title;
-    }
-    return '';
-  };
-
   render() {
-    const { form, rowData, closeFormModal, saving, showModal, evnData } = this.props;
+    const { form, rowData, closeFormModal, saving, showModal } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '修改凭证' : '新建凭证';
+    const title = rowData ? '修改服务器节点' : '新建服务器节点';
     const envProps = {
       form,
-      name: 'envRemark',
-      dataSource: evnData,
-      rowKey: 'key',
-      reader: {
-        name: 'title',
-        field: ['key'],
+      name: 'envName',
+      store: {
+        url: `${SERVER_PATH}/sei-manager/env/findAllUnfrozen`,
       },
-      afterSelect: item => {
-        form.setFieldsValue({ env: item.key });
+      showSearch: false,
+      pagination: false,
+      field: ['envCode'],
+      reader: {
+        name: 'name',
+        description: 'remark',
+        field: ['code'],
       },
     };
-    const env = get(rowData, 'env');
-    getFieldDecorator('env', { initialValue: env });
+    getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
     return (
       <ExtModal
         destroyOnClose
@@ -70,8 +64,8 @@ class FormModal extends PureComponent {
       >
         <Form {...formItemLayout} layout="horizontal">
           <FormItem label="运行环境">
-            {getFieldDecorator('envRemark', {
-              initialValue: this.getEnvRemark(env),
+            {getFieldDecorator('envName', {
+              initialValue: get(rowData, 'envName'),
               rules: [
                 {
                   required: true,

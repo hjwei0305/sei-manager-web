@@ -102,17 +102,6 @@ class ServerNode extends Component {
     });
   };
 
-  getEnvRemark = key => {
-    const {
-      serverNode: { evnData },
-    } = this.props;
-    const env = evnData.filter(e => e.key === key);
-    if (env.length === 1) {
-      return env[0].title;
-    }
-    return '';
-  };
-
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
@@ -124,7 +113,7 @@ class ServerNode extends Component {
 
   render() {
     const { serverNode, loading } = this.props;
-    const { showModal, rowData, list, evnData } = serverNode;
+    const { showModal, rowData, list } = serverNode;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -158,10 +147,9 @@ class ServerNode extends Component {
       },
       {
         title: '环境',
-        dataIndex: 'env',
+        dataIndex: 'envName',
         width: 140,
         required: true,
-        render: this.getEnvRemark,
       },
       {
         title: '节点名称',
@@ -185,7 +173,6 @@ class ServerNode extends Component {
       save: this.save,
       rowData,
       showModal,
-      evnData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['serverNode/save'],
     };

@@ -1,10 +1,7 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { constants } from '@/utils';
 import { del, getList, save } from './service';
 
-const { ENV_CATEGORY } = constants;
-const evnData = Object.keys(ENV_CATEGORY).map(key => ENV_CATEGORY[key]);
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 
@@ -15,7 +12,6 @@ export default modelExtend(model, {
     list: [],
     rowData: null,
     showModal: false,
-    evnData,
   },
   subscriptions: {
     setup({ dispatch, history }) {
