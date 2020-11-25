@@ -116,7 +116,7 @@ class FilterView extends PureComponent {
   render() {
     const { currentViewType, reader, title, iconType, extraTitle } = this.props;
     const { menuShow, menusData } = this.state;
-    let currentViewTitle = `${get(currentViewType, get(reader, 'title'))}`;
+    let currentViewTitle = `${get(currentViewType, get(reader, 'title')) || '无可用视图'}`;
     if (extraTitle) {
       currentViewTitle = (
         <>

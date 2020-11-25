@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Input, Button, Menu, Drawer } from 'antd';
@@ -36,6 +36,23 @@ class LogList extends PureComponent {
 
   static filterDateRef;
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'runtimeLog/updateState',
+      payload: {
+        currentEnvViewType: null,
+        envViewData: [],
+        currentLog: null,
+        showDetail: false,
+        showTranceLog: false,
+        logData: null,
+        tranceData: [],
+        serviceList: [],
+      },
+    });
+  }
+
   reloadData = () => {
     const { dispatch, runtimeLog } = this.props;
     const { filter: originFilter, currentTimeViewType } = runtimeLog;
@@ -52,7 +69,9 @@ class LogList extends PureComponent {
         filter,
       },
     });
-    // this.tableRef.remoteDataRefresh();
+    if (isEqual(originFilter, filter)) {
+      this.tableRef.remoteDataRefresh();
+    }
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
@@ -331,7 +350,7 @@ class LogList extends PureComponent {
   getFilter = () => {
     const { runtimeLog } = this.props;
     const { filter, currentEnvViewType } = runtimeLog;
-    const filters = [{ fieldName: 'env', operator: 'EQ', value: currentEnvViewType.code }];
+    const filters = [{ fieldName: 'env', operator: 'EQ', value: get(currentEnvViewType, 'code') }];
     let idxName = '*';
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
@@ -543,7 +562,7 @@ class LogList extends PureComponent {
         </>
       ),
     };
-    const { agentServer } = currentEnvViewType;
+    const agentServer = get(currentEnvViewType, 'agentServer');
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
