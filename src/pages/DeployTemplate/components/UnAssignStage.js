@@ -118,7 +118,7 @@ class UnAssignStages extends Component {
         getContainer={false}
         placement="right"
         visible={showAssign}
-        title="未分配的阶段"
+        title="可以使用的阶段"
         className={cls(styles['user-item-box'])}
         onClose={this.handlerClose}
         style={{ position: 'absolute' }}

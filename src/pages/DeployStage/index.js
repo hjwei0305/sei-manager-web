@@ -152,13 +152,13 @@ class DeployStage extends Component {
       {
         title: '部署阶段名称',
         dataIndex: 'name',
-        width: 220,
+        width: 320,
         required: true,
       },
       {
         title: '部署阶段描述',
         dataIndex: 'remark',
-        width: 380,
+        width: 420,
         render: t => t || '-',
       },
     ];
