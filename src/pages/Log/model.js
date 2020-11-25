@@ -70,7 +70,8 @@ export default modelExtend(model, {
         });
       }
     },
-    *getLogDetail({ payload }, { call, put }) {
+    *getLogDetail({ payload }, { call, put, select }) {
+      const { currentEnvViewType } = yield select(sel => sel.runtimeLog);
       const { currentLog } = payload;
       yield put({
         type: 'updateState',
@@ -82,6 +83,7 @@ export default modelExtend(model, {
       });
       const serviceName = get(currentLog, 'serviceName', '') || '';
       const re = yield call(getLogDetail, {
+        agentServer: get(currentEnvViewType, 'agentServer'),
         id: get(currentLog, 'id', null),
         serviceName: serviceName ? `${serviceName}*` : '',
       });
@@ -94,7 +96,9 @@ export default modelExtend(model, {
         });
       }
     },
-    *getTranceLog({ payload }, { call, put }) {
+    *getTranceLog({ payload }, { call, put, select }) {
+      const { currentEnvViewType } = yield select(sel => sel.runtimeLog);
+      const agentServer = get(currentEnvViewType, 'agentServer');
       const { currentLog } = payload;
       yield put({
         type: 'updateState',
@@ -106,12 +110,14 @@ export default modelExtend(model, {
       });
       const serviceName = get(currentLog, 'serviceName', '') || '';
       const re = yield call(getTranceLog, {
+        agentServer,
         traceId: get(currentLog, 'traceId', null),
         serviceName: serviceName ? `${serviceName}*` : '',
       });
       if (re.success) {
         let logData = null;
         const reLog = yield call(getLogDetail, {
+          agentServer,
           id: get(currentLog, 'id', null),
           serviceName: serviceName ? `${serviceName}*` : '',
         });
@@ -127,10 +133,13 @@ export default modelExtend(model, {
         });
       }
     },
-    *getTranceLogDetail({ payload }, { call, put }) {
+    *getTranceLogDetail({ payload }, { call, put, select }) {
+      const { currentEnvViewType } = yield select(sel => sel.runtimeLog);
+      const agentServer = get(currentEnvViewType, 'agentServer');
       const { currentLog } = payload;
       const serviceName = get(currentLog, 'serviceName', '') || '';
       const re = yield call(getLogDetail, {
+        agentServer,
         id: get(currentLog, 'id', null),
         serviceName: serviceName ? `${serviceName}*` : '',
       });

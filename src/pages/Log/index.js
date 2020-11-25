@@ -552,7 +552,7 @@ class LogList extends PureComponent {
       searchPlaceHolder: '输入关键字查询',
       store: {
         type: 'POST',
-        url: `${agentServer}/sei-manager/log/findByPage`,
+        url: `${agentServer}/log/findByPage`,
       },
       cascadeParams: {
         ...this.getFilter(),

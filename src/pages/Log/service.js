@@ -8,29 +8,33 @@ const { SERVER_PATH } = constants;
 
 /**
  * 获取日志详情
+ *  * @agentServer string
  * @id string
  * @serviceName string
  */
 export async function getLogDetail(params) {
-  const url = `${SERVER_PATH}/sei-manager/log/detail`;
+  const { agentServer, ...rest } = params;
+  const url = `${agentServer}/log/detail`;
   return request({
     url,
     method: 'GET',
-    params,
+    params: rest,
   });
 }
 
 /**
  * 获取链路日志
+ * @agentServer string
  * @traceId string
  * @serviceName string
  */
 export async function getTranceLog(params) {
-  const url = `${SERVER_PATH}/sei-manager/log/findByTraceId`;
+  const { agentServer, ...rest } = params;
+  const url = `${agentServer}/log/findByTraceId`;
   return request({
     url,
     method: 'GET',
-    params,
+    params: rest,
   });
 }
 
