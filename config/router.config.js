@@ -65,6 +65,11 @@ const routes = [
         namd: '后台配置',
         routes: [
           {
+            path: '/auth/env',
+            name: '环境管理',
+            component: './Env',
+          },
+          {
             path: '/auth/feature',
             name: '功能项',
             component: './Feature',

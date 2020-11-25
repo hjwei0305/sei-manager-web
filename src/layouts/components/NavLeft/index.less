@@ -21,10 +21,10 @@
       line-height: 32px;
       text-align: center;
       .collapsed-search-icon {
-        color: rgba(255, 255, 255, 0.65);
+        color: rgba(0, 0, 0, 0.65);
         font-size: 16px;
         &:hover {
-          color: #fff;
+          color: fade(@primary-color, 65%);
         }
       }
       .ant-input {
@@ -43,6 +43,11 @@
         &:focus {
           box-shadow: none;
         }
+      }
+      .ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled) {
+        background-color: fade(@primary-color, 10%);
+        border-color: @menu-search-input-border;
+        border-right-width: 0 !important;
       }
       .anticon {
         color: fade(@primary-color, 85%);
