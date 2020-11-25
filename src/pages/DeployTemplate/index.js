@@ -29,6 +29,18 @@ class DeployTemplate extends Component {
     };
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/updateState',
+      payload: {
+        currentTemplate: null,
+        selectedTemplate: null,
+        showAssign: false,
+      },
+    });
+  }
+
   reloadTemplateData = () => {
     if (this.listCardRef) {
       this.listCardRef.remoteDataRefresh();

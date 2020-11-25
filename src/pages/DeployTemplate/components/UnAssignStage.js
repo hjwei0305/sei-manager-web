@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import cls from 'classnames';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { Button, Input, Drawer } from 'antd';
 import { ListCard } from 'suid';
 import { constants } from '@/utils';
@@ -26,6 +26,13 @@ class UnAssignStages extends Component {
     this.state = {
       selectedRowKeys: [],
     };
+  }
+
+  componentDidUpdate(preProps) {
+    const { showAssign } = this.props;
+    if (!isEqual(preProps.showAssign, showAssign) && !showAssign) {
+      this.setState({ selectedRowKeys: [] });
+    }
   }
 
   assignStages = () => {
