@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-12 16:59:01
+ * @Last Modified time: 2020-11-25 10:22:50
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -123,8 +123,8 @@ export default {
 
       return result;
     },
-    *userLogin({ payload }, { put, take }) {
-      const result = yield userLogin({ ...payload, locale: adaptLocale(getCurrentLocale()) });
+    *userLogin({ payload }, { call, put, take }) {
+      const result = yield call(userLogin, { ...payload, locale: adaptLocale(getCurrentLocale()) });
       const { success, data, message: msg } = result || {};
       if (success) {
         yield put({

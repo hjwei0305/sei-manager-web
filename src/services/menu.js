@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:57:34
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-13 10:28:01
+ * @Last Modified time: 2020-11-25 10:22:17
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -26,3 +26,12 @@ export const collectMenu = ({ id }) =>
 /** 移除收藏菜单 */
 export const deCollectMenu = ({ id }) =>
   request.post(`${SERVER_PATH}/sei-basic/userMenu/removeMenu/${id}`);
+
+/**
+ * 获取运行环境
+ */
+export async function getEnvData() {
+  return request({
+    url: `${SERVER_PATH}/sei-manager/env/findAllUnfrozen`,
+  });
+}

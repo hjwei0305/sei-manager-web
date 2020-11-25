@@ -2,12 +2,12 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-13 15:33:38
+ * @Last Modified time: 2020-11-25 10:31:29
  */
 import { router } from 'umi';
 import { utils } from 'suid';
 import { cloneDeep, set, has } from 'lodash';
-import { getMenu, collectMenu, deCollectMenu } from '@/services/menu';
+import { getMenu, collectMenu, deCollectMenu, getEnvData } from '@/services/menu';
 import { treeOperation, constants, eventBus, userInfoOperation } from '@/utils';
 import { traverseTrees } from '@/utils/tree';
 
@@ -101,13 +101,21 @@ export default {
     allLeafMenus: [],
     /** 是否显示登录框 */
     loginVisible: false,
+    /** 运行环境 */
+    envData: [],
   },
 
   effects: {
     *getMenus(_, { put, call }) {
+      let envData = [];
+      const evnRes = yield call(getEnvData);
+      if (evnRes.success) {
+        envData = evnRes.data;
+      }
       yield put({
         type: '_updateState',
         payload: {
+          envData,
           menuTrees: [],
           currMenuTree: null,
         },

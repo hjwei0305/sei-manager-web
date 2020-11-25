@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
-import { Form, Input, Switch } from 'antd';
+import { Form, Input, Switch, InputNumber } from 'antd';
 import { ExtModal } from 'suid';
+import styles from './index.less';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -38,6 +39,7 @@ class FormModal extends PureComponent {
         onCancel={closeFormModal}
         visible={showModal}
         centered
+        wrapClassName={styles['form-modal-box']}
         bodyStyle={{ paddingBottom: 0 }}
         confirmLoading={saving}
         title={title}
@@ -81,6 +83,17 @@ class FormModal extends PureComponent {
                 },
               ],
             })(<Input />)}
+          </FormItem>
+          <FormItem label="序号">
+            {getFieldDecorator('rank', {
+              initialValue: get(rowData, 'rank'),
+              rules: [
+                {
+                  required: true,
+                  message: '序号不能为空',
+                },
+              ],
+            })(<InputNumber precision={0} />)}
           </FormItem>
           <FormItem label="冻结">
             {getFieldDecorator('frozen', {

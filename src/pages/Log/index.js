@@ -16,7 +16,7 @@ import LogDetail from './components/LogDetail';
 import LogLevel from './components/LogLevel';
 import styles from './index.less';
 
-const { LEVEL_CATEGORY, LOG_ACTION, SERVER_PATH } = constants;
+const { LEVEL_CATEGORY, LOG_ACTION } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'level', operator: 'EQ', value: null },
@@ -52,7 +52,7 @@ class LogList extends PureComponent {
         filter,
       },
     });
-    this.tableRef.remoteDataRefresh();
+    // this.tableRef.remoteDataRefresh();
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
@@ -331,7 +331,7 @@ class LogList extends PureComponent {
   getFilter = () => {
     const { runtimeLog } = this.props;
     const { filter, currentEnvViewType } = runtimeLog;
-    const filters = [{ fieldName: 'env', operator: 'EQ', value: currentEnvViewType.key }];
+    const filters = [{ fieldName: 'env', operator: 'EQ', value: currentEnvViewType.code }];
     let idxName = '*';
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
@@ -532,6 +532,10 @@ class LogList extends PureComponent {
             currentViewType={currentEnvViewType}
             viewTypeData={envViewData}
             onAction={this.handlerEnvChange}
+            reader={{
+              title: 'name',
+              value: 'code',
+            }}
           />
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
@@ -539,6 +543,7 @@ class LogList extends PureComponent {
         </>
       ),
     };
+    const { agentServer } = currentEnvViewType;
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
@@ -547,10 +552,10 @@ class LogList extends PureComponent {
       searchPlaceHolder: '输入关键字查询',
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/log/findByPage`,
-        params: this.getFilter(),
+        url: `${agentServer}/sei-manager/log/findByPage`,
       },
       cascadeParams: {
+        ...this.getFilter(),
         highlightFields: ['message', 'logger', 'serviceName', 'fromServer'],
       },
       remotePaging: true,

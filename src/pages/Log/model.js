@@ -4,10 +4,9 @@ import moment from 'moment';
 import { constants } from '@/utils';
 import { getLogDetail, getTranceLog, getServices } from './service';
 
-const { ENV_CATEGORY, LEVEL_CATEGORY, SEARCH_DATE_PERIOD } = constants;
+const { LEVEL_CATEGORY, SEARCH_DATE_PERIOD } = constants;
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
-const ENV_CATEGORY_DATA = Object.keys(ENV_CATEGORY).map(key => ENV_CATEGORY[key]);
 const LEVEL_CATEGORY_DATA = Object.keys(LEVEL_CATEGORY).map(key => LEVEL_CATEGORY[key]);
 
 const getDefaultTimeViewType = () => {
@@ -23,8 +22,8 @@ export default modelExtend(model, {
 
   state: {
     currentTimeViewType: SEARCH_DATE_PERIOD.THIS_5M,
-    currentEnvViewType: ENV_CATEGORY_DATA[0],
-    envViewData: ENV_CATEGORY_DATA,
+    currentEnvViewType: null,
+    envViewData: [],
     levelViewData: LEVEL_CATEGORY_DATA,
     currentLog: null,
     showDetail: false,
@@ -46,7 +45,21 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    *getServices(_, { call, put }) {
+    *getServices(_, { call, put, select }) {
+      const { envData } = yield select(sel => sel.menu);
+      let currentEnvViewType = null;
+      let envViewData = [];
+      if (envData && envData.length > 0) {
+        envViewData = envData;
+        [currentEnvViewType] = envData;
+      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          currentEnvViewType,
+          envViewData,
+        },
+      });
       const re = yield call(getServices);
       if (re.success) {
         yield put({

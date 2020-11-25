@@ -120,7 +120,9 @@ class DeployStage extends Component {
       return (
         <>
           {t}
-          <Tag color="red">已冻结</Tag>
+          <Tag color="red" style={{ marginLeft: 8 }}>
+            已冻结
+          </Tag>
         </>
       );
     }
@@ -162,16 +164,22 @@ class DeployStage extends Component {
         ),
       },
       {
+        title: '序号',
+        dataIndex: 'rank',
+        width: 80,
+        required: true,
+      },
+      {
         title: '环境代码',
         dataIndex: 'code',
-        width: 140,
+        width: 100,
         required: true,
         render: this.renderCode,
       },
       {
         title: '环境名称',
         dataIndex: 'name',
-        width: 200,
+        width: 140,
         required: true,
       },
       {
@@ -218,7 +226,7 @@ class DeployStage extends Component {
         url: `${SERVER_PATH}/sei-manager/env/findAll`,
       },
       sort: {
-        field: { name: 'asc', code: null, remark: null, agentServer: null },
+        field: { rank: 'asc', name: null, code: null, remark: null, agentServer: null },
       },
     };
     return (
