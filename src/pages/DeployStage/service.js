@@ -26,7 +26,7 @@ export async function del(params) {
 
 /**
  * 获取阶段参数
- * @stageId string
+ * @stageId ？ string
  */
 export async function getStageParameters(params) {
   const url = `${SERVER_PATH}/sei-manager/deployStage/getStageParameters`;

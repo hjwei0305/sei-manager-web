@@ -106,6 +106,16 @@ class DeployStage extends Component {
     });
   };
 
+  getStageParams = stageId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployStage/getStageParameters',
+      payload: {
+        stageId,
+      },
+    });
+  };
+
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
@@ -117,7 +127,7 @@ class DeployStage extends Component {
 
   render() {
     const { deployStage, loading } = this.props;
-    const { showModal, rowData } = deployStage;
+    const { showModal, rowData, stageParams } = deployStage;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -168,6 +178,9 @@ class DeployStage extends Component {
       showModal,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['deployStage/save'],
+      stageParamsLoading: loading.effects['deployStage/getStageParameters'],
+      getStageParams: this.getStageParams,
+      stageParams,
     };
     const toolBarProps = {
       left: (

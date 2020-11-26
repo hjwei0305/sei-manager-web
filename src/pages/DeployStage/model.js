@@ -1,6 +1,6 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { del, save } from './service';
+import { del, save, getStageParameters } from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -12,8 +12,25 @@ export default modelExtend(model, {
     list: [],
     rowData: null,
     showModal: false,
+    stageParams: [],
   },
   effects: {
+    *getStageParameters({ payload }, { call, put, select }) {
+      const { stageParams: originStageParams } = yield select(sel => sel.deployStage);
+      if (originStageParams.length === 0) {
+        const res = yield call(getStageParameters, payload);
+        let stageParams = [];
+        if (res.success) {
+          stageParams = res.data;
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            stageParams,
+          },
+        });
+      }
+    },
     *save({ payload, callback }, { call }) {
       const re = yield call(save, payload);
       message.destroy();

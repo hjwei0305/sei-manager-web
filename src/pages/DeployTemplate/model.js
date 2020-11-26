@@ -22,6 +22,7 @@ export default modelExtend(model, {
     showAssign: false,
     currentTemplateState: null,
     showEditStateModal: false,
+    showPreview: false,
     stageParams: [],
     templateXml: '',
   },
@@ -39,18 +40,21 @@ export default modelExtend(model, {
         },
       });
     },
-    *getStageParameters({ payload }, { call, put }) {
-      const res = yield call(getStageParameters, payload);
-      let stageParams = [];
-      if (res.success) {
-        stageParams = res.data;
+    *getStageParameters({ payload }, { call, put, select }) {
+      const { stageParams: originStageParams } = yield select(sel => sel.deployTemplate);
+      if (originStageParams.length === 0) {
+        const res = yield call(getStageParameters, payload);
+        let stageParams = [];
+        if (res.success) {
+          stageParams = res.data;
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            stageParams,
+          },
+        });
       }
-      yield put({
-        type: 'updateState',
-        payload: {
-          stageParams,
-        },
-      });
     },
     *saveDeployTemplate({ payload, callback }, { call, put }) {
       const re = yield call(saveDeployTemplate, payload);

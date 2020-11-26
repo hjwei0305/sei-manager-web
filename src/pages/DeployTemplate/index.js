@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
+import { get } from 'lodash';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Input, Empty, Popconfirm, Layout } from 'antd';
 import { ExtIcon, ListCard } from 'suid';
@@ -10,6 +11,7 @@ import TemplateAdd from './components/DeployTemplateForm/Add';
 import TemplateEdit from './components/DeployTemplateForm/Edit';
 import AssignedStage from './components/AssignedStage';
 import UnAssignStage from './components/UnAssignStage';
+import TemplatePreview from './components/TemplatePreview';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
@@ -141,6 +143,37 @@ class DeployTemplate extends Component {
     this.assignedStageRef = ref;
   };
 
+  previewTemplate = item => {
+    const templateId = get(item, 'id');
+    if (templateId) {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'deployTemplate/updateState',
+        payload: {
+          currentTemplate: item,
+          showPreview: true,
+        },
+      });
+      dispatch({
+        type: 'deployTemplate/getTemplateXml',
+        payload: {
+          templateId,
+        },
+      });
+    }
+  };
+
+  handlerClosePreview = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/updateState',
+      payload: {
+        showPreview: false,
+        currentTemplate: null,
+      },
+    });
+  };
+
   renderCustomTool = () => (
     <>
       <Search
@@ -176,7 +209,12 @@ class DeployTemplate extends Component {
               <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
             )}
           </Popconfirm>
-          <ExtIcon className={cls('action-item')} type="profile" antd />
+          <ExtIcon
+            className={cls('action-item')}
+            onClick={() => this.previewTemplate(item)}
+            type="profile"
+            antd
+          />
         </div>
       </>
     );
@@ -184,7 +222,13 @@ class DeployTemplate extends Component {
 
   render() {
     const { loading, deployTemplate } = this.props;
-    const { selectedTemplate, showAssign } = deployTemplate;
+    const {
+      currentTemplate,
+      selectedTemplate,
+      showAssign,
+      showPreview,
+      templateXml,
+    } = deployTemplate;
     const saving = loading.effects['deployTemplate/saveDeployTemplate'];
     const selectedKeys = selectedTemplate ? [selectedTemplate.id] : [];
     const deployTemplateProps = {
@@ -215,6 +259,13 @@ class DeployTemplate extends Component {
       assignStages: this.assignStages,
       assignLoading: loading.effects['deployTemplate/assignStages'],
     };
+    const templatePreviewProps = {
+      currentTemplate,
+      showPreview,
+      closePreview: this.handlerClosePreview,
+      templateXml,
+      templateXmlLoading: loading.effects['deployTemplate/getTemplateXml'],
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
@@ -232,6 +283,7 @@ class DeployTemplate extends Component {
           </Content>
         </Layout>
         {selectedTemplate ? <UnAssignStage {...unAssignStagesProps} /> : null}
+        <TemplatePreview {...templatePreviewProps} />
       </div>
     );
   }

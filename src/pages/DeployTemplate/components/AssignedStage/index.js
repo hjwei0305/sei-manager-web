@@ -137,6 +137,16 @@ class AssignedStage extends Component {
     });
   };
 
+  getStageParams = stageId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/getStageParameters',
+      payload: {
+        stageId,
+      },
+    });
+  };
+
   renderNickname = (t, row) => {
     return (
       <>
@@ -149,7 +159,12 @@ class AssignedStage extends Component {
   render() {
     const { selectedRowKeys } = this.state;
     const { loading, deployTemplate } = this.props;
-    const { selectedTemplate, currentTemplateState, showEditStateModal } = deployTemplate;
+    const {
+      selectedTemplate,
+      currentTemplateState,
+      showEditStateModal,
+      stageParams,
+    } = deployTemplate;
     const hasSelected = selectedRowKeys.length > 0;
     const columns = [
       {
@@ -165,7 +180,6 @@ class AssignedStage extends Component {
             <ExtIcon
               className={cls('action-item')}
               onClick={() => this.edit(record)}
-              tooltip={{ title: '编辑' }}
               type="edit"
               antd
             />
@@ -239,8 +253,11 @@ class AssignedStage extends Component {
       rowData: currentTemplateState,
       showModal: showEditStateModal,
       closeFormModal: this.closeEditStateModal,
-      saving: loading.effects['deployTemplate/removeAssignedStages'],
+      saving: loading.effects['deployTemplate/saveTemplateStage'],
       save: this.saveTemplateStage,
+      stageParamsLoading: loading.effects['deployTemplate/getStageParameters'],
+      getStageParams: this.getStageParams,
+      stageParams,
     };
     return (
       <div className={cls(styles['user-box'])}>

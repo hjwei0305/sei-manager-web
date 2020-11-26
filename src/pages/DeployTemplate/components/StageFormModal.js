@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
+import PropTypes from 'prop-types';
 import { Button, InputNumber } from 'antd';
-import { ExtModal, utils, message, BannerTitle } from 'suid';
+import { ExtModal, utils, message, BannerTitle, ListLoader } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-terminal';
@@ -12,6 +13,17 @@ const { getUUID } = utils;
 
 class StageFormModal extends PureComponent {
   static aceId;
+
+  static propTypes = {
+    rowData: PropTypes.object,
+    save: PropTypes.func,
+    showModal: PropTypes.bool,
+    closeFormModal: PropTypes.func,
+    saving: PropTypes.bool,
+    stageParamsLoading: PropTypes.bool,
+    getStageParams: PropTypes.func,
+    stageParams: PropTypes.array,
+  };
 
   constructor(props) {
     super(props);
@@ -25,9 +37,11 @@ class StageFormModal extends PureComponent {
   }
 
   componentDidUpdate(preProps) {
-    const { rowData } = this.props;
+    const { rowData, getStageParams } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
       this.setState({ scriptText: get(rowData, 'playscript'), rank: get(rowData, 'rank') });
+      const stageId = get(rowData, 'stageId');
+      getStageParams(stageId);
     }
   }
 
@@ -53,14 +67,15 @@ class StageFormModal extends PureComponent {
 
   handlerComplete = ace => {
     if (ace) {
-      const completers = [
-        {
-          name: 'params.PROJECT_NAME',
-          value: 'params.PROJECT_NAME',
+      const { stageParams } = this.props;
+      const completers = stageParams.map(p => {
+        return {
+          name: `params.${p.code}`,
+          value: `params.${p.code}`,
           score: 10,
-          meta: '项目名称',
-        },
-      ];
+          meta: p.name,
+        };
+      });
       ace.completers.push({
         getCompletions(editor, session, pos, prefix, callback) {
           if (prefix.length === 0) {
@@ -92,7 +107,7 @@ class StageFormModal extends PureComponent {
   };
 
   render() {
-    const { closeFormModal, showModal, rowData } = this.props;
+    const { closeFormModal, showModal, rowData, stageParamsLoading } = this.props;
     const { scriptText } = this.state;
     return (
       <ExtModal
@@ -106,28 +121,32 @@ class StageFormModal extends PureComponent {
         title={<BannerTitle title={get(rowData, 'name')} subTitle="阶段执行脚本" />}
         footer={this.renderFooter()}
       >
-        <AceEditor
-          style={{ marginBottom: 24 }}
-          mode="json"
-          theme="terminal"
-          name={this.aceId}
-          fontSize={16}
-          onChange={this.handlerAceChannge}
-          showPrintMargin={false}
-          showGutter={false}
-          highlightActiveLine
-          width="100%"
-          height="100%"
-          value={scriptText}
-          onLoad={this.handlerComplete}
-          setOptions={{
-            enableBasicAutocompletion: false,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            showLineNumbers: false,
-            tabSize: 4,
-          }}
-        />
+        {stageParamsLoading ? (
+          <ListLoader />
+        ) : (
+          <AceEditor
+            style={{ marginBottom: 24 }}
+            mode="json"
+            theme="terminal"
+            name={this.aceId}
+            fontSize={16}
+            onChange={this.handlerAceChannge}
+            showPrintMargin={false}
+            showGutter={false}
+            highlightActiveLine
+            width="100%"
+            height="100%"
+            value={scriptText}
+            onLoad={this.handlerComplete}
+            setOptions={{
+              enableBasicAutocompletion: false,
+              enableLiveAutocompletion: true,
+              enableSnippets: true,
+              showLineNumbers: false,
+              tabSize: 4,
+            }}
+          />
+        )}
       </ExtModal>
     );
   }

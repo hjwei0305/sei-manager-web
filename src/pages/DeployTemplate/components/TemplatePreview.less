@@ -1,0 +1,19 @@
+@import '../../../themes/vars.less';
+.preview-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  :global {
+    .ant-drawer-header {
+      border-color: transparent;
+    }
+    .ant-drawer-wrapper-body,
+    .ant-drawer .ant-drawer-content {
+      overflow: hidden;
+    }
+    .ant-drawer-body {
+      height: calc(100% - 55px);
+      padding: 0;
+    }
+  }
+}
