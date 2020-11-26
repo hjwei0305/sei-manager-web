@@ -43,3 +43,37 @@ export async function removeAssignedStages(data) {
     data,
   });
 }
+
+/** 模板阶段保存 */
+export async function saveTemplateStage(data) {
+  const url = `${SERVER_PATH}/sei-manager/deployTemplateStage/save`;
+  return request({
+    url,
+    method: 'POST',
+    data,
+  });
+}
+
+/**
+ * 获取模板XML内容
+ * @templateId string
+ */
+export async function getTemplateXml(params) {
+  const url = `${SERVER_PATH}/sei-manager/deployTemplate/getXml`;
+  return request({
+    url,
+    params,
+  });
+}
+
+/**
+ * 获取阶段参数
+ * @stageId string
+ */
+export async function getStageParameters(params) {
+  const url = `${SERVER_PATH}/sei-manager/deployStage/getStageParameters`;
+  return request({
+    url,
+    params,
+  });
+}

@@ -23,3 +23,15 @@ export async function del(params) {
     method: 'DELETE',
   });
 }
+
+/**
+ * 获取阶段参数
+ * @stageId string
+ */
+export async function getStageParameters(params) {
+  const url = `${SERVER_PATH}/sei-manager/deployStage/getStageParameters`;
+  return request({
+    url,
+    params,
+  });
+}

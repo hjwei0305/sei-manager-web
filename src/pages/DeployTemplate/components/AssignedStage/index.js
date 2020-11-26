@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Tag, Drawer, Popconfirm } from 'antd';
-import { ExtTable, BannerTitle } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon } from 'suid';
 import { constants } from '@/utils';
+import StageFormModal from '../StageFormModal';
 import styles from './index.less';
 
 const { SERVER_PATH, USER_ACTION } = constants;
@@ -99,20 +100,48 @@ class AssignedStage extends Component {
     });
   };
 
+  edit = rowData => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/updateState',
+      payload: {
+        currentTemplateState: rowData,
+        showEditStateModal: true,
+      },
+    });
+  };
+
+  closeEditStateModal = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/updateState',
+      payload: {
+        currentTemplateState: null,
+        showEditStateModal: false,
+      },
+    });
+  };
+
+  saveTemplateStage = data => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'deployTemplate/saveTemplateStage',
+      payload: {
+        ...data,
+      },
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+        }
+      },
+    });
+  };
+
   renderNickname = (t, row) => {
     return (
       <>
+        <Tag>{row.rank}</Tag>
         {t}
-        {row.admin ? (
-          <Tag color="blue" style={{ marginLeft: 8 }}>
-            管理员
-          </Tag>
-        ) : null}
-        {row.status === false ? (
-          <Tag color="red" style={{ marginLeft: 8 }}>
-            已禁用
-          </Tag>
-        ) : null}
       </>
     );
   };
@@ -120,23 +149,29 @@ class AssignedStage extends Component {
   render() {
     const { selectedRowKeys } = this.state;
     const { loading, deployTemplate } = this.props;
-    const { selectedTemplate } = deployTemplate;
+    const { selectedTemplate, currentTemplateState, showEditStateModal } = deployTemplate;
     const hasSelected = selectedRowKeys.length > 0;
     const columns = [
-      // {
-      //   title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
-      //   key: 'operation',
-      //   width: 80,
-      //   align: 'center',
-      //   dataIndex: 'id',
-      //   className: 'action',
-      //   required: true,
-      //   render: (_text, record) => (
-      //     <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
-      //       <ExtAction userData={record} onAction={this.handlerAction} />
-      //     </span>
-      //   ),
-      // },
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 60,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        render: (_text, record) => (
+          <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
+            <ExtIcon
+              className={cls('action-item')}
+              onClick={() => this.edit(record)}
+              tooltip={{ title: '编辑' }}
+              type="edit"
+              antd
+            />
+          </span>
+        ),
+      },
       {
         title: '阶段名称',
         dataIndex: 'name',
@@ -194,11 +229,18 @@ class AssignedStage extends Component {
       searchProperties: ['name', 'remark'],
       searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-manager/deployTemplateStage/getChildrenFromParentId`,
+        url: `${SERVER_PATH}/sei-manager/deployTemplateStage/getStageByTemplateId`,
       },
       cascadeParams: {
-        parentId: get(selectedTemplate, 'id'),
+        templateId: get(selectedTemplate, 'id'),
       },
+    };
+    const stageFormModalProps = {
+      rowData: currentTemplateState,
+      showModal: showEditStateModal,
+      closeFormModal: this.closeEditStateModal,
+      saving: loading.effects['deployTemplate/removeAssignedStages'],
+      save: this.saveTemplateStage,
     };
     return (
       <div className={cls(styles['user-box'])}>
@@ -208,6 +250,7 @@ class AssignedStage extends Component {
         >
           <ExtTable {...extTableProps} />
         </Card>
+        <StageFormModal {...stageFormModalProps} />
       </div>
     );
   }

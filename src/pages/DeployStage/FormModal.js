@@ -105,8 +105,8 @@ class FormModal extends PureComponent {
               showPrintMargin={false}
               showGutter={false}
               highlightActiveLine
-              width={730}
-              height={260}
+              width="730px"
+              height="260px"
               value={scriptText}
               setOptions={{
                 enableBasicAutocompletion: false,

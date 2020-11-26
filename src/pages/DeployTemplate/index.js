@@ -34,8 +34,6 @@ class DeployTemplate extends Component {
     dispatch({
       type: 'deployTemplate/updateState',
       payload: {
-        currentTemplate: null,
-        selectedTemplate: null,
         showAssign: false,
       },
     });
@@ -178,6 +176,7 @@ class DeployTemplate extends Component {
               <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
             )}
           </Popconfirm>
+          <ExtIcon className={cls('action-item')} type="profile" antd />
         </div>
       </>
     );

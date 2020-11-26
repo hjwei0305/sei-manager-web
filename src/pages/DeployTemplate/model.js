@@ -5,6 +5,9 @@ import {
   saveDeployTemplate,
   assignStages,
   removeAssignedStages,
+  saveTemplateStage,
+  getStageParameters,
+  getTemplateXml,
 } from './service';
 
 const { dvaModel } = utils;
@@ -17,8 +20,38 @@ export default modelExtend(model, {
     currentTemplate: null,
     selectedTemplate: null,
     showAssign: false,
+    currentTemplateState: null,
+    showEditStateModal: false,
+    stageParams: [],
+    templateXml: '',
   },
   effects: {
+    *getTemplateXml({ payload }, { call, put }) {
+      const res = yield call(getTemplateXml, payload);
+      let templateXml = '';
+      if (res.success) {
+        templateXml = res.data;
+      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          templateXml,
+        },
+      });
+    },
+    *getStageParameters({ payload }, { call, put }) {
+      const res = yield call(getStageParameters, payload);
+      let stageParams = [];
+      if (res.success) {
+        stageParams = res.data;
+      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          stageParams,
+        },
+      });
+    },
     *saveDeployTemplate({ payload, callback }, { call, put }) {
       const re = yield call(saveDeployTemplate, payload);
       message.destroy();
@@ -79,6 +112,25 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.remove-success', defaultMessage: '移除成功' }));
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *saveTemplateStage({ payload, callback }, { call, put }) {
+      const re = yield call(saveTemplateStage, payload);
+      message.destroy();
+      if (re.success) {
+        message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
+        yield put({
+          type: 'updateState',
+          payload: {
+            currentTemplateState: null,
+            showEditStateModal: false,
+          },
+        });
       } else {
         message.error(re.message);
       }
