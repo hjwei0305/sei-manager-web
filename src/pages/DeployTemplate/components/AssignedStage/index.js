@@ -238,7 +238,7 @@ class AssignedStage extends Component {
       checkbox: true,
       selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
-      rowKeys: 'stageId',
+      rowKey: 'stageId',
       onTableRef: ref => (this.tableRef = ref),
       searchPlaceHolder: '输入阶段名称、阶段描述关键字',
       searchProperties: ['name', 'remark'],
