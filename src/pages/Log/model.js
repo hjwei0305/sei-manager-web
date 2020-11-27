@@ -53,6 +53,7 @@ export default modelExtend(model, {
         envViewData = envData;
         [currentEnvViewType] = envData;
       }
+      const agentServer = get(currentEnvViewType, 'agentServer');
       yield put({
         type: 'updateState',
         payload: {
@@ -60,7 +61,7 @@ export default modelExtend(model, {
           envViewData,
         },
       });
-      const re = yield call(getServices);
+      const re = yield call(getServices, { agentServer });
       if (re.success) {
         yield put({
           type: 'updateState',

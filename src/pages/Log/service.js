@@ -41,8 +41,9 @@ export async function getTranceLog(params) {
 /**
  * 获取当前所有可用应用服务清单
  */
-export async function getServices() {
-  const url = `${SERVER_PATH}/sei-manager/application/getServices`;
+export async function getServices(params) {
+  const { agentServer } = params;
+  const url = `${agentServer}/serviceInstance/getServices`;
   return request({
     url,
     method: 'GET',
