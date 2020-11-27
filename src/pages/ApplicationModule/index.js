@@ -202,7 +202,7 @@ class ApplicationModule extends Component {
   getFilter = () => {
     const { applicationModule } = this.props;
     const { filter } = applicationModule;
-    const filters = [];
+    const filters = [{ fieldName: 'frozen', operator: 'EQ', value: false }];
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
       if (value !== null) {
@@ -226,7 +226,7 @@ class ApplicationModule extends Component {
       {
         title: '模块代码',
         dataIndex: 'code',
-        width: 120,
+        width: 180,
         required: true,
         ...this.getColumnSearchProps('code'),
       },
@@ -241,6 +241,7 @@ class ApplicationModule extends Component {
         title: '模块版本',
         dataIndex: 'version',
         width: 120,
+        render: t => t || '-',
         ...this.getColumnSearchProps('version'),
       },
       {
@@ -248,6 +249,7 @@ class ApplicationModule extends Component {
         dataIndex: 'remark',
         width: 320,
         required: true,
+        render: t => t || '-',
         ...this.getColumnSearchProps('remark'),
       },
       {
@@ -255,6 +257,7 @@ class ApplicationModule extends Component {
         dataIndex: 'gitUrl',
         width: 420,
         required: true,
+        render: t => t || '-',
         ...this.getColumnSearchProps('gitUrl'),
       },
       {
@@ -262,6 +265,7 @@ class ApplicationModule extends Component {
         dataIndex: 'nameSpace',
         width: 320,
         required: true,
+        render: t => t || '-',
         ...this.getColumnSearchProps('nameSpace'),
       },
     ];

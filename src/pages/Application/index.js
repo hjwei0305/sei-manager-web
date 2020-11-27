@@ -35,22 +35,26 @@ class Application extends Component {
         dataIndex: 'version',
         width: 120,
         required: true,
+        render: t => t || '-',
       },
       {
         title: '描述说明',
         dataIndex: 'remark',
         width: 380,
         required: true,
+        render: t => t || '-',
       },
       {
         title: '所属组代码',
         dataIndex: 'groupCode',
         width: 200,
+        render: t => t || '-',
       },
       {
         title: '所属组名称',
         dataIndex: 'groupName',
         width: 280,
+        render: t => t || '-',
       },
     ];
     const toolBarProps = {
@@ -74,6 +78,9 @@ class Application extends Component {
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+        params: {
+          filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
+        },
       },
       sort: {
         multiple: true,
