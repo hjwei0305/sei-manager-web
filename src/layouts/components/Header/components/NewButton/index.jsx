@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
+import { router } from 'umi';
 import { Menu } from 'antd';
 import { ExtIcon } from 'suid';
 import ExtDropdown from '@/components/ExtDropdown';
@@ -23,12 +24,13 @@ class NewButton extends React.Component {
     const its = NoMenuNewApply.filter(it => it.id === key);
     if (its.length === 1) {
       const { dispatch } = this.props;
-      console.log(its[0]);
       dispatch({
         type: 'menu/openTab',
         payload: {
           activedMenu: its[0],
         },
+      }).then(() => {
+        router.push(its[0].url);
       });
     }
   };
