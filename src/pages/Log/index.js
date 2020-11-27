@@ -105,10 +105,14 @@ class LogList extends PureComponent {
   handlerEnvChange = currentEnvViewType => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'runtimeLog/updateState',
+      type: 'runtimeLog/updatePageState',
       payload: {
         currentEnvViewType,
       },
+    }).then(() => {
+      dispatch({
+        type: 'runtimeLog/getServices',
+      });
     });
   };
 

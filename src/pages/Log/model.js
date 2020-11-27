@@ -38,29 +38,43 @@ export default modelExtend(model, {
       history.listen(location => {
         if (pathMatchRegexp('/log/logRecord', location.pathname)) {
           dispatch({
-            type: 'getServices',
+            type: 'updateEnvViewData',
+          }).then(() => {
+            dispatch({
+              type: 'getServices',
+            });
           });
         }
       });
     },
   },
   effects: {
-    *getServices(_, { call, put, select }) {
+    *updatePageState({ payload }, { put }) {
+      yield put({
+        type: 'updateState',
+        payload,
+      });
+      return payload;
+    },
+    *updateEnvViewData(_, { put, select }) {
       const { envData } = yield select(sel => sel.menu);
       let currentEnvViewType = null;
       let envViewData = [];
-      if (envData && envData.length > 0) {
+      if (!currentEnvViewType && envData && envData.length > 0) {
         envViewData = envData;
         [currentEnvViewType] = envData;
       }
-      const agentServer = get(currentEnvViewType, 'agentServer');
-      yield put({
+      return yield put({
         type: 'updateState',
         payload: {
           currentEnvViewType,
           envViewData,
         },
       });
+    },
+    *getServices(_, { call, put, select }) {
+      const { currentEnvViewType } = yield select(sel => sel.runtimeLog);
+      const agentServer = get(currentEnvViewType, 'agentServer');
       const re = yield call(getServices, { agentServer });
       if (re.success) {
         yield put({
