@@ -62,7 +62,7 @@ const routes = [
       },
       {
         path: '/auth',
-        namd: '后台配置',
+        namd: '系统配置',
         routes: [
           {
             path: '/auth/env',
@@ -93,6 +93,22 @@ const routes = [
             path: '/auth/userList',
             name: '用户',
             component: './User',
+          },
+        ],
+      },
+      {
+        path: '/integration',
+        namd: '持续集成',
+        routes: [
+          {
+            path: '/integration/application',
+            name: '应用管理',
+            component: './Application',
+          },
+          {
+            path: '/integration/applicationModule',
+            name: '模块管理',
+            component: './ApplicationModule',
           },
         ],
       },
@@ -146,32 +162,6 @@ const routes = [
             path: '/model/dataModel',
             name: '数据类型',
             component: './DataModel/DataModelManager',
-          },
-        ],
-      },
-      {
-        path: '/app',
-        namd: '数据模型',
-        routes: [
-          {
-            path: '/app/deployJob',
-            name: '部署配置',
-            component: './Application/DeployJob',
-          },
-          {
-            path: '/app/project',
-            name: '部署配置',
-            component: './Application/Project',
-          },
-          {
-            path: '/app/appModule',
-            name: '部署配置',
-            component: './Application/AppModule',
-          },
-          {
-            path: '/app/deployLog',
-            name: '开发部署日志',
-            component: './Application/DeployLog',
           },
         ],
       },

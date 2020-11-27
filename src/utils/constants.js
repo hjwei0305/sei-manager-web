@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-23 11:30:57
+ * @Last Modified time: 2020-11-27 14:59:34
  */
 import { name } from '../../package.json';
 
@@ -55,6 +55,22 @@ export const NoMenuPages = [
     title: '个人设置',
     url: '/sei-basic-web/userProfile',
     // closeActiveParentTab: true,
+  },
+];
+
+/** 新建申请菜单统一入口 */
+export const NoMenuNewApply = [
+  {
+    id: 'newApp',
+    icon: 'file',
+    title: '新建应用',
+    url: '/integration/application',
+  },
+  {
+    id: 'newModule',
+    icon: 'file-text',
+    title: '新建模块',
+    url: '/integration/applicationModule',
   },
 ];
 
@@ -138,6 +154,7 @@ const USER_BTN_KEY = {
 
 export default {
   NoMenuPages,
+  NoMenuNewApply,
   APP_BASE,
   LOCAL_PATH,
   SERVER_PATH,

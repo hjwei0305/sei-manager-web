@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { Icon } from 'antd';
 import FullScreen from '@/components/FullScreen';
 import UserIcon from './components/UserIcon';
+import NewButton from './components/NewButton';
 
 import styles from './index.less';
 
@@ -37,6 +38,7 @@ class Header extends React.Component {
           </span>
         </div>
         <div className={cls('header-layout-right')}>
+          <NewButton />
           <UserIcon />
           <FullScreen className={cls('trigger')} />
         </div>

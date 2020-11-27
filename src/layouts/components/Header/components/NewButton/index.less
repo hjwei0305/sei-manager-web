@@ -1,0 +1,22 @@
+@import '../../../../../themes/default.less';
+
+.new-icon-wrapper {
+  display: inline-block;
+  height: 100%;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  :global {
+    i {
+      color: @primary-color;
+    }
+  }
+}
+
+.new-menu-item {
+  :global {
+    .ant-dropdown-menu-item {
+      padding: 10px 16px;
+    }
+  }
+}
