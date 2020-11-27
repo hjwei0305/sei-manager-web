@@ -188,7 +188,7 @@ class LogList extends PureComponent {
           style={{
             padding: 8,
             maxHeight: 300,
-            height: 300,
+            height: 260,
             width: 160,
             boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
           }}

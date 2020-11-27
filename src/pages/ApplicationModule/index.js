@@ -13,7 +13,7 @@ const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'code', operator: 'EQ', value: null },
   { fieldName: 'name', operator: 'EQ', value: null },
-  { fieldName: 'appName', operator: 'EQ', value: null },
+  { fieldName: 'appId', operator: 'EQ', value: null },
   { fieldName: 'version', operator: 'EQ', value: null },
   { fieldName: 'remark', operator: 'EQ', value: null },
   { fieldName: 'gitUrl', operator: 'EQ', value: null },
@@ -25,6 +25,13 @@ class ApplicationModule extends Component {
   static tableRef;
 
   static listCardRef = null;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      appName: '全部',
+    };
+  }
 
   reloadData = () => {
     if (this.tableRef) {
@@ -87,25 +94,26 @@ class ApplicationModule extends Component {
 
   getColumnSearchComponent = (dataIndex, setSelectedKeys, selectedKeys, confirm, clearFilters) => {
     if (dataIndex === 'appName') {
-      const { applicationModule } = this.props;
-      const { filter } = applicationModule;
-      const appName = get(filter, 'appName') || '全部';
+      const { appName } = this.state;
       const appListProps = {
         className: 'search-content',
         showArrow: false,
         showSearch: false,
         selectedKeys,
-        rowKey: 'name',
         remotePaging: true,
-        onSelectChange: keys => {
+        onSelectChange: (keys, items) => {
           setSelectedKeys(keys);
-          this.handleColumnSearch(keys, dataIndex, confirm);
+          this.setState({ appName: items[0].name });
+          this.handleColumnSearch(keys, 'appId', confirm);
         },
         store: {
           type: 'POST',
           url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+          params: {
+            filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
+          },
         },
-        customTool: () => this.renderCustomTool(dataIndex, clearFilters),
+        customTool: () => this.renderCustomTool('appId', clearFilters),
         onListCardRef: ref => (this.listCardRef = ref),
         itemField: {
           title: item => item.name,
@@ -133,7 +141,10 @@ class ApplicationModule extends Component {
           >
             <div style={{ fontWeight: 700, fontSize: 16 }}>{appName}</div>
             <Button
-              onClick={() => this.handleColumnSearchReset(dataIndex, clearFilters)}
+              onClick={() => {
+                this.setState({ appName: '全部' });
+                this.handleColumnSearchReset('appId', clearFilters);
+              }}
               style={{ marginLeft: 8 }}
             >
               重置
@@ -297,12 +308,8 @@ class ApplicationModule extends Component {
       sort: {
         multiple: true,
         field: {
-          name: 'asc',
+          code: 'asc',
           version: 'asc',
-          code: null,
-          remark: null,
-          gitUrl: null,
-          nameSpace: null,
         },
       },
     };
