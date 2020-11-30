@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-30 14:23:24
+ * @Last Modified time: 2020-11-30 15:07:59
  */
 import { name } from '../../package.json';
 
@@ -62,15 +62,15 @@ export const NoMenuPages = [
 export const NoMenuNewApply = [
   {
     id: 'newApp',
-    icon: 'file',
+    icon: 'appstore',
     title: '应用申请',
     url: '/my-center/apply/application/new',
   },
   {
     id: 'newModule',
-    icon: 'file-text',
+    icon: 'file',
     title: '模块申请',
-    url: '/integration/applicationModule',
+    url: '/my-center/apply/applicationModule/new',
   },
 ];
 

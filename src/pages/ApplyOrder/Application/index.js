@@ -4,7 +4,7 @@ import cls from 'classnames';
 import { trim } from 'lodash';
 import { Button, Modal, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, BannerTitle, message } from 'suid';
+import { ExtTable, message } from 'suid';
 import { constants } from '../../../utils';
 import ApplyState from '../components/ApplyState';
 import ExtAction from './ExtAction';
@@ -81,6 +81,7 @@ class Certificate extends PureComponent {
 
   approve = rowData => {
     const { dispatch } = this.props;
+    message.loading('正在提交审核...');
     dispatch({
       type: 'applyApplication/approve',
       payload: {
@@ -111,7 +112,7 @@ class Certificate extends PureComponent {
     switch (key) {
       case APPLY_APPLICATION_ACTION.VIEW:
         dispatch({
-          type: 'payBillApply/updateState',
+          type: 'applyApplication/updateState',
           payload: {
             rowData,
             onlyView: true,
@@ -148,8 +149,15 @@ class Certificate extends PureComponent {
   stopApprove = rowData => {
     const { dispatch } = this.props;
     this.confirmModal = Modal.confirm({
-      title: <BannerTitle title="终止审核原因" subTitle="确认" />,
-      content: <TextArea style={{ resize: 'none' }} rows={3} onChange={this.handlerMessageText} />,
+      title: '终止审核确认',
+      content: (
+        <TextArea
+          style={{ resize: 'none' }}
+          placeholder="请输入终止审核的原因"
+          rows={3}
+          onChange={this.handlerMessageText}
+        />
+      ),
       okButtonProps: { type: 'primary' },
       style: { top: '20%' },
       okText: '确定',
@@ -168,6 +176,7 @@ class Certificate extends PureComponent {
               },
               callback: res => {
                 if (res.success) {
+                  message.destroy();
                   resolve();
                   this.reloadData();
                 } else {
@@ -239,7 +248,7 @@ class Certificate extends PureComponent {
 
   render() {
     const { applyApplication, loading } = this.props;
-    const { showModal, rowData } = applyApplication;
+    const { showModal, rowData, onlyView } = applyApplication;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -304,6 +313,7 @@ class Certificate extends PureComponent {
     ];
     const formModalProps = {
       save: this.save,
+      onlyView,
       rowData,
       showModal,
       closeFormModal: this.closeFormModal,

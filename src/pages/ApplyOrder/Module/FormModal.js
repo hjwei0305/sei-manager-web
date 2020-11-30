@@ -83,21 +83,24 @@ class FormModal extends PureComponent {
   render() {
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '修改应用申请' : '新建应用申请';
-    getFieldDecorator('groupCode', { initialValue: get(rowData, 'groupCode') });
-    const groupProps = {
+    const title = rowData ? '修改模块申请' : '新建模块申请';
+    getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
+    const appProps = {
       form,
-      name: 'groupName',
+      name: 'appName',
       store: {
-        url: `${SERVER_PATH}/sei-manager/userGroup/findAll`,
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+        params: {
+          filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
+        },
       },
-      showSearch: false,
-      pagination: false,
-      field: ['groupCode'],
+      remotePaging: true,
+      field: ['appId'],
       reader: {
         name: 'name',
-        description: 'description',
-        field: ['code'],
+        description: 'remark',
+        field: ['id'],
       },
     };
     return (
@@ -107,65 +110,79 @@ class FormModal extends PureComponent {
         visible={showModal}
         onCancel={closeFormModal}
         bodyStyle={{ paddingBottom: 0 }}
-        title={onlyView ? '应用详情' : title}
+        title={onlyView ? '模块详情' : title}
         footer={this.renderFooterBtn()}
       >
         <Form {...formItemLayout} layout="horizontal">
-          <FormItem label="应用代码">
+          <FormItem label="所属应用">
+            {getFieldDecorator('appName', {
+              initialValue: get(rowData, 'appName'),
+              rules: [
+                {
+                  required: true,
+                  message: '所属应用不能为空',
+                },
+              ],
+            })(<ComboList {...appProps} disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="模块代码">
             {getFieldDecorator('code', {
               initialValue: get(rowData, 'code'),
               rules: [
                 {
                   required: true,
-                  message: '应用代码不能为空',
+                  message: '模块代码不能为空',
                 },
               ],
             })(<Input disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="应用名称">
+          <FormItem label="模块名称">
             {getFieldDecorator('name', {
               initialValue: get(rowData, 'name'),
               rules: [
                 {
                   required: true,
-                  message: '应用名称不能为空',
+                  message: '模块名称不能为空',
                 },
               ],
             })(<Input disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="应用所属组">
-            {getFieldDecorator('groupName', {
-              initialValue: get(rowData, 'groupName'),
-              rules: [
-                {
-                  required: true,
-                  message: '应用所属组不能为空',
-                },
-              ],
-            })(<ComboList {...groupProps} disabled={onlyView} />)}
-          </FormItem>
-          <FormItem label="应用版本">
+          <FormItem label="模块版本">
             {getFieldDecorator('version', {
               initialValue: get(rowData, 'version'),
               rules: [
                 {
                   required: true,
-                  message: '应用版本不能为空',
+                  message: '	模块版本不能为空',
                 },
               ],
             })(<Input disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="应用描述">
+          <FormItem label="模块描述">
             {getFieldDecorator('remark', {
               initialValue: get(rowData, 'remark'),
               rules: [
                 {
                   required: true,
-                  message: '应用描述不能为空',
+                  message: '模块描述不能为空',
                 },
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
           </FormItem>
+          {onlyView ? (
+            <>
+              <FormItem label="Git地址">
+                {getFieldDecorator('gitUrl', {
+                  initialValue: get(rowData, 'gitUrl'),
+                })(<Input disabled />)}
+              </FormItem>
+              <FormItem label="命名空间(包路径)">
+                {getFieldDecorator('nameSpace', {
+                  initialValue: get(rowData, 'nameSpace'),
+                })(<Input disabled />)}
+              </FormItem>
+            </>
+          ) : null}
         </Form>
       </ExtModal>
     );

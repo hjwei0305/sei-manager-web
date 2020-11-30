@@ -5,6 +5,7 @@ import { Layout, Menu, Card } from 'antd';
 import { ScrollBar } from 'suid';
 import { constants } from '@/utils';
 import Application from './Application';
+import Module from './Module';
 import styles from './index.less';
 
 const { APPLY_ORDER_TYPE } = constants;
@@ -36,6 +37,8 @@ class ApplyOrder extends PureComponent {
     switch (currentAppyType.name) {
       case APPLY_ORDER_TYPE.APPLICATION.name:
         return <Application />;
+      case APPLY_ORDER_TYPE.MODULE.name:
+        return <Module />;
       default:
     }
   };
