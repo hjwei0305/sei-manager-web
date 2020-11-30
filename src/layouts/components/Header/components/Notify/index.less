@@ -1,0 +1,58 @@
+@import '../../../../../themes/default.less';
+
+.message-box {
+  width: 320px;
+  padding: 24px;
+  overflow: hidden;
+  background-color: @white;
+  :global {
+    .ant-tabs {
+      display: flex;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 14px;
+      font-variant: tabular-nums;
+      line-height: 1.5715;
+      list-style: none;
+      font-feature-settings: 'tnum', 'tnum';
+    }
+    .ant-tabs-tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin: 0 32px 0 0;
+      padding: 12px 6px;
+      font-size: 14px;
+      background: 0 0;
+      border: 0;
+      outline: none;
+      cursor: pointer;
+    }
+    .ant-tabs-bottom,
+    .ant-tabs-top {
+      flex-direction: column;
+    }
+    .ant-tabs > .ant-tabs-nav,
+    .ant-tabs > div > .ant-tabs-nav {
+      position: relative;
+      display: flex;
+      flex: none;
+      align-items: center;
+    }
+    .ant-tabs-nav-scroll {
+      text-align: center;
+    }
+    .ant-tabs-tabpane-active {
+      height: 320px;
+    }
+    .ant-empty {
+      margin-top: 22%;
+      .ant-empty-description {
+        color: fade(@black, 30%);
+      }
+    }
+  }
+}
