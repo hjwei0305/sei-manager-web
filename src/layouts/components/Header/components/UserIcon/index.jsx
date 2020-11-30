@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
+import { router } from 'umi';
 import { get, cloneDeep } from 'lodash';
 import { Icon, Menu, Avatar } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -53,6 +54,22 @@ class UserIcon extends React.Component {
     });
   };
 
+  handlerMyApply = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'menu/openTab',
+      payload: {
+        activedMenu: {
+          id: 'my-apply',
+          title: '我的申请单',
+          url: '/my-center/apply',
+        },
+      },
+    }).then(({ activedMenu }) => {
+      router.push(activedMenu.url);
+    });
+  };
+
   dropdownRender = () => {
     const menu = (
       <Menu selectedKeys={[]} className={cls(styles['user-menu-item'])}>
@@ -63,6 +80,10 @@ class UserIcon extends React.Component {
         <Menu.Item key="my-dashboard-home" onClick={this.handlerDashboardCustom}>
           <Icon type="home" />
           {formatMessage({ id: 'app.dashboard.custom', desc: '自定义首页' })}
+        </Menu.Item>
+        <Menu.Item key="apply" onClick={this.handlerMyApply}>
+          <Icon type="project" />
+          我的申请单
         </Menu.Item>
         <Menu.Item key="logout" onClick={this.handleClick}>
           <Icon type="logout" />

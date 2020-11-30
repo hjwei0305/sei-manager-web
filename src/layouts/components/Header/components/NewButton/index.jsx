@@ -53,7 +53,7 @@ class NewButton extends React.Component {
 
   render() {
     return (
-      <ExtDropdown overlay={this.dropdownRender()}>
+      <ExtDropdown overlay={this.dropdownRender()} placement="topRight">
         <span className={cls(styles['new-icon-wrapper'], 'trigger')}>
           <ExtIcon type="plus-circle" theme="filled" antd />
         </span>

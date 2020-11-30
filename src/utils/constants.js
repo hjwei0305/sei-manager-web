@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-27 16:50:21
+ * @Last Modified time: 2020-11-30 14:23:24
  */
 import { name } from '../../package.json';
 
@@ -63,13 +63,13 @@ export const NoMenuNewApply = [
   {
     id: 'newApp',
     icon: 'file',
-    title: '新建应用',
-    url: '/integration/application',
+    title: '应用申请',
+    url: '/my-center/apply/application/new',
   },
   {
     id: 'newModule',
     icon: 'file-text',
-    title: '新建模块',
+    title: '模块申请',
     url: '/integration/applicationModule',
   },
 ];
@@ -151,6 +151,38 @@ const USER_BTN_KEY = {
   ASSIGN_ROLE: 'USER_ASSIGN_ROLE',
 };
 
+const APPLY_STATUS = {
+  ALL: { remark: '全部', name: 'ALL', color: '' },
+  INITIAL: { remark: '草稿', name: 'INITIAL', color: '' },
+  PROCESSING: { remark: '审核中', name: 'PROCESSING', color: 'orange' },
+  PASSED: { remark: '审核通过', name: 'PASSED', color: 'green' },
+  UNPASSED: { remark: '审核未通过', name: 'UNPASSED', color: 'red' },
+};
+
+const APPLY_ORDER_TYPE = {
+  APPLICATION: { remark: '应用申请', name: 'APPLICATION' },
+  MODULE: { remark: '模块申请', name: 'MODULE' },
+  VERSION: { remark: '版本申请', name: 'VERSION' },
+  PUBLISH: { remark: '发布申请', name: 'PUBLISH' },
+  DEPLOY: { remark: '部署申请', name: 'DEPLOY' },
+};
+
+/**
+ * 应用申请功能项操作
+ */
+const APPLY_APPLICATION_ACTION = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+  VIEW: 'view',
+  APPROVE: 'approve',
+  STOP_APPROVE: 'stop_approve',
+};
+
+const FLOW_OPERATION_TYPE = {
+  CANCEL: 'CANCEL',
+  REJECT: 'REJECT',
+  PASSED: 'PASSED',
+};
 export default {
   NoMenuPages,
   NoMenuNewApply,
@@ -170,4 +202,8 @@ export default {
   USER_ACTION,
   CI_SERVER_PATH,
   USER_BTN_KEY,
+  APPLY_APPLICATION_ACTION,
+  APPLY_STATUS,
+  APPLY_ORDER_TYPE,
+  FLOW_OPERATION_TYPE,
 };

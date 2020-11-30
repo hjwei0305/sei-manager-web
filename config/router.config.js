@@ -113,6 +113,27 @@ const routes = [
         ],
       },
       {
+        path: '/my-center',
+        namd: '个人中心',
+        routes: [
+          {
+            path: '/my-center/apply',
+            name: '我的申请',
+            component: './ApplyOrder',
+          },
+          {
+            path: '/my-center/apply/application',
+            name: '应用申请',
+            component: './ApplyOrder/Application',
+          },
+          {
+            path: '/my-center/apply/application/new',
+            name: '应用申请-新建',
+            component: './ApplyOrder/Application',
+          },
+        ],
+      },
+      {
         path: '/log',
         namd: '日志分析',
         routes: [
