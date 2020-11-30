@@ -213,7 +213,7 @@ class Certificate extends PureComponent {
           dispatch({
             type: 'applyApplication/del',
             payload: {
-              id: rowData.id,
+              id: rowData.relationId,
             },
             callback: res => {
               if (res.success) {
