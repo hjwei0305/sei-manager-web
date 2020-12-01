@@ -9,7 +9,7 @@ import { getTodoTaskNum } from '@/services/notify';
 import { constants } from '@/utils';
 import styles from './index.less';
 
-const { APPLY_ORDER_TYPE } = constants;
+const { APPLY_ORDER_TYPE, NoMenuPage } = constants;
 
 @connect(() => ({}))
 class Notify extends PureComponent {
@@ -79,11 +79,9 @@ class Notify extends PureComponent {
 
   handlerTodoItem = item => {
     const { dispatch } = this.props;
-    const activedMenu = {
-      id: 'myTodoList',
-      title: '我的待办',
-      url: `/my-center/workTodo?t=${item.name}`,
-    };
+    const url = `/my-center/workTodo?t=${item.name}`;
+    const activedMenu = NoMenuPage.myTodoList;
+    Object.assign(activedMenu, { url });
     dispatch({
       type: 'menu/openTab',
       payload: {

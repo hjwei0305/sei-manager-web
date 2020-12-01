@@ -6,10 +6,11 @@ import { get } from 'lodash';
 import { Icon, Menu, Avatar } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import ExtDropdown from '@/components/ExtDropdown';
-import { userInfoOperation } from '@/utils';
+import { userInfoOperation, constants } from '@/utils';
 import styles from './index.less';
 
 const { getCurrentUser } = userInfoOperation;
+const { NoMenuPage } = constants;
 
 @connect(() => ({}))
 class UserIcon extends React.Component {
@@ -30,11 +31,7 @@ class UserIcon extends React.Component {
     dispatch({
       type: 'menu/openTab',
       payload: {
-        activedMenu: {
-          id: 'userProfile',
-          title: '个人设置',
-          url: '/sei-basic-web/userProfile',
-        },
+        activedMenu: NoMenuPage.userProfile,
       },
     }).then(({ activedMenu }) => {
       router.push(activedMenu.url);
@@ -46,11 +43,7 @@ class UserIcon extends React.Component {
     dispatch({
       type: 'menu/openTab',
       payload: {
-        activedMenu: {
-          id: 'my-dashboard-home',
-          title: '自定义首页',
-          url: '/sei-dashboard-web/scene/myHome',
-        },
+        activedMenu: NoMenuPage['my-dashboard-home'],
       },
     });
   };
@@ -60,11 +53,7 @@ class UserIcon extends React.Component {
     dispatch({
       type: 'menu/openTab',
       payload: {
-        activedMenu: {
-          id: 'my-apply',
-          title: '我的申请单',
-          url: '/my-center/apply',
-        },
+        activedMenu: NoMenuPage['my-apply'],
       },
     }).then(({ activedMenu }) => {
       router.push(activedMenu.url);

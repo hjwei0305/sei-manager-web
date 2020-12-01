@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-01 14:01:00
+ * @Last Modified time: 2020-12-01 16:18:41
  */
 import { name } from '../../package.json';
 
@@ -57,25 +57,32 @@ export const NoMenuNewApply = [
 ];
 
 /** 非菜单页面 */
-export const NoMenuPages = [
-  {
+export const NoMenuPage = {
+  'my-apply': {
     id: 'my-apply',
     title: '我的申请单',
     url: '/my-center/apply',
   },
-  {
+  myTodoList: {
     id: 'myTodoList',
     title: '我的待办',
     url: `/my-center/workTodo?t=ALL`,
   },
-  {
+  userProfile: {
     id: 'userProfile',
     title: '个人设置',
     url: '/sei-basic-web/userProfile',
-    // closeActiveParentTab: true,
   },
-  ...NoMenuNewApply,
-];
+  'my-dashboard-home': {
+    id: 'my-dashboard-home',
+    title: '自定义首页',
+    url: '/sei-dashboard-web/scene/myHome',
+  },
+};
+
+export const NoMenuPages = Object.keys(NoMenuPage)
+  .map(key => NoMenuPage[key])
+  .concat(NoMenuNewApply);
 
 const ENV_CATEGORY = {
   dev: { key: 'dev', title: '开发环境' },
@@ -188,6 +195,7 @@ const FLOW_OPERATION_TYPE = {
   PASSED: 'PASSED',
 };
 export default {
+  NoMenuPage,
   NoMenuPages,
   NoMenuNewApply,
   APP_BASE,
