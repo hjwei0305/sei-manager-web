@@ -452,7 +452,7 @@ class Certificate extends PureComponent {
 
   renderColumnAppName = () => {
     const { appName } = this.state;
-    return `应用名称(${appName})`;
+    return `应用(${appName})`;
   };
 
   render() {
@@ -484,7 +484,7 @@ class Certificate extends PureComponent {
       {
         title: this.renderColumnAppName(),
         dataIndex: 'appName',
-        width: 160,
+        width: 220,
         required: true,
         ...this.getColumnSearchProps('appName'),
       },
