@@ -213,11 +213,6 @@ class WorkTodo extends PureComponent {
         render: this.renderApplyType,
       },
       {
-        title: '事项编号',
-        dataIndex: 'taskNo',
-        width: 100,
-      },
-      {
         title: '事项名称',
         dataIndex: 'taskName',
         width: 220,
