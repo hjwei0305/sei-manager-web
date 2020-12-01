@@ -44,7 +44,7 @@ class Notify extends PureComponent {
   getMessageCount = () => {
     getTodoTaskNum().then(result => {
       const { success, data } = result || {};
-      if (success && Object.keys(data).length > 0) {
+      if (success) {
         const { messageCount: oldMessageCount } = this.state;
         const todoData = [];
         let messageCount = 0;

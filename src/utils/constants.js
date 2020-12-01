@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-01 11:29:48
+ * @Last Modified time: 2020-12-01 14:01:00
  */
 import { name } from '../../package.json';
 
@@ -58,6 +58,11 @@ export const NoMenuNewApply = [
 
 /** 非菜单页面 */
 export const NoMenuPages = [
+  {
+    id: 'my-apply',
+    title: '我的申请单',
+    url: '/my-center/apply',
+  },
   {
     id: 'myTodoList',
     title: '我的待办',

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { get } from 'lodash';
+import { get, trim, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Button } from 'antd';
-import { ExtModal, ComboList } from 'suid';
+import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '../../../utils';
 
 const { TextArea } = Input;
@@ -15,6 +15,19 @@ const formItemLayout = {
   wrapperCol: {
     span: 18,
   },
+};
+
+const getVersion = rowData => {
+  let moduleCode = '';
+  let appVersion = '';
+  if (rowData) {
+    const version = get(rowData, 'version') || '';
+    const vers = version.split('.');
+    if (vers.length === 2) {
+      [appVersion, moduleCode] = vers;
+    }
+  }
+  return [appVersion, moduleCode];
 };
 
 @Form.create()
@@ -30,8 +43,26 @@ class FormModal extends PureComponent {
     saveToApproving: PropTypes.bool,
   };
 
+  constructor(props) {
+    super(props);
+    const { rowData } = props;
+    const [appVersion] = getVersion(rowData);
+    this.state = {
+      appVersion,
+    };
+  }
+
+  componentDidUpdate(preProps) {
+    const { rowData } = this.props;
+    if (!isEqual(preProps.rowData, rowData)) {
+      const [appVersion] = getVersion(rowData);
+      this.setState({ appVersion });
+    }
+  }
+
   handlerFormSubmit = approve => {
     const { form, save, rowData, saveToApprove } = this.props;
+    const { appVersion } = this.state;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -39,6 +70,7 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
+      Object.assign(params, { version: `${appVersion}.${trim(params.version)}` });
       if (approve) {
         saveToApprove(params);
       } else {
@@ -80,7 +112,18 @@ class FormModal extends PureComponent {
     );
   };
 
+  validateVersion = (rule, value, callback) => {
+    const { form } = this.props;
+    const reg = /^([1-9]\d*|[0]{1,1})$/;
+    if (trim(value) && !reg.test(value)) {
+      form.validateFields(['version'], { force: true });
+      callback('只能输入正整数');
+    }
+    callback();
+  };
+
   render() {
+    const { appVersion } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -95,6 +138,9 @@ class FormModal extends PureComponent {
           filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
         },
       },
+      afterSelect: item => {
+        this.setState({ appVersion: item.version });
+      },
       remotePaging: true,
       field: ['appId'],
       reader: {
@@ -106,6 +152,7 @@ class FormModal extends PureComponent {
     return (
       <ExtModal
         maskClosable={false}
+        centered
         destroyOnClose
         visible={showModal}
         onCancel={closeFormModal}
@@ -149,14 +196,22 @@ class FormModal extends PureComponent {
           </FormItem>
           <FormItem label="模块版本">
             {getFieldDecorator('version', {
-              initialValue: get(rowData, 'version'),
+              initialValue: getVersion(rowData)[1],
               rules: [
                 {
                   required: true,
                   message: '	模块版本不能为空',
                 },
               ],
-            })(<Input disabled={onlyView} />)}
+            })(
+              <MoneyInput
+                disabled={onlyView}
+                textAlign="left"
+                thousand={false}
+                precision={0}
+                prefix={`${appVersion}.`}
+              />,
+            )}
           </FormItem>
           <FormItem label="模块描述">
             {getFieldDecorator('remark', {

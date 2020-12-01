@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Button } from 'antd';
-import { ExtModal, ComboList } from 'suid';
+import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '../../../utils';
 
 const { TextArea } = Input;
@@ -103,6 +103,7 @@ class FormModal extends PureComponent {
     return (
       <ExtModal
         maskClosable={false}
+        centered
         destroyOnClose
         visible={showModal}
         onCancel={closeFormModal}
@@ -153,7 +154,7 @@ class FormModal extends PureComponent {
                   message: '应用版本不能为空',
                 },
               ],
-            })(<Input disabled={onlyView} />)}
+            })(<MoneyInput textAlign="left" thousand={false} precision={0} disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用描述">
             {getFieldDecorator('remark', {
