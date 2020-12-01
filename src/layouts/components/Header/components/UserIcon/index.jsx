@@ -2,15 +2,13 @@ import React from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { router } from 'umi';
-import { get, cloneDeep } from 'lodash';
+import { get } from 'lodash';
 import { Icon, Menu, Avatar } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import ExtDropdown from '@/components/ExtDropdown';
-import { userInfoOperation, constants } from '@/utils';
-
+import { userInfoOperation } from '@/utils';
 import styles from './index.less';
 
-const { NoMenuPages } = constants;
 const { getCurrentUser } = userInfoOperation;
 
 @connect(() => ({}))
@@ -32,12 +30,15 @@ class UserIcon extends React.Component {
     dispatch({
       type: 'menu/openTab',
       payload: {
-        activedMenu: cloneDeep(NoMenuPages[0]),
+        activedMenu: {
+          id: 'userProfile',
+          title: '个人设置',
+          url: '/sei-basic-web/userProfile',
+        },
       },
+    }).then(({ activedMenu }) => {
+      router.push(activedMenu.url);
     });
-    // .then(({ activedMenu }) => {
-    //   router.push(activedMenu.url);
-    // });
   };
 
   handlerDashboardCustom = () => {
