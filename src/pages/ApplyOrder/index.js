@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { Layout, Menu, Card } from 'antd';
-import { ScrollBar } from 'suid';
+import { ScrollBar, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import Application from './Application';
 import Module from './Module';
@@ -72,7 +72,11 @@ class ApplyOrder extends PureComponent {
             </Card>
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
-            <Card bordered={false} title={currentAppyType.remark} className="apply-box">
+            <Card
+              bordered={false}
+              title={<BannerTitle title={currentAppyType.remark} subTitle="单据列表" />}
+              className="apply-box"
+            >
               {this.renderApplyOrder()}
             </Card>
           </Content>
