@@ -184,13 +184,9 @@ class BasicLayout extends React.Component {
     let activedKey = '';
     let title = '开发运维平台';
     if (activedMenu) {
-      const { id, title: tempTitle, rootName } = activedMenu;
+      const { id, title: tempTitle } = activedMenu;
       activedKey = id;
-      if (rootName) {
-        title = `开发运维平台-${tempTitle}`;
-      } else {
-        title = tempTitle;
-      }
+      title = `开发运维平台-${tempTitle}`;
     }
     return (
       <ScrollBar>
