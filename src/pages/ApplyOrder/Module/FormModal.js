@@ -242,7 +242,7 @@ class FormModal extends PureComponent {
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
           </FormItem>
-          {moduleType !== 'java' ? (
+          {moduleType === 'java' ? (
             <FormItem label="命名空间(包路径)">
               {getFieldDecorator('nameSpace', {
                 initialValue: get(rowData, 'nameSpace'),
