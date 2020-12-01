@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { get, trim, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Radio } from 'antd';
 import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '../../../utils';
+import styles from './FormModal.less';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -19,7 +20,7 @@ const formItemLayout = {
 
 const getVersion = rowData => {
   let moduleCode = '';
-  let appVersion = '';
+  let appVersion = '0';
   if (rowData) {
     const version = get(rowData, 'version') || '';
     const vers = version.split('.');
@@ -49,6 +50,7 @@ class FormModal extends PureComponent {
     const [appVersion] = getVersion(rowData);
     this.state = {
       appVersion,
+      moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
     };
   }
 
@@ -56,7 +58,7 @@ class FormModal extends PureComponent {
     const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
       const [appVersion] = getVersion(rowData);
-      this.setState({ appVersion });
+      this.setState({ appVersion, moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
@@ -112,18 +114,12 @@ class FormModal extends PureComponent {
     );
   };
 
-  validateVersion = (rule, value, callback) => {
-    const { form } = this.props;
-    const reg = /^([1-9]\d*|[0]{1,1})$/;
-    if (trim(value) && !reg.test(value)) {
-      form.validateFields(['version'], { force: true });
-      callback('只能输入正整数');
-    }
-    callback();
+  handlerModuleTypeChange = e => {
+    this.setState({ moduleType: e.target.value });
   };
 
   render() {
-    const { appVersion } = this.state;
+    const { appVersion, moduleType } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -154,7 +150,9 @@ class FormModal extends PureComponent {
         maskClosable={false}
         centered
         destroyOnClose
+        width={580}
         visible={showModal}
+        wrapClassName={styles['form-box']}
         onCancel={closeFormModal}
         bodyStyle={{ paddingBottom: 0 }}
         title={onlyView ? '模块详情' : title}
@@ -171,6 +169,26 @@ class FormModal extends PureComponent {
                 },
               ],
             })(<ComboList {...appProps} disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="模块类型">
+            {getFieldDecorator('moduleType', {
+              initialValue: moduleType,
+              rules: [
+                {
+                  required: true,
+                  message: '模块类型不能为空',
+                },
+              ],
+            })(
+              <Radio.Group onChange={this.handlerModuleTypeChange} disabled={onlyView} size="small">
+                <Radio.Button key="web" value="web">
+                  前端模块
+                </Radio.Button>
+                <Radio.Button key="java" value="java">
+                  后端模块
+                </Radio.Button>
+              </Radio.Group>,
+            )}
           </FormItem>
           <FormItem label="模块代码">
             {getFieldDecorator('code', {
@@ -224,16 +242,24 @@ class FormModal extends PureComponent {
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
           </FormItem>
+          {moduleType === 'java' ? (
+            <FormItem label="命名空间(包路径)">
+              {getFieldDecorator('nameSpace', {
+                initialValue: get(rowData, 'nameSpace'),
+                rules: [
+                  {
+                    required: true,
+                    message: '命名空间(包路径)不能为空',
+                  },
+                ],
+              })(<Input disabled={onlyView} />)}
+            </FormItem>
+          ) : null}
           {onlyView ? (
             <>
               <FormItem label="Git地址">
                 {getFieldDecorator('gitUrl', {
                   initialValue: get(rowData, 'gitUrl'),
-                })(<Input disabled />)}
-              </FormItem>
-              <FormItem label="命名空间(包路径)">
-                {getFieldDecorator('nameSpace', {
-                  initialValue: get(rowData, 'nameSpace'),
                 })(<Input disabled />)}
               </FormItem>
             </>
