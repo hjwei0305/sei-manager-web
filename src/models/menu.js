@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-09 15:49:41
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-27 15:26:41
+ * @Last Modified time: 2020-12-01 13:37:44
  */
 import { router } from 'umi';
 import { utils } from 'suid';
@@ -135,7 +135,13 @@ export default {
           currMenuTree: menuTrees,
         };
         if (initPathname) {
-          const temp = allLeafMenus.concat(NoMenuPages).filter(item => item.url === initPathname);
+          const temp = allLeafMenus
+            .concat(NoMenuPages)
+            .filter(
+              item =>
+                item.url === initPathname ||
+                (item.url && initPathname && item.url.split('?')[0] === initPathname.split('?')[0]),
+            );
           let activedMenu = null;
           if (temp && temp.length) {
             [activedMenu] = temp;
