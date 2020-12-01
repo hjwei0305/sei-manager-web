@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-30 17:28:13
+ * @Last Modified time: 2020-12-01 11:29:48
  */
 import { name } from '../../package.json';
 
@@ -40,24 +40,6 @@ const SERVER_PATH = getServerPath();
 const MANAGER_CONTEXT = `/sei-manager/`;
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-/** 非菜单页面 */
-export const NoMenuPages = [
-  // {
-  //   id: 'flow-homepage',
-  //   url: '/sei-flow-web/homepage',
-  //   title: '我的任务',
-  //   noClosable: true,
-  //   /** 激活刷新 */
-  //   activedRefresh: true,
-  // },
-  {
-    id: 'userProfile',
-    title: '个人设置',
-    url: '/sei-basic-web/userProfile',
-    // closeActiveParentTab: true,
-  },
-];
-
 /** 新建申请菜单统一入口 */
 export const NoMenuNewApply = [
   {
@@ -72,6 +54,22 @@ export const NoMenuNewApply = [
     title: '模块申请',
     url: '/my-center/apply/applicationModule/new',
   },
+];
+
+/** 非菜单页面 */
+export const NoMenuPages = [
+  {
+    id: 'myTodoList',
+    title: '我的待办',
+    url: `/my-center/workTodo?t=ALL`,
+  },
+  {
+    id: 'userProfile',
+    title: '个人设置',
+    url: '/sei-basic-web/userProfile',
+    // closeActiveParentTab: true,
+  },
+  ...NoMenuNewApply,
 ];
 
 const ENV_CATEGORY = {
@@ -160,6 +158,7 @@ const APPLY_STATUS = {
 };
 
 const APPLY_ORDER_TYPE = {
+  ALL: { remark: '全部', name: 'ALL' },
   APPLICATION: { remark: '应用申请', name: 'APPLICATION' },
   MODULE: { remark: '模块申请', name: 'MODULE' },
   VERSION: { remark: '版本申请', name: 'VERSION' },

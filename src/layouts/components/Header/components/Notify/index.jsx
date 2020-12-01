@@ -1,16 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Badge, Icon, Dropdown, Tabs, Empty } from 'antd';
-import { ListCard } from 'suid';
+import { connect } from 'dva';
+import { router } from 'umi';
+import { Badge, Icon, Dropdown, Card, Empty, List } from 'antd';
+import { ScrollBar } from 'suid';
+import { AplayAudio } from '@/components';
 import emtpy from '@/assets/notice_emtpy.svg';
 import { getTodoTaskNum } from '@/services/notify';
-import { constants, speech } from '@/utils';
+import { constants } from '@/utils';
 import styles from './index.less';
 
 const { APPLY_ORDER_TYPE } = constants;
-const { TabPane } = Tabs;
 
+@connect(() => ({}))
 class Notify extends PureComponent {
   static messageTimer;
+
+  static aplayAudioRef;
 
   constructor(props) {
     super(props);
@@ -62,7 +67,9 @@ class Notify extends PureComponent {
           },
           () => {
             if (messageCount > oldMessageCount) {
-              speech(`您有新的未处理的消息`);
+              if (this.aplayAudioRef) {
+                this.aplayAudioRef.aplayAudio();
+              }
             }
           },
         );
@@ -70,48 +77,54 @@ class Notify extends PureComponent {
     });
   };
 
+  handlerTodoItem = item => {
+    const { dispatch } = this.props;
+    const activedMenu = {
+      id: 'myTodoList',
+      title: '我的待办',
+      url: `/my-center/workTodo?t=${item.name}`,
+    };
+    dispatch({
+      type: 'menu/openTab',
+      payload: {
+        activedMenu,
+      },
+    }).then(() => {
+      router.push(activedMenu.url);
+    });
+    this.setState({
+      visible: false,
+    });
+  };
+
   renderTodoList = () => {
     const { todoData } = this.state;
-    if (todoData.length === 0) {
-      return <Empty image={emtpy} description="你已完成所有待办" />;
-    }
-    const todoListProps = {
-      dataSource: todoData,
-      rowKey: 'name',
-      showSearch: false,
-      pagination: false,
-      onSelectChange: (keys, items) => {
-        console.log(keys, items);
-      },
-      customTool: () => null,
-      itemField: {
-        title: item => item.remark,
-        extra: item => (
-          <Badge style={{ marginRight: 8 }} title={`有 ${item.count} 条待办`} count={item.count} />
-        ),
-      },
-    };
-    return <ListCard {...todoListProps} />;
+    return (
+      <Card title="待办信息" bordered={false} size="small">
+        {todoData.length === 0 ? (
+          <Empty image={emtpy} description="你已完成所有待办" />
+        ) : (
+          <ScrollBar>
+            <List
+              itemLayout="horizontal"
+              dataSource={todoData}
+              renderItem={item => (
+                <List.Item onClick={() => this.handlerTodoItem(item)}>
+                  <List.Item.Meta title={item.remark} />
+                  <Badge count={item.count} />
+                </List.Item>
+              )}
+            />
+          </ScrollBar>
+        )}
+      </Card>
+    );
   };
 
   getDropdownProps = () => {
     const { visible } = this.state;
     return {
-      overlay: (
-        <div className={styles['message-box']}>
-          <Tabs animated={false}>
-            <TabPane tab="待办" key="1">
-              {this.renderTodoList()}
-            </TabPane>
-            <TabPane tab="通知" key="2">
-              <Empty image={emtpy} description="你已查看所有通知" />
-            </TabPane>
-            <TabPane tab="消息" key="3">
-              <Empty image={emtpy} description="你已读完所有消息" />
-            </TabPane>
-          </Tabs>
-        </div>
-      ),
+      overlay: <div className={styles['message-box']}>{this.renderTodoList()}</div>,
       visible,
       placement: 'bottomLeft',
       trigger: ['click'],
@@ -131,6 +144,7 @@ class Notify extends PureComponent {
             </Badge>
           </span>
         </Dropdown>
+        <AplayAudio onAudioRef={ref => (this.aplayAudioRef = ref)} />
       </>
     );
   }

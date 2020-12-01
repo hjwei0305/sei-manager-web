@@ -117,6 +117,11 @@ const routes = [
         namd: '个人中心',
         routes: [
           {
+            path: '/my-center/workTodo',
+            name: '我的待办',
+            component: './WorkTodo',
+          },
+          {
             path: '/my-center/apply',
             name: '我的申请',
             component: './ApplyOrder',
