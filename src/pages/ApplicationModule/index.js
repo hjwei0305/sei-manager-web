@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
+import copy from 'copy-to-clipboard';
 import { Button, Input } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ListCard } from 'suid';
+import { ExtTable, ListCard, message, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import styles from './index.less';
 
@@ -65,6 +66,29 @@ class ApplicationModule extends Component {
         filter,
       },
     });
+  };
+
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
+  renderCopyColumn = t => {
+    if (t) {
+      return (
+        <>
+          <ExtIcon
+            type="copy"
+            className="copy-btn"
+            antd
+            tooltip={{ title: '复制内容到粘贴板' }}
+            onClick={() => this.handlerCopy(t)}
+          />
+          <span style={{ marginLeft: 28 }} dangerouslySetInnerHTML={{ __html: t }} />
+        </>
+      );
+    }
+    return '-';
   };
 
   handlerSearchChange = v => {
@@ -265,11 +289,11 @@ class ApplicationModule extends Component {
       },
       {
         title: 'Git地址',
-        dataIndex: 'gitUrl',
+        dataIndex: 'gitHttpUrl',
         width: 420,
         required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('gitUrl'),
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('gitHttpUrl'),
       },
       {
         title: '命名空间(包路径)',

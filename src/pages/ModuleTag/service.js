@@ -5,9 +5,9 @@ const { request } = utils;
 
 const { SERVER_PATH } = constants;
 
-/** 为用户组分配用户 */
-export async function assignUsers(data) {
-  const url = `${SERVER_PATH}/sei-manager/userGroupUser/insertRelations`;
+/** 创建标签 */
+export async function createTag(data) {
+  const url = `${SERVER_PATH}/sei-manager/appModule/createTag`;
   return request({
     url,
     method: 'POST',
@@ -15,12 +15,13 @@ export async function assignUsers(data) {
   });
 }
 
-/** 用户组移除已分配的用户 */
-export async function removeAssignedUsers(data) {
-  const url = `${SERVER_PATH}/sei-manager/userGroupUser/removeRelations`;
+/** 删除标签 */
+export async function removeTag(data) {
+  const { gitId, tagName } = data;
+  const url = `${SERVER_PATH}/sei-manager/appModule/deleteRelease/${gitId}?tagName=${tagName}`;
   return request({
     url,
     method: 'DELETE',
-    data,
+    data: {},
   });
 }

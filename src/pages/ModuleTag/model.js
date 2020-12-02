@@ -1,6 +1,5 @@
-import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { assignUsers, removeAssignedUsers } from './service';
+import { createTag, removeTag } from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -15,15 +14,15 @@ export default modelExtend(model, {
     moduleFilter: {},
   },
   effects: {
-    *assignUsers({ payload, callback }, { call, put }) {
-      const re = yield call(assignUsers, payload);
+    *createTag({ payload, callback }, { call, put }) {
+      const re = yield call(createTag, payload);
       message.destroy();
       if (re.success) {
-        message.success(formatMessage({ id: 'global.assign-success', defaultMessage: '分配成功' }));
+        message.success('标签创建成功');
         yield put({
           type: 'updateState',
           payload: {
-            showAssign: false,
+            showTagModal: false,
           },
         });
       } else {
@@ -33,11 +32,11 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *removeAssignedUsers({ payload, callback }, { call }) {
-      const re = yield call(removeAssignedUsers, payload);
+    *removeTag({ payload, callback }, { call }) {
+      const re = yield call(removeTag, payload);
       message.destroy();
       if (re.success) {
-        message.success(formatMessage({ id: 'global.remove-success', defaultMessage: '移除成功' }));
+        message.success('标签删除成功');
       } else {
         message.error(re.message);
       }

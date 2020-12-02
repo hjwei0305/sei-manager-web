@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { get } from 'lodash';
 import { Form, Input } from 'antd';
 import { ExtModal } from 'suid';
 
@@ -16,12 +17,12 @@ const formItemLayout = {
 @Form.create()
 class FormModal extends PureComponent {
   handlerFormSubmit = () => {
-    const { form, save } = this.props;
+    const { form, save, currentModule } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
       }
-      const params = {};
+      const params = { gitId: get(currentModule, 'gitId') };
       Object.assign(params, formData);
       save(params);
     });
@@ -54,7 +55,7 @@ class FormModal extends PureComponent {
             })(<Input />)}
           </FormItem>
           <FormItem label="标签消息">
-            {getFieldDecorator('tagMessage', {
+            {getFieldDecorator('message', {
               initialValue: '',
               rules: [
                 {

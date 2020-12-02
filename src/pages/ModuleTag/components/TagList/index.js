@@ -42,7 +42,7 @@ class TagList extends Component {
   save = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'moduleTag/save',
+      type: 'moduleTag/createTag',
       payload: {
         ...data,
       },
@@ -61,16 +61,20 @@ class TagList extends Component {
   };
 
   del = record => {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      moduleTag: { currentModule },
+    } = this.props;
     this.setState(
       {
-        delRowId: record.id,
+        delRowId: record.name,
       },
       () => {
         dispatch({
-          type: 'moduleTag/del',
+          type: 'moduleTag/removeTag',
           payload: {
-            id: record.id,
+            tagName: record.name,
+            gitId: get(currentModule, 'gitId'),
           },
           callback: res => {
             if (res.success) {
@@ -99,7 +103,7 @@ class TagList extends Component {
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
-    if (loading.effects['moduleTag/del'] && delRowId === row.id) {
+    if (loading.effects['moduleTag/removeTag'] && delRowId === row.name) {
       return <ExtIcon className="del-loading" type="loading" antd />;
     }
     return <ExtIcon className="del" type="delete" antd />;
@@ -134,13 +138,13 @@ class TagList extends Component {
       },
       {
         title: '标签名称',
-        dataIndex: 'tagName',
+        dataIndex: 'name',
         width: 220,
         required: true,
       },
       {
-        title: '标签消息',
-        dataIndex: 'tagMessage',
+        title: '标签描述',
+        dataIndex: 'message',
         width: 480,
         render: t => t || '-',
       },
@@ -160,21 +164,23 @@ class TagList extends Component {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
+      rowKey: 'name',
       onTableRef: ref => (this.tableRef = ref),
       searchPlaceHolder: '输入标签名称、标签消息关键字',
       searchProperties: ['tagName', 'tagMessage'],
       searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-manager/userGroupUser/getChildrenFromParentId`,
+        url: `${SERVER_PATH}/sei-manager/appModule/getTags`,
       },
       cascadeParams: {
-        moduleId: get(currentModule, 'id'),
+        gitId: get(currentModule, 'gitId'),
       },
     };
     const formModalProps = {
       showTagModal,
+      currentModule,
       closeFormModal: this.closeFormModal,
-      saving: loading.effects['moduleTag/save'],
+      saving: loading.effects['moduleTag/createTag'],
       save: this.save,
     };
     return (

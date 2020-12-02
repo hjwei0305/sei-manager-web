@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
+import copy from 'copy-to-clipboard';
 import { Input, Empty, Layout } from 'antd';
-import { ListCard } from 'suid';
+import { ListCard, message, ExtIcon } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
 import TagList from './components/TagList';
@@ -24,6 +25,7 @@ class ModuleTag extends Component {
     dispatch({
       type: 'moduleTag/updateState',
       payload: {
+        currentModule: null,
         moduleFilter: {},
       },
     });
@@ -93,6 +95,11 @@ class ModuleTag extends Component {
     return { filters };
   };
 
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
   renderCustomTool = () => (
     <>
       <Search
@@ -107,6 +114,28 @@ class ModuleTag extends Component {
     </>
   );
 
+  renderModuleName = item => {
+    return (
+      <>
+        {item.name}
+        <span
+          style={{ marginLeft: 4, fontSize: 12, color: '#999' }}
+        >{`版本：${item.version}`}</span>
+        <ExtIcon
+          type="copy"
+          className="copy-btn"
+          style={{ marginLeft: 4 }}
+          antd
+          tooltip={{ title: '复制Git地址到粘贴板' }}
+          onClick={e => {
+            e.stopPropagation();
+            this.handlerCopy(item.gitHttpUrl);
+          }}
+        />
+      </>
+    );
+  };
+
   render() {
     const { moduleTag } = this.props;
     const { currentModule } = moduleTag;
@@ -117,10 +146,10 @@ class ModuleTag extends Component {
       onSelectChange: this.handlerModuleSelect,
       customTool: this.renderCustomTool,
       onListCardRef: ref => (this.listCardRef = ref),
-      searchProperties: ['description', 'name'],
+      searchProperties: ['remark', 'name'],
       itemField: {
-        title: item => item.name,
-        description: item => item.description,
+        title: this.renderModuleName,
+        description: item => item.remark,
       },
       remotePaging: true,
       store: {

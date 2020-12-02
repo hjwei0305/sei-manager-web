@@ -6,6 +6,17 @@
   overflow: hidden;
   background-color: @page-background-color;
   :global {
+    .copy-btn {
+      width: 24px;
+      height: 24px;
+      line-height: 28px;
+      border-radius: 4px;
+      visibility: hidden;
+      transition: all 0.3s;
+      &:hover {
+        background-color: fade(@primary-color, 15%);
+      }
+    }
     .left-content {
       .suid-list-card-tool-box {
         padding: 0 24px;
@@ -54,6 +65,9 @@
           }
         }
         &:hover {
+          .copy-btn {
+            visibility: visible;
+          }
           .tool-action {
             .action-item {
               visibility: visible;
