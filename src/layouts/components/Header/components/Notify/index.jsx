@@ -45,7 +45,6 @@ class Notify extends PureComponent {
     getTodoTaskNum().then(result => {
       const { success, data } = result || {};
       if (success) {
-        const { messageCount: oldMessageCount } = this.state;
         const todoData = [];
         let messageCount = 0;
         Object.keys(data).forEach(todoKey => {
@@ -66,7 +65,7 @@ class Notify extends PureComponent {
             todoData,
           },
           () => {
-            if (messageCount > oldMessageCount) {
+            if (messageCount > 0) {
               if (this.aplayAudioRef) {
                 this.aplayAudioRef.aplayAudio();
               }
