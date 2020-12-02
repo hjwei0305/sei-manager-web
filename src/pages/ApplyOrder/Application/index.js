@@ -15,7 +15,7 @@ const { SERVER_PATH, APPLY_APPLICATION_ACTION } = constants;
 const { TextArea } = Input;
 
 @connect(({ applyApplication, loading }) => ({ applyApplication, loading }))
-class Certificate extends PureComponent {
+class Application extends PureComponent {
   static tableRef;
 
   static messageText;
@@ -358,4 +358,4 @@ class Certificate extends PureComponent {
   }
 }
 
-export default Certificate;
+export default Application;

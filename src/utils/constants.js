@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-01 16:18:41
+ * @Last Modified time: 2020-12-02 13:26:02
  */
 import { name } from '../../package.json';
 
@@ -41,20 +41,20 @@ const MANAGER_CONTEXT = `/sei-manager/`;
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 /** 新建申请菜单统一入口 */
-export const NoMenuNewApply = [
-  {
+export const NoMenuNewApply = {
+  newApp: {
     id: 'newApp',
     icon: 'appstore',
     title: '应用申请',
     url: '/my-center/apply/application/new',
   },
-  {
+  newModule: {
     id: 'newModule',
     icon: 'file',
     title: '模块申请',
     url: '/my-center/apply/applicationModule/new',
   },
-];
+};
 
 /** 非菜单页面 */
 export const NoMenuPage = {
@@ -82,7 +82,7 @@ export const NoMenuPage = {
 
 export const NoMenuPages = Object.keys(NoMenuPage)
   .map(key => NoMenuPage[key])
-  .concat(NoMenuNewApply);
+  .concat(Object.keys(NoMenuNewApply).map(key => NoMenuNewApply[key]));
 
 const ENV_CATEGORY = {
   dev: { key: 'dev', title: '开发环境' },

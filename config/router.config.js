@@ -110,6 +110,11 @@ const routes = [
             name: '模块管理',
             component: './ApplicationModule',
           },
+          {
+            path: '/integration/moduleTag',
+            name: '模块标签',
+            component: './ModuleTag',
+          },
         ],
       },
       {
@@ -134,7 +139,7 @@ const routes = [
           {
             path: '/my-center/apply/application/new',
             name: '应用申请-新建',
-            component: './ApplyOrder/Application',
+            component: './ApplyOrder/NewApply/Application',
           },
           {
             path: '/my-center/apply/applicationModule',
@@ -144,7 +149,7 @@ const routes = [
           {
             path: '/my-center/apply/applicationModule/new',
             name: '模块申请-新建',
-            component: './ApplyOrder/Module',
+            component: './ApplyOrder/NewApply/Module',
           },
         ],
       },

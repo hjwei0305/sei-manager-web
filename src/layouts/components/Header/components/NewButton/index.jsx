@@ -12,6 +12,8 @@ import styles from './index.less';
 const { NoMenuNewApply } = constants;
 const { getCurrentUser } = userInfoOperation;
 
+const NoMenuNewApplyData = Object.keys(NoMenuNewApply).map(key => NoMenuNewApply[key]);
+
 @connect(() => ({}))
 class NewButton extends React.Component {
   constructor(props) {
@@ -21,7 +23,7 @@ class NewButton extends React.Component {
 
   handlerNew = e => {
     const { key } = e;
-    const its = NoMenuNewApply.filter(it => it.id === key);
+    const its = NoMenuNewApplyData.filter(it => it.id === key);
     if (its.length === 1) {
       const { dispatch } = this.props;
       dispatch({
@@ -38,7 +40,7 @@ class NewButton extends React.Component {
   dropdownRender = () => {
     const menu = (
       <Menu selectedKeys={[]} onClick={this.handlerNew} className={cls(styles['new-menu-item'])}>
-        {NoMenuNewApply.map(it => {
+        {NoMenuNewApplyData.map(it => {
           return (
             <Menu.Item key={it.id}>
               <ExtIcon type={it.icon} antd />
