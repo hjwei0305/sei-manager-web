@@ -29,12 +29,7 @@ export default {
           callback({ success: false });
         }
       }
-      if (err.statusCode === -1) {
-        notification.info({
-          message: formatMessage({ id: 'app.request.info', defaultMessage: '接口请求提示' }),
-          description: err.message,
-        });
-      } else {
+      if (err.statusCode !== -1) {
         notification.error({
           message: formatMessage({ id: 'app.request.error', defaultMessage: '接口请求异常' }),
           description: err.message,

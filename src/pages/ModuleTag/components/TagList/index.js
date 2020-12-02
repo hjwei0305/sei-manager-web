@@ -106,7 +106,20 @@ class TagList extends Component {
     if (loading.effects['moduleTag/removeTag'] && delRowId === row.name) {
       return <ExtIcon className="del-loading" type="loading" antd />;
     }
-    return <ExtIcon className="del" type="delete" antd />;
+    if (row.release === true) {
+      return <ExtIcon className="disabled" type="delete" antd />;
+    }
+    return (
+      <Popconfirm
+        title={formatMessage({
+          id: 'global.delete.confirm',
+          defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+        })}
+        onConfirm={() => this.del(row)}
+      >
+        <ExtIcon className="del" type="delete" antd />
+      </Popconfirm>
+    );
   };
 
   render() {
@@ -123,16 +136,7 @@ class TagList extends Component {
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
-            <Popconfirm
-              placement="topLeft"
-              title={formatMessage({
-                id: 'global.delete.confirm',
-                defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-              })}
-              onConfirm={() => this.del(record)}
-            >
-              {this.renderDelBtn(record)}
-            </Popconfirm>
+            {this.renderDelBtn(record)}
           </span>
         ),
       },

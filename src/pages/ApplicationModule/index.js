@@ -84,7 +84,7 @@ class ApplicationModule extends Component {
             tooltip={{ title: '复制内容到粘贴板' }}
             onClick={() => this.handlerCopy(t)}
           />
-          <span style={{ marginLeft: 28 }} dangerouslySetInnerHTML={{ __html: t }} />
+          <span style={{ marginLeft: 20 }} dangerouslySetInnerHTML={{ __html: t }} />
         </>
       );
     }
