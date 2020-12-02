@@ -329,7 +329,9 @@ export default {
           visibleTabData = tempVisibleTabs.concat(addVisibleTabs);
         }
       }
-
+      if (activedMenu && activedMenu.url) {
+        router.push(activedMenu.url);
+      }
       yield put({
         type: '_updateState',
         payload: {
