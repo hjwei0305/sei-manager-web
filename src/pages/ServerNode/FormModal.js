@@ -50,6 +50,22 @@ class FormModal extends PureComponent {
       },
     };
     getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
+    const certificateProps = {
+      form,
+      name: 'certificateName',
+      store: {
+        url: `${SERVER_PATH}/sei-manager/certificate/findAllUnfrozen`,
+      },
+      showSearch: false,
+      pagination: false,
+      field: ['certificateId'],
+      reader: {
+        name: 'name',
+        description: 'remark',
+        field: ['id'],
+      },
+    };
+    getFieldDecorator('certificateId', { initialValue: get(rowData, 'certificateId') });
     return (
       <ExtModal
         destroyOnClose
@@ -73,6 +89,17 @@ class FormModal extends PureComponent {
                 },
               ],
             })(<ComboList {...envProps} />)}
+          </FormItem>
+          <FormItem label="凭证">
+            {getFieldDecorator('certificateName', {
+              initialValue: get(rowData, 'certificateName'),
+              rules: [
+                {
+                  required: true,
+                  message: '凭证不能为空',
+                },
+              ],
+            })(<ComboList {...certificateProps} />)}
           </FormItem>
           <FormItem label="节点名称">
             {getFieldDecorator('name', {

@@ -5,10 +5,12 @@ export const dva = {
   config: {
     onError(err) {
       err.preventDefault();
-      notification.error({
-        message: '接口请求异常',
-        description: err.message,
-      });
+      if (err.statusCode !== -1) {
+        notification.error({
+          message: '接口请求异常',
+          description: err.message,
+        });
+      }
     },
   },
 };

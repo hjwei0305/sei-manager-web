@@ -1,7 +1,8 @@
 @import '../../../../themes/vars.less';
 .view-box {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   margin-left: 8px;
   cursor: pointer;
   :global {
@@ -15,8 +16,13 @@
       }
     }
     .view-content {
-      margin-right: 8px;
+      display: inline-block;
+      max-width: 230px;
+      margin-right: 4px;
+      overflow: hidden;
       color: fade(@black, 45%);
+      white-space: nowrap;
+      text-overflow: ellipsis;
       transition: all ease-in 0.3s;
       &:hover {
         color: fade(@black, 65%);

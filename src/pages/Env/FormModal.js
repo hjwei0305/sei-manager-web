@@ -55,7 +55,7 @@ class FormModal extends PureComponent {
                   message: '环境代码不能为空',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled={!!rowData} />)}
           </FormItem>
           <FormItem label="环境名称">
             {getFieldDecorator('name', {

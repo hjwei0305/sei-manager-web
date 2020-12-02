@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Input, Empty, Layout } from 'antd';
+import { Input, Empty, Layout, Tooltip } from 'antd';
 import { ListCard, message, ExtIcon } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
@@ -102,15 +102,17 @@ class ModuleTag extends Component {
 
   renderCustomTool = () => (
     <>
-      <Search
-        allowClear
-        placeholder="输入代码、名称关键字查询"
-        onChange={e => this.handlerSearchChange(e.target.value)}
-        onSearch={this.handlerSearch}
-        onPressEnter={this.handlerPressEnter}
-        style={{ width: 220 }}
-      />
       <DropdownApp onAction={this.handlerAppChange} />
+      <Tooltip title="输入代码、名称、描述关键字查询">
+        <Search
+          allowClear
+          placeholder="代码、名称、描述"
+          onChange={e => this.handlerSearchChange(e.target.value)}
+          onSearch={this.handlerSearch}
+          onPressEnter={this.handlerPressEnter}
+          style={{ width: 160 }}
+        />
+      </Tooltip>
     </>
   );
 
@@ -146,7 +148,7 @@ class ModuleTag extends Component {
       onSelectChange: this.handlerModuleSelect,
       customTool: this.renderCustomTool,
       onListCardRef: ref => (this.listCardRef = ref),
-      searchProperties: ['remark', 'name'],
+      searchProperties: ['remark', 'name', 'code'],
       itemField: {
         title: this.renderModuleName,
         description: item => item.remark,
@@ -163,7 +165,7 @@ class ModuleTag extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
-          <Sider width={460} className="auto-height" theme="light">
+          <Sider width={480} className="auto-height" theme="light">
             <ListCard {...moduleProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
