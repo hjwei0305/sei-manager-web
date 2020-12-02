@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Form, Input, Button, Radio } from 'antd';
 import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '../../../utils';
-import styles from './FormModal.less';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -115,7 +114,12 @@ class FormModal extends PureComponent {
   };
 
   handlerModuleTypeChange = e => {
-    this.setState({ moduleType: e.target.value });
+    const { form } = this.props;
+    const moduleType = e.target.value;
+    if (moduleType === 'web') {
+      form.setFieldsValue({ nameSpace: '' });
+    }
+    this.setState({ moduleType });
   };
 
   render() {
@@ -152,7 +156,6 @@ class FormModal extends PureComponent {
         destroyOnClose
         width={580}
         visible={showModal}
-        wrapClassName={styles['form-box']}
         onCancel={closeFormModal}
         bodyStyle={{ paddingBottom: 0 }}
         title={onlyView ? '模块详情' : title}
@@ -170,7 +173,7 @@ class FormModal extends PureComponent {
               ],
             })(<ComboList {...appProps} disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="模块类型">
+          <FormItem style={{ marginBottom: 0, marginLeft: 60 }}>
             {getFieldDecorator('moduleType', {
               initialValue: moduleType,
               rules: [
@@ -242,19 +245,17 @@ class FormModal extends PureComponent {
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
           </FormItem>
-          {moduleType === 'java' ? (
-            <FormItem label="命名空间(包路径)">
-              {getFieldDecorator('nameSpace', {
-                initialValue: get(rowData, 'nameSpace'),
-                rules: [
-                  {
-                    required: true,
-                    message: '命名空间(包路径)不能为空',
-                  },
-                ],
-              })(<Input disabled={onlyView} />)}
-            </FormItem>
-          ) : null}
+          <FormItem label="命名空间(包路径)">
+            {getFieldDecorator('nameSpace', {
+              initialValue: get(rowData, 'nameSpace'),
+              rules: [
+                {
+                  required: moduleType === 'java',
+                  message: '命名空间(包路径)不能为空',
+                },
+              ],
+            })(<Input disabled={onlyView || moduleType === 'web'} />)}
+          </FormItem>
           {onlyView ? (
             <>
               <FormItem label="Git地址">
