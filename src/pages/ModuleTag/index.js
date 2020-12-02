@@ -19,6 +19,16 @@ const FILTER_FIELDS = [{ fieldName: 'appId', operator: 'EQ', value: null }];
 class ModuleTag extends Component {
   static listCardRef = null;
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'moduleTag/updateState',
+      payload: {
+        moduleFilter: {},
+      },
+    });
+  }
+
   reloadModuleData = () => {
     if (this.listCardRef) {
       this.listCardRef.remoteDataRefresh();
@@ -71,10 +81,10 @@ class ModuleTag extends Component {
   getFilter = () => {
     const { moduleTag } = this.props;
     const { moduleFilter } = moduleTag;
-    const filters = [];
+    const filters = [{ fieldName: 'frozen', operator: 'EQ', value: false }];
     FILTER_FIELDS.forEach(f => {
       const value = get(moduleFilter, f.fieldName, null) || null;
-      if (value !== null) {
+      if (value !== null && value !== '') {
         const param = { ...f };
         Object.assign(param, { value });
         filters.push(param);
