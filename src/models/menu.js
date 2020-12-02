@@ -331,6 +331,8 @@ export default {
       }
       if (activedMenu && activedMenu.url) {
         router.push(activedMenu.url);
+      } else {
+        router.push('/DashBoard');
       }
       yield put({
         type: '_updateState',
