@@ -476,7 +476,6 @@ class LogList extends PureComponent {
         dataIndex: 'id',
         className: 'action',
         required: true,
-        fixed: 'left',
         render: (id, record) => (
           <span className={cls('action-box')}>
             <ExtAction key={id} onAction={this.handlerAction} recordItem={record} />
@@ -487,7 +486,6 @@ class LogList extends PureComponent {
         title: this.renderColumnTimestamp(),
         dataIndex: 'timestamp',
         width: 210,
-        fixed: 'left',
         required: true,
         ...this.getColumnSearchProps('timestamp'),
       },
