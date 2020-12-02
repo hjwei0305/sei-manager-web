@@ -571,10 +571,6 @@ class LogList extends PureComponent {
       columns,
       searchProperties: ['*'],
       searchPlaceHolder: '输入关键字查询',
-      store: {
-        type: 'POST',
-        url: `${agentServer}/log/findByPage`,
-      },
       cascadeParams: {
         ...this.getFilter(),
         highlightFields: ['message', 'logger', 'serviceName', 'fromServer'],
@@ -587,6 +583,14 @@ class LogList extends PureComponent {
         },
       },
     };
+    if (agentServer) {
+      Object.assign(tableProps, {
+        store: {
+          type: 'POST',
+          url: `${agentServer}/log/findByPage`,
+        },
+      });
+    }
     const tranceLogProps = {
       visible: showTranceLog,
       onCloseModal: this.handlerClose,
