@@ -25,6 +25,15 @@ export async function editSave(data) {
   });
 }
 
+/** 获取申请 */
+export async function getPublish(params) {
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/findOne`;
+  return request({
+    url,
+    params,
+  });
+}
+
 /** 删除 */
 export async function del(params) {
   const url = `${SERVER_PATH}/sei-manager/releaseRecord/deleteRequisition/${params.id}`;

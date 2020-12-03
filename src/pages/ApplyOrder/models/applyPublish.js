@@ -2,7 +2,7 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
 import { constants } from '@/utils';
 import { approve, stopApprove } from '../services/service';
-import { del, editSave, createSave } from '../services/applyPublish';
+import { del, editSave, createSave, getPublish } from '../services/applyPublish';
 
 const { FLOW_OPERATION_TYPE } = constants;
 const { pathMatchRegexp, dvaModel } = utils;
@@ -42,6 +42,23 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             showModal: false,
+          },
+        });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *getPublish({ payload, callback }, { call, put }) {
+      const re = yield call(getPublish, payload);
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            rowData: re.data,
           },
         });
       } else {

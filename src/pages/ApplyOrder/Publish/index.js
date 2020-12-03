@@ -128,9 +128,14 @@ class Certificate extends PureComponent {
         dispatch({
           type: 'applyPublish/updateState',
           payload: {
-            rowData,
             onlyView: true,
             showModal: true,
+          },
+        });
+        dispatch({
+          type: 'applyPublish/getPublish',
+          payload: {
+            id: rowData.id,
           },
         });
         break;
@@ -139,7 +144,13 @@ class Certificate extends PureComponent {
           type: 'applyPublish/updateState',
           payload: {
             showModal: true,
-            rowData,
+          },
+        });
+        dispatch({
+          type: 'applyPublish/getPublish',
+          payload: {
+            showModal: true,
+            id: rowData.id,
           },
         });
         break;
@@ -478,11 +489,17 @@ class Certificate extends PureComponent {
         render: t => <ApplyState state={t} />,
       },
       {
-        title: '发布名称',
+        title: '发布主题',
         dataIndex: 'name',
         width: 260,
         required: true,
         ...this.getColumnSearchProps('name'),
+      },
+      {
+        title: '期望完成时间',
+        dataIndex: 'expCompleteTime',
+        width: 180,
+        required: true,
       },
       {
         title: this.renderColumnAppName(),
@@ -498,14 +515,6 @@ class Certificate extends PureComponent {
         required: true,
         ...this.getColumnSearchProps('moduleName'),
       },
-      {
-        title: '发布说明',
-        dataIndex: 'remark',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('remark'),
-      },
     ];
     const formModalProps = {
       save: this.save,
@@ -513,6 +522,7 @@ class Certificate extends PureComponent {
       rowData,
       showModal,
       closeFormModal: this.closeFormModal,
+      dataLoading: loading.effects['applyPublish/getPublish'],
       saving:
         loading.effects['applyPublish/createSave'] || loading.effects['applyPublish/editSave'],
       saveToApprove: this.saveToApprove,
@@ -548,8 +558,7 @@ class Certificate extends PureComponent {
       },
       sort: {
         field: {
-          code: 'asc',
-          version: 'asc',
+          expCompleteTime: 'desc',
         },
       },
     };
