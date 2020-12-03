@@ -3,7 +3,7 @@ import cls from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, Input } from 'antd';
 import { ListCard, ExtIcon } from 'suid';
-import { constants } from '../ConfigList/node_modules/@/utils';
+import { constants } from '@/utils';
 import styles from './index.less';
 
 const { Search } = Input;

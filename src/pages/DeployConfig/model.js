@@ -12,6 +12,7 @@ export default modelExtend(model, {
     showModal: false,
     rowData: null,
     moduleFilter: {},
+    configFilter: {},
   },
   effects: {
     *save({ payload, callback }, { call, put }) {

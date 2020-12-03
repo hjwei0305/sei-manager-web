@@ -115,6 +115,11 @@ const routes = [
             name: '模块标签',
             component: './ModuleTag',
           },
+          {
+            path: '/integration/deployConfig',
+            name: '部署配置',
+            component: './DeployConfig',
+          },
         ],
       },
       {
