@@ -88,18 +88,26 @@ class FormModal extends PureComponent {
     return current && current < moment().startOf('day');
   };
 
+  closeFormModal = () => {
+    const { closeFormModal } = this.props;
+    this.setState({ remark: '' });
+    if (closeFormModal) {
+      closeFormModal();
+    }
+  };
+
   renderFooterBtn = () => {
-    const { saving, closeFormModal, saveToApproving, onlyView, dataLoading } = this.props;
+    const { saving, saveToApproving, onlyView, dataLoading } = this.props;
     if (onlyView) {
       return (
-        <Button type="primary" onClick={closeFormModal}>
+        <Button type="primary" onClick={this.closeFormModal}>
           关闭
         </Button>
       );
     }
     return (
       <>
-        <Button disabled={saving || saveToApproving} onClick={closeFormModal}>
+        <Button disabled={saving || saveToApproving} onClick={this.closeFormModal}>
           取消
         </Button>
         <Button
@@ -123,7 +131,7 @@ class FormModal extends PureComponent {
 
   render() {
     const { remark } = this.state;
-    const { form, rowData, showModal, closeFormModal, onlyView, dataLoading } = this.props;
+    const { form, rowData, showModal, onlyView, dataLoading } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改发布申请' : '新建发布申请';
     getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
@@ -217,7 +225,7 @@ class FormModal extends PureComponent {
         destroyOnClose
         width={860}
         visible={showModal}
-        onCancel={closeFormModal}
+        onCancel={this.closeFormModal}
         wrapClassName={styles['form-box']}
         bodyStyle={{ paddingBottom: 0 }}
         title={modalTitle}
