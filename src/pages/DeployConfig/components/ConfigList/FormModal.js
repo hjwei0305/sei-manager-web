@@ -22,20 +22,20 @@ const formItemLayout = {
 class FormModal extends PureComponent {
   static listCardRef;
 
-  static serverNodes;
-
   constructor(props) {
     super(props);
-    this.serverNodes = [];
     this.state = {
       currentEnv: null,
+      serverNodes: [],
     };
   }
 
   componentDidUpdate(prevProps) {
     const { rowData } = this.props;
     if (!isEqual(prevProps.rowData, rowData)) {
+      const serverNodeStr = get(rowData, 'nodes') || '';
       this.setState({
+        serverNodes: serverNodeStr ? serverNodeStr.split(',') : [],
         currentEnv: {
           code: get(rowData, 'envCode'),
           name: get(rowData, 'envName'),
@@ -46,6 +46,7 @@ class FormModal extends PureComponent {
 
   handlerFormSubmit = () => {
     const { form, save, currentModule, rowData } = this.props;
+    const { serverNodes } = this.state;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -59,14 +60,16 @@ class FormModal extends PureComponent {
       Object.assign(params, rowData);
       Object.assign(params, formData);
       Object.assign(params, {
-        nodes: this.serverNodes.join(','),
+        nodes: serverNodes.join(','),
       });
       save(params);
     });
   };
 
   handlerServerNodeSelect = keys => {
-    this.serverNodes = keys;
+    this.setState({
+      serverNodes: [...keys],
+    });
   };
 
   handlerSearchChange = v => {
@@ -83,7 +86,7 @@ class FormModal extends PureComponent {
 
   closeFormModal = () => {
     const { closeFormModal } = this.props;
-    this.setState({ currentEnv: null });
+    this.setState({ currentEnv: null, serverNodes: [] });
     if (closeFormModal) {
       closeFormModal();
     }
@@ -112,9 +115,11 @@ class FormModal extends PureComponent {
   );
 
   render() {
-    const { currentEnv } = this.state;
+    const { currentEnv, serverNodes } = this.state;
     const { form, saving, showModal, rowData } = this.props;
     const { getFieldDecorator } = form;
+    getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
+    getFieldDecorator('tempId', { initialValue: get(rowData, 'tempId') });
     const title = rowData ? '新建配置' : '修改配置';
     const envProps = {
       form,
@@ -134,7 +139,6 @@ class FormModal extends PureComponent {
         field: ['code'],
       },
     };
-    getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
     const tmpProps = {
       form,
       name: 'tempName',
@@ -150,11 +154,9 @@ class FormModal extends PureComponent {
         field: ['id'],
       },
     };
-    getFieldDecorator('tempId', { initialValue: get(rowData, 'tempId') });
-    const selectedKeys = (get(rowData, 'nodes') || '').split(',');
     const serverNodeListProps = {
       className: 'left-content',
-      selectedKeys,
+      selectedKeys: serverNodes,
       title: <BannerTitle title={get(currentEnv, 'name') || ''} subTitle="服务器节点列表" />,
       showSearch: false,
       onSelectChange: this.handlerServerNodeSelect,
