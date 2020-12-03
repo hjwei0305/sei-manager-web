@@ -10,6 +10,14 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 
 const FormItem = Form.Item;
 const { getUUID } = utils;
+const formItemLayout = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 18,
+  },
+};
 
 @Form.create()
 class FormModal extends PureComponent {
@@ -110,7 +118,7 @@ class FormModal extends PureComponent {
         {stageParamsLoading ? (
           <ListLoader />
         ) : (
-          <Form layout="inline">
+          <Form layout="horizontal" {...formItemLayout}>
             <Row style={{ height: 70, overflow: 'hidden' }}>
               <Col span={10}>
                 <FormItem label="阶段名称">
@@ -122,14 +130,14 @@ class FormModal extends PureComponent {
                         message: '阶段名称不能为空',
                       },
                     ],
-                  })(<Input style={{ width: 250 }} />)}
+                  })(<Input />)}
                 </FormItem>
               </Col>
               <Col span={14}>
                 <FormItem label="阶段描述">
                   {getFieldDecorator('remark', {
                     initialValue: get(rowData, 'remark'),
-                  })(<Input style={{ width: 390 }} />)}
+                  })(<Input />)}
                 </FormItem>
               </Col>
             </Row>
