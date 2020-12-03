@@ -522,7 +522,7 @@ class Certificate extends PureComponent {
       rowData,
       showModal,
       closeFormModal: this.closeFormModal,
-      dataLoading: loading.effects['applyPublish/getPublish'],
+      dataLoading: loading.effects['applyPublish/getPublish'] || true,
       saving:
         loading.effects['applyPublish/createSave'] || loading.effects['applyPublish/editSave'],
       saveToApprove: this.saveToApprove,

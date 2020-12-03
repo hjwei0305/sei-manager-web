@@ -89,7 +89,7 @@ class FormModal extends PureComponent {
   };
 
   renderFooterBtn = () => {
-    const { saving, closeFormModal, saveToApproving, onlyView } = this.props;
+    const { saving, closeFormModal, saveToApproving, onlyView, dataLoading } = this.props;
     if (onlyView) {
       return (
         <Button type="primary" onClick={closeFormModal}>
@@ -103,14 +103,14 @@ class FormModal extends PureComponent {
           取消
         </Button>
         <Button
-          disabled={saveToApproving}
+          disabled={saveToApproving || dataLoading}
           loading={saving}
           onClick={() => this.handlerFormSubmit()}
         >
           仅保存
         </Button>
         <Button
-          disabled={saving}
+          disabled={saving || dataLoading}
           loading={saveToApproving}
           onClick={() => this.handlerFormSubmit(true)}
           type="primary"
@@ -209,6 +209,7 @@ class FormModal extends PureComponent {
       },
     };
     const expCompleteTime = get(rowData, 'expCompleteTime');
+    const modalTitle = onlyView || dataLoading ? '发布详情' : title;
     return (
       <ExtModal
         maskClosable={false}
@@ -219,7 +220,7 @@ class FormModal extends PureComponent {
         onCancel={closeFormModal}
         wrapClassName={styles['form-box']}
         bodyStyle={{ paddingBottom: 0 }}
-        title={onlyView ? '发布详情' : title}
+        title={modalTitle}
         footer={this.renderFooterBtn()}
       >
         {dataLoading ? (
