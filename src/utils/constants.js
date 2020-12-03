@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-02 13:26:02
+ * @Last Modified time: 2020-12-03 14:11:47
  */
 import { name } from '../../package.json';
 
@@ -53,6 +53,12 @@ export const NoMenuNewApply = {
     icon: 'file',
     title: '模块申请',
     url: '/my-center/apply/applicationModule/new',
+  },
+  publish: {
+    id: 'publish',
+    icon: 'rocket',
+    title: '发布申请',
+    url: '/my-center/apply/publish/new',
   },
 };
 
@@ -173,7 +179,6 @@ const APPLY_ORDER_TYPE = {
   ALL: { remark: '全部', name: 'ALL' },
   APPLICATION: { remark: '应用申请', name: 'APPLICATION' },
   MODULE: { remark: '模块申请', name: 'MODULE' },
-  VERSION: { remark: '版本申请', name: 'VERSION' },
   PUBLISH: { remark: '发布申请', name: 'PUBLISH' },
   DEPLOY: { remark: '部署申请', name: 'DEPLOY' },
 };

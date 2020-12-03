@@ -191,7 +191,7 @@ class FormModal extends PureComponent {
       >
         <Row gutter={8}>
           <Col span={12}>
-            <Card bordered={false} className="form-box" title="基本信息">
+            <Card bordered={false} className="item-box" title="基本信息">
               <Form {...formItemLayout} layout="horizontal">
                 <FormItem label="运行环境">
                   {getFieldDecorator('envName', {

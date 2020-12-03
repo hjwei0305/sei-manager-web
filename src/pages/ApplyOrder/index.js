@@ -6,6 +6,7 @@ import { ScrollBar, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import Application from './Application';
 import Module from './Module';
+import Publish from './Publish';
 import styles from './index.less';
 
 const { APPLY_ORDER_TYPE } = constants;
@@ -39,6 +40,8 @@ class ApplyOrder extends PureComponent {
         return <Application />;
       case APPLY_ORDER_TYPE.MODULE.name:
         return <Module />;
+      case APPLY_ORDER_TYPE.PUBLISH.name:
+        return <Publish />;
       default:
     }
   };

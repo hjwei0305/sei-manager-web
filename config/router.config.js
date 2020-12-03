@@ -156,6 +156,16 @@ const routes = [
             name: '模块申请-新建',
             component: './ApplyOrder/NewApply/Module',
           },
+          {
+            path: '/my-center/apply/publish',
+            name: '发布申请',
+            component: './ApplyOrder/Publish',
+          },
+          {
+            path: '/my-center/apply/publish/new',
+            name: '发布申请-新建',
+            component: './ApplyOrder/NewApply/Publish',
+          },
         ],
       },
       {
