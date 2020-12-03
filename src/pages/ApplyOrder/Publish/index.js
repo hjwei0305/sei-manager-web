@@ -14,9 +14,9 @@ import styles from './index.less';
 const { SERVER_PATH, APPLY_APPLICATION_ACTION } = constants;
 const { TextArea, Search } = Input;
 const FILTER_FIELDS = [
-  { fieldName: 'name', operator: 'EQ', value: null },
+  { fieldName: 'name', operator: 'LK', value: null },
   { fieldName: 'appId', operator: 'EQ', value: null },
-  { fieldName: 'remark', operator: 'EQ', value: null },
+  { fieldName: 'moduleName', operator: 'LK', value: null },
 ];
 
 @connect(({ applyPublish, loading }) => ({ applyPublish, loading }))
