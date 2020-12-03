@@ -4,7 +4,7 @@ import { getTypeTodoList, submitHanlder, getTodoList } from './service';
 
 const { APPLY_ORDER_TYPE } = constants;
 const APPLY_ORDER_TYPE_DATA = Object.keys(APPLY_ORDER_TYPE).map(key => APPLY_ORDER_TYPE[key]);
-const { dvaModel } = utils;
+const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 
 export default modelExtend(model, {
@@ -15,7 +15,45 @@ export default modelExtend(model, {
     currentViewType: APPLY_ORDER_TYPE_DATA[0],
     todoData: [],
   },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (pathMatchRegexp('/my-center/workTodo', location.pathname)) {
+          const { t } = location.query;
+          const viewType = APPLY_ORDER_TYPE_DATA.filter(v => v.name === t);
+          dispatch({
+            type: 'getTypeTodoList',
+            payload: {
+              init: true,
+              currentViewType: viewType.length === 1 ? viewType[0] : null,
+            },
+          });
+        }
+      });
+    },
+  },
   effects: {
+    *getTypeTodoList({ payload }, { call, put }) {
+      const { currentViewType } = payload;
+      if (currentViewType) {
+        const re = yield call(getTypeTodoList, { type: currentViewType.name });
+        if (re.success) {
+          yield put({
+            type: 'updateState',
+            payload: {
+              todoData: re.data,
+              currentViewType,
+            },
+          });
+        } else {
+          message.destroy();
+          message.error(re.message);
+        }
+      } else {
+        message.destroy();
+        message.error('未指定待办申请类型');
+      }
+    },
     *getWorkTodoList({ payload }, { call, put }) {
       const { currentViewType } = payload;
       if (currentViewType) {

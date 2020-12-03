@@ -54,13 +54,13 @@ class FormModal extends PureComponent {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="标签描述">
+          <FormItem label="标签消息">
             {getFieldDecorator('message', {
               initialValue: '',
               rules: [
                 {
                   required: true,
-                  message: '标签描述不能为空',
+                  message: '标签消息不能为空',
                 },
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} />)}

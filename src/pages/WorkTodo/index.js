@@ -6,10 +6,9 @@ import moment from 'moment';
 import withRouter from 'umi/withRouter';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Tag, Modal, Input } from 'antd';
-import { ExtTable, message } from 'suid';
+import { ExtTable, message, ExtIcon } from 'suid';
 import { FilterView } from '@/components';
 import { constants } from '../../utils';
-import ExtAction from './components/ExtAction';
 import styles from './index.less';
 
 const { FLOW_OPERATION_TYPE, APPLY_ORDER_TYPE } = constants;
@@ -190,7 +189,7 @@ class WorkTodo extends PureComponent {
     const columns = [
       {
         key: 'operation',
-        width: 50,
+        width: 120,
         align: 'center',
         dataIndex: 'id',
         title: '操作',
@@ -200,7 +199,20 @@ class WorkTodo extends PureComponent {
         render: (id, record) => {
           return (
             <span className={cls('action-box')}>
-              <ExtAction key={id} onAction={this.handlerAction} item={record} />
+              <ExtIcon
+                className="passed"
+                tooltip={{ title: '审核通过' }}
+                type="check"
+                antd
+                onClick={() => this.approvePassed(record)}
+              />
+              <ExtIcon
+                className="reject"
+                tooltip={{ title: '审核拒绝' }}
+                type="close"
+                antd
+                onClick={() => this.approveReject(record)}
+              />
             </span>
           );
         },

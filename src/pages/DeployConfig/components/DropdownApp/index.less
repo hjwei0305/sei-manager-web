@@ -1,0 +1,32 @@
+@import '../../../../themes/vars.less';
+.view-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  cursor: pointer;
+  :global {
+    .view-label {
+      margin-right: 8px;
+      i {
+        margin-right: 4px;
+      }
+      em {
+        font-style: normal;
+      }
+    }
+    .view-content {
+      display: inline-block;
+      max-width: 230px;
+      margin-right: 4px;
+      overflow: hidden;
+      color: fade(@black, 45%);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition: all ease-in 0.3s;
+      &:hover {
+        color: fade(@black, 65%);
+      }
+    }
+  }
+}

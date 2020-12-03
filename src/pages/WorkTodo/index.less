@@ -1,4 +1,6 @@
 @import '../../themes/vars.less';
+@passed: #25b864;
+@reject: @error-color;
 .container-box {
   position: relative;
   height: 100%;
@@ -28,20 +30,36 @@
           background-color: fade(@black, 5%);
         }
       }
-      .ant-drawer-top.ant-drawer-open .ant-drawer-content-wrapper {
-        box-shadow: none;
-      }
-      .ant-drawer-body {
-        display: flex;
-        align-items: center;
-        height: 44px;
-        padding: 0 24px;
-        line-height: 44px;
-        background-color: @white;
-        .select {
+    }
+    .ant-table-tbody > tr > td {
+      color: fade(@black, 65%);
+      font-weight: normal;
+      &.action {
+        padding: 0 8px !important;
+        .action-box {
           display: inline-block;
-          min-width: 120px;
-          color: fade(@black, 65%);
+          height: 100%;
+          i {
+            line-height: 34px !important;
+            &.passed {
+              color: @white;
+              background-color: @passed;
+              border: 1px solid @passed;
+            }
+            &.passed:hover {
+              color: @passed !important;
+              background-color: @white !important;
+            }
+            &.reject {
+              color: @white;
+              background-color: @reject;
+              border: 1px solid @reject;
+            }
+            &.reject:hover {
+              color: @reject !important;
+              background-color: @white !important;
+            }
+          }
         }
       }
     }
