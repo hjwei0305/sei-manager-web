@@ -120,6 +120,16 @@ const routes = [
             name: '部署配置',
             component: './DeployConfig',
           },
+          {
+            path: '/integration/publishRecord',
+            name: '发布记录',
+            component: './PublishRecord',
+          },
+          {
+            path: '/integration/versionRecord',
+            name: '版本记录',
+            component: './VersionRecord',
+          },
         ],
       },
       {

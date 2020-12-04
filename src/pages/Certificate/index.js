@@ -148,7 +148,7 @@ class Certificate extends Component {
       {
         title: '凭证名称',
         dataIndex: 'name',
-        width: 220,
+        width: 280,
         required: true,
       },
       {
