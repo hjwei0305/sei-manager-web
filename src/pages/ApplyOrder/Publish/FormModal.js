@@ -332,7 +332,6 @@ class FormModal extends PureComponent {
                     onChange={this.handlerAceChannge}
                     showPrintMargin={false}
                     showGutter={false}
-                    wrapEnabled
                     readOnly={onlyView}
                     highlightActiveLine
                     width="100%"
