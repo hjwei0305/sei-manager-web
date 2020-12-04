@@ -544,9 +544,9 @@ class Certificate extends PureComponent {
       toolBar: toolBarProps,
       columns,
       onTableRef: ref => (this.tableRef = ref),
-      showSearchTooltip: true,
-      searchPlaceHolder: '发布名称、描述说明',
-      searchProperties: ['name', 'remark'],
+      showSearchTooltip: false,
+      searchPlaceHolder: '请输入发布主题关键字查询',
+      searchProperties: ['name'],
       searchWidth: 260,
       remotePaging: true,
       cascadeParams: {
