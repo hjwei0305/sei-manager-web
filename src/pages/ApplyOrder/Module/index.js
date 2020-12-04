@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { trim, get } from 'lodash';
+import copy from 'copy-to-clipboard';
 import { Button, Modal, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, message, ListCard } from 'suid';
+import { ExtTable, message, ListCard, ExtIcon } from 'suid';
 import { constants } from '../../../utils';
 import ApplyState from '../components/ApplyState';
 import ExtAction from './ExtAction';
@@ -19,8 +20,7 @@ const FILTER_FIELDS = [
   { fieldName: 'appId', operator: 'EQ', value: null },
   { fieldName: 'version', operator: 'EQ', value: null },
   { fieldName: 'remark', operator: 'EQ', value: null },
-  { fieldName: 'gitUrl', operator: 'EQ', value: null },
-  { fieldName: 'nameSpace', operator: 'EQ', value: null },
+  { fieldName: 'gitHttpUrl', operator: 'EQ', value: null },
 ];
 
 @connect(({ applyModule, loading }) => ({ applyModule, loading }))
@@ -450,6 +450,29 @@ class Certificate extends PureComponent {
     return { filters };
   };
 
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
+  renderCopyColumn = t => {
+    if (t) {
+      return (
+        <>
+          <ExtIcon
+            type="copy"
+            className="copy-btn"
+            antd
+            tooltip={{ title: '复制内容到粘贴板' }}
+            onClick={() => this.handlerCopy(t)}
+          />
+          <span style={{ marginLeft: 20 }} dangerouslySetInnerHTML={{ __html: t }} />
+        </>
+      );
+    }
+    return '-';
+  };
+
   renderColumnAppName = () => {
     const { appName } = this.state;
     return `应用(${appName})`;
@@ -519,19 +542,11 @@ class Certificate extends PureComponent {
       },
       {
         title: 'Git地址',
-        dataIndex: 'gitUrl',
+        dataIndex: 'gitHttpUrl',
         width: 420,
         required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('gitUrl'),
-      },
-      {
-        title: '命名空间(包路径)',
-        dataIndex: 'nameSpace',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('nameSpace'),
+        render: this.renderCopyColumn,
+        ...this.getColumnSearchProps('gitHttpUrl'),
       },
     ];
     const formModalProps = {
