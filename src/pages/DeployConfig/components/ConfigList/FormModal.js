@@ -55,6 +55,7 @@ class FormModal extends PureComponent {
         appId: get(currentModule, 'appId'),
         appName: get(currentModule, 'appName'),
         moduleId: get(currentModule, 'id'),
+        moduleCode: get(currentModule, 'code'),
         moduleName: get(currentModule, 'name'),
       };
       Object.assign(params, rowData);
