@@ -280,20 +280,20 @@ class ApplicationModule extends Component {
         ...this.getColumnSearchProps('version'),
       },
       {
-        title: '描述说明',
-        dataIndex: 'remark',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('remark'),
-      },
-      {
         title: 'Git地址',
         dataIndex: 'gitHttpUrl',
         width: 420,
         required: true,
         render: this.renderCopyColumn,
         ...this.getColumnSearchProps('gitHttpUrl'),
+      },
+      {
+        title: '描述说明',
+        dataIndex: 'remark',
+        width: 320,
+        required: true,
+        render: t => t || '-',
+        ...this.getColumnSearchProps('remark'),
       },
       {
         title: '命名空间(包路径)',
