@@ -59,18 +59,14 @@ class Notify extends PureComponent {
             });
           }
         });
-        this.setState(
-          {
-            messageCount,
-            todoData,
-          },
-          () => {
-            const { messageCount: oldMessageCount } = this.state;
-            if (this.aplayAudioRef && messageCount > oldMessageCount) {
-              this.aplayAudioRef.aplayAudio();
-            }
-          },
-        );
+        const { messageCount: oldMessageCount } = this.state;
+        if (this.aplayAudioRef && messageCount > oldMessageCount) {
+          this.aplayAudioRef.aplayAudio();
+        }
+        this.setState({
+          messageCount,
+          todoData,
+        });
       }
     });
   };

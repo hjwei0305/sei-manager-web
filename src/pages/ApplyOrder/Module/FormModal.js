@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { get, trim, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Radio } from 'antd';
+import { Form, Input, Button, Radio, Alert } from 'antd';
 import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '../../../utils';
 
@@ -157,11 +157,12 @@ class FormModal extends PureComponent {
         width={580}
         visible={showModal}
         onCancel={closeFormModal}
-        bodyStyle={{ paddingBottom: 0 }}
+        bodyStyle={{ padding: 0 }}
         title={onlyView ? '模块详情' : title}
         footer={this.renderFooterBtn()}
       >
-        <Form {...formItemLayout} layout="horizontal">
+        <Alert message="提示:模块代码一旦创建后不能修改" banner />
+        <Form {...formItemLayout} layout="horizontal" style={{ margin: 24 }}>
           <FormItem label="所属应用">
             {getFieldDecorator('appName', {
               initialValue: get(rowData, 'appName'),
@@ -202,7 +203,7 @@ class FormModal extends PureComponent {
                   message: '模块代码不能为空',
                 },
               ],
-            })(<Input disabled={onlyView} />)}
+            })(<Input disabled={!!rowData || onlyView} />)}
           </FormItem>
           <FormItem label="模块名称">
             {getFieldDecorator('name', {

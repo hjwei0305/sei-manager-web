@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
-import { Form, Input, Switch, InputNumber } from 'antd';
+import { Form, Input, Switch, InputNumber, Alert } from 'antd';
 import { ExtModal } from 'suid';
 import styles from './index.less';
 
@@ -40,12 +40,13 @@ class FormModal extends PureComponent {
         visible={showModal}
         centered
         wrapClassName={styles['form-modal-box']}
-        bodyStyle={{ paddingBottom: 0 }}
+        bodyStyle={{ padding: 0 }}
         confirmLoading={saving}
         title={title}
         onOk={this.handlerFormSubmit}
       >
-        <Form {...formItemLayout} layout="horizontal">
+        <Alert message="提示:环境代码一旦创建后不能修改" banner />
+        <Form {...formItemLayout} layout="horizontal" style={{ margin: 24 }}>
           <FormItem label="环境代码">
             {getFieldDecorator('code', {
               initialValue: get(rowData, 'code'),
