@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-03 14:11:47
+ * @Last Modified time: 2020-12-04 13:27:02
  */
 import { name } from '../../package.json';
 
@@ -175,6 +175,18 @@ const APPLY_STATUS = {
   UNPASSED: { remark: '审核未通过', name: 'UNPASSED', color: 'red' },
 };
 
+const JENKINS_STATUS = {
+  ALL: { remark: '全部', name: 'ALL', color: '' },
+  FAILURE: { remark: '构建失败', name: 'FAILURE', color: 'red' },
+  UNSTABLE: { remark: '不稳定', name: 'UNSTABLE', color: 'orange' },
+  BUILDING: { remark: '构建中', name: 'BUILDING', color: 'blue' },
+  ABORTED: { remark: '构建终止', name: 'ABORTED', color: 'magenta' },
+  SUCCESS: { remark: '构建成功', name: 'SUCCESS', color: 'green' },
+  UNKNOWN: { remark: '未知', name: 'UNKNOWN', color: '' },
+  CANCELLED: { remark: '构建取消', name: 'CANCELLED', color: 'purple' },
+  NOT_BUILT: { remark: '构建取消', name: 'NOT_BUILT', color: 'cyan' },
+};
+
 const APPLY_ORDER_TYPE = {
   ALL: { remark: '全部', name: 'ALL' },
   APPLICATION: { remark: '应用申请', name: 'APPLICATION' },
@@ -223,4 +235,5 @@ export default {
   APPLY_STATUS,
   APPLY_ORDER_TYPE,
   FLOW_OPERATION_TYPE,
+  JENKINS_STATUS,
 };

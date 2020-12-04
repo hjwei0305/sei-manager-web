@@ -2,18 +2,20 @@ import React, { Component } from 'react';
 import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
-import { Button, Input } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ListCard } from 'suid';
-import { constants } from '../ReleaseRecord/node_modules/@/utils';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { Button, Input, Popconfirm } from 'antd';
+import { ExtTable, ListCard, ExtIcon } from 'suid';
+import { constants } from '@/utils';
+import JenkinsState from './JenkinsState';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'appId', operator: 'EQ', value: null },
-  { fieldName: 'moduleName', operator: 'LK', value: null },
   { fieldName: 'name', operator: 'LK', value: null },
+  { fieldName: 'moduleName', operator: 'LK', value: null },
+  { fieldName: 'tagName', operator: 'LK', value: null },
 ];
 
 @connect(({ publishRecord, loading }) => ({ publishRecord, loading }))
@@ -26,6 +28,7 @@ class ApplicationModule extends Component {
     super(props);
     this.state = {
       appName: '全部',
+      buildId: null,
     };
   }
 
@@ -209,7 +212,7 @@ class ApplicationModule extends Component {
   getFilter = () => {
     const { publishRecord } = this.props;
     const { filter } = publishRecord;
-    const filters = [];
+    const filters = [{ fieldName: 'frozen', operator: 'EQ', value: false }];
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
       if (value !== null) {
@@ -221,8 +224,58 @@ class ApplicationModule extends Component {
     return { filters };
   };
 
+  build = record => {
+    const { dispatch } = this.props;
+    this.setState({ buildId: record.id });
+    dispatch({
+      type: 'publishRecord/build',
+      payload: {
+        id: record.id,
+      },
+    });
+  };
+
+  renderBuildBtn = row => {
+    const { loading } = this.props;
+    const { buildId } = this.state;
+    if (loading.effects['publishRecord/build'] && buildId === row.id) {
+      return <ExtIcon className="loading" type="loading" antd />;
+    }
+    return (
+      <Popconfirm title="确定要发起Jenkins构建吗？" onConfirm={() => this.build(row)}>
+        <ExtIcon type="play-circle" antd />
+      </Popconfirm>
+    );
+  };
+
   render() {
     const columns = [
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 100,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        render: (_text, record) => (
+          <span className={cls('action-box')}>{this.renderBuildBtn(record)}</span>
+        ),
+      },
+      {
+        title: '构建状态',
+        dataIndex: 'buildStatus',
+        width: 100,
+        required: true,
+        render: t => <JenkinsState state={t} />,
+      },
+      {
+        title: '发布主题',
+        dataIndex: 'name',
+        width: 260,
+        required: true,
+        ...this.getColumnSearchProps('name'),
+      },
       {
         title: '应用名称',
         dataIndex: 'appName',
@@ -238,47 +291,17 @@ class ApplicationModule extends Component {
         ...this.getColumnSearchProps('moduleName'),
       },
       {
-        title: '版本名称',
-        dataIndex: 'name',
-        width: 120,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('name'),
-      },
-      {
-        title: '版本号',
-        dataIndex: 'version',
-        width: 120,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('version'),
-      },
-      {
-        title: '版本创建时间',
-        dataIndex: 'createTime',
+        title: '标签名称',
+        dataIndex: 'tagName',
         width: 180,
         render: t => t || '-',
+        ...this.getColumnSearchProps('tagName'),
       },
       {
-        title: '描述说明',
-        dataIndex: 'remark',
-        width: 320,
+        title: '期望完成时间',
+        dataIndex: 'expCompleteTime',
+        width: 180,
         required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('remark'),
-      },
-      {
-        title: '标签名称',
-        dataIndex: 'commitId',
-        width: 420,
-        required: true,
-        ...this.getColumnSearchProps('commitId'),
-      },
-      {
-        title: '镜像名',
-        dataIndex: 'imageName',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('imageName'),
       },
     ];
     const toolBarProps = {
@@ -301,14 +324,14 @@ class ApplicationModule extends Component {
       remotePaging: true,
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/releaseVersion/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/releaseRecord/findByPage`,
       },
       cascadeParams: {
         ...this.getFilter(),
       },
       sort: {
         field: {
-          createTime: 'desc',
+          expCompleteTime: 'desc',
         },
       },
     };
