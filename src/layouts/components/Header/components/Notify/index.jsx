@@ -65,10 +65,9 @@ class Notify extends PureComponent {
             todoData,
           },
           () => {
-            if (messageCount > 0) {
-              if (this.aplayAudioRef) {
-                this.aplayAudioRef.aplayAudio();
-              }
+            const { messageCount: oldMessageCount } = this.state;
+            if (this.aplayAudioRef && messageCount > oldMessageCount) {
+              this.aplayAudioRef.aplayAudio();
             }
           },
         );

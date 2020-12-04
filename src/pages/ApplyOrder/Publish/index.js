@@ -135,7 +135,7 @@ class Certificate extends PureComponent {
         dispatch({
           type: 'applyPublish/getPublish',
           payload: {
-            id: rowData.id,
+            id: rowData.relationId,
           },
         });
         break;
@@ -150,7 +150,7 @@ class Certificate extends PureComponent {
           type: 'applyPublish/getPublish',
           payload: {
             showModal: true,
-            id: rowData.id,
+            id: rowData.relationId,
           },
         });
         break;
