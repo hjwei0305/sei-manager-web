@@ -1,11 +1,23 @@
+@import '../../../themes/vars.less';
 .stage-box {
   height: 100%;
   padding: 0;
   overflow: hidden;
   :global {
-    .ant-modal-body {
-      height: 420px;
+    .ant-modal {
       padding: 0;
+    }
+    .ant-modal,
+    .ant-modal-content {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      height: calc(100% - 108px);
+      padding: 0;
+      background-color: @page-background-color;
     }
     .ant-input-number-handler-wrap {
       display: none;

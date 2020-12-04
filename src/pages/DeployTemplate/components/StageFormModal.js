@@ -115,9 +115,7 @@ class StageFormModal extends PureComponent {
         onCancel={closeFormModal}
         visible={showModal}
         centered
-        width={780}
         wrapClassName={styles['stage-box']}
-        bodyStyle={{ paddingBottom: 0 }}
         title={<BannerTitle title={get(rowData, 'name')} subTitle="阶段执行脚本" />}
         footer={this.renderFooter()}
       >
@@ -125,7 +123,6 @@ class StageFormModal extends PureComponent {
           <ListLoader />
         ) : (
           <AceEditor
-            style={{ marginBottom: 24 }}
             mode="json"
             theme="terminal"
             name={this.aceId}

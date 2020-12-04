@@ -7,15 +7,17 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-terminal';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import styles from './FormModal.less';
 
 const FormItem = Form.Item;
+const { TextArea } = Input;
 const { getUUID } = utils;
 const formItemLayout = {
   labelCol: {
-    span: 6,
+    span: 24,
   },
   wrapperCol: {
-    span: 18,
+    span: 24,
   },
 };
 
@@ -109,8 +111,7 @@ class FormModal extends PureComponent {
         onCancel={closeFormModal}
         visible={showModal}
         centered
-        width={880}
-        bodyStyle={{ paddingBottom: 0 }}
+        wrapClassName={styles['stage-box']}
         confirmLoading={saving}
         title={title}
         onOk={this.handlerFormSubmit}
@@ -118,60 +119,60 @@ class FormModal extends PureComponent {
         {stageParamsLoading ? (
           <ListLoader />
         ) : (
-          <Form layout="horizontal" {...formItemLayout}>
-            <Row style={{ height: 70, overflow: 'hidden' }}>
-              <Col span={10}>
-                <FormItem label="阶段名称">
-                  {getFieldDecorator('name', {
-                    initialValue: get(rowData, 'name'),
-                    rules: [
-                      {
-                        required: true,
-                        message: '阶段名称不能为空',
-                      },
-                    ],
-                  })(<Input />)}
-                </FormItem>
-              </Col>
-              <Col span={14}>
-                <FormItem label="阶段描述">
-                  {getFieldDecorator('remark', {
-                    initialValue: get(rowData, 'remark'),
-                  })(<Input />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <FormItem
-              required
-              label="部署执行脚本"
-              wrapperCol={{ span: 24 }}
-              labelCol={{ span: 24 }}
-              validateStatus="error"
-            >
-              <AceEditor
-                style={{ marginBottom: 24 }}
-                mode="json"
-                theme="terminal"
-                name={this.aceId}
-                fontSize={16}
-                onChange={this.handlerAceChannge}
-                showPrintMargin={false}
-                showGutter={false}
-                highlightActiveLine
-                width="830px"
-                height="260px"
-                value={scriptText}
-                onLoad={this.handlerComplete}
-                setOptions={{
-                  enableBasicAutocompletion: true,
-                  enableLiveAutocompletion: true,
-                  enableSnippets: true,
-                  showLineNumbers: false,
-                  tabSize: 4,
-                }}
-              />
-            </FormItem>
-          </Form>
+          <Row gutter={8}>
+            <Col span={6}>
+              <div className="item-box">
+                <div className="form-body">
+                  <Form layout="horizontal" {...formItemLayout}>
+                    <FormItem label="阶段名称">
+                      {getFieldDecorator('name', {
+                        initialValue: get(rowData, 'name'),
+                        rules: [
+                          {
+                            required: true,
+                            message: '阶段名称不能为空',
+                          },
+                        ],
+                      })(<Input />)}
+                    </FormItem>
+                    <FormItem label="阶段描述">
+                      {getFieldDecorator('remark', {
+                        initialValue: get(rowData, 'remark'),
+                      })(<TextArea style={{ resize: 'none' }} rows={4} />)}
+                    </FormItem>
+                  </Form>
+                </div>
+              </div>
+            </Col>
+            <Col span={18}>
+              <div className="item-box">
+                <div className="item-label">部署执行脚本</div>
+                <div className="item-body">
+                  <AceEditor
+                    mode="json"
+                    theme="terminal"
+                    name={this.aceId}
+                    fontSize={16}
+                    onChange={this.handlerAceChannge}
+                    showPrintMargin={false}
+                    showGutter={false}
+                    highlightActiveLine
+                    width="100%"
+                    height="100%"
+                    value={scriptText}
+                    onLoad={this.handlerComplete}
+                    setOptions={{
+                      enableBasicAutocompletion: true,
+                      enableLiveAutocompletion: true,
+                      enableSnippets: true,
+                      showLineNumbers: false,
+                      tabSize: 4,
+                    }}
+                  />
+                </div>
+              </div>
+            </Col>
+          </Row>
         )}
       </ExtModal>
     );
