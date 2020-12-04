@@ -189,7 +189,7 @@ class WorkTodo extends PureComponent {
     const columns = [
       {
         key: 'operation',
-        width: 120,
+        width: 90,
         align: 'center',
         dataIndex: 'id',
         title: '操作',
