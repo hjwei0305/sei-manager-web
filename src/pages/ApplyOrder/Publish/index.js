@@ -496,12 +496,6 @@ class Certificate extends PureComponent {
         ...this.getColumnSearchProps('name'),
       },
       {
-        title: '期望完成时间',
-        dataIndex: 'expCompleteTime',
-        width: 180,
-        required: true,
-      },
-      {
         title: this.renderColumnAppName(),
         dataIndex: 'appName',
         width: 220,
@@ -514,6 +508,12 @@ class Certificate extends PureComponent {
         width: 260,
         required: true,
         ...this.getColumnSearchProps('moduleName'),
+      },
+      {
+        title: '期望完成时间',
+        dataIndex: 'expCompleteTime',
+        width: 180,
+        required: true,
       },
     ];
     const formModalProps = {
