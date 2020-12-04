@@ -232,7 +232,7 @@ class ConfigList extends Component {
     return (
       <div className={cls(styles['user-box'])}>
         <Card
-          title={<BannerTitle title={get(currentModule, 'name')} subTitle="标签列表" />}
+          title={<BannerTitle title={get(currentModule, 'name')} subTitle="配置列表" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />
