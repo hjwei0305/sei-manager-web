@@ -119,7 +119,7 @@ class Notify extends PureComponent {
       overlay: <div className={styles['message-box']}>{this.renderTodoList()}</div>,
       visible,
       placement: 'bottomLeft',
-      trigger: ['click'],
+      trigger: ['hover'],
       onVisibleChange: this.handleVisibleChange,
     };
   };
