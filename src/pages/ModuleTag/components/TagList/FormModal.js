@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
-import { Form, Input } from 'antd';
+import { Form, Input, Alert } from 'antd';
 import { ExtModal } from 'suid';
 
 const FormItem = Form.Item;
@@ -37,12 +37,13 @@ class FormModal extends PureComponent {
         onCancel={closeFormModal}
         visible={showTagModal}
         centered
-        bodyStyle={{ paddingBottom: 0 }}
+        bodyStyle={{ padding: 0 }}
         confirmLoading={saving}
         onOk={this.handlerFormSubmit}
         title="新建标签"
       >
-        <Form {...formItemLayout} layout="horizontal">
+        <Alert message="提示:请合并代码到 master 分支后，再创建标签!" banner />
+        <Form {...formItemLayout} layout="horizontal" style={{ padding: 24 }}>
           <FormItem label="标签名称">
             {getFieldDecorator('tagName', {
               initialValue: '',
