@@ -2,17 +2,18 @@ import { PubSub } from 'pubsub-js';
 
 let lockReconnect = false;
 let cancelReconnect;
+let heartCheckTimer = null;
 let ws = null;
 
 const heartCheck = {
   timeout: 60000, // 60秒
   timeoutObj: null,
   reset() {
-    clearInterval(this.timeoutObj);
+    clearInterval(heartCheckTimer);
     return this;
   },
   start() {
-    this.timeoutObj = setInterval(() => {
+    heartCheckTimer = setInterval(() => {
       // 这里发送一个心跳，后端收到后，返回一个心跳消息，
       // onmessage拿到返回的心跳就说明连接正常
       ws.send('HeartBeat');
@@ -42,7 +43,7 @@ const createWebSocket = url => {
   ws.onmessage = event => {
     lockReconnect = true;
     // 把获取到的消息处理成字典，方便后期使用
-    const data = JSON.parse(event.data);
+    const data = { buildLog: event.data };
     PubSub.publish('message', data);
     // event 为服务端传输的消息，在这里可以处理
   };
@@ -54,6 +55,7 @@ const closeWebSocket = () => {
     ws.close();
   }
   clearTimeout(cancelReconnect);
+  clearInterval(heartCheckTimer);
 };
 
 const websocket = ws;

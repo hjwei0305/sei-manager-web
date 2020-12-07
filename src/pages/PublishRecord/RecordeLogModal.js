@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
+import { PubSub } from 'pubsub-js';
 import { get, includes, isEqual } from 'lodash';
 import { Modal, Layout, Descriptions, Steps, Card } from 'antd';
 import { ListLoader, BannerTitle, ScrollBar, ExtIcon, utils } from 'suid';
@@ -19,6 +20,8 @@ const { closeWebSocket, createWebSocket } = wsocket;
 
 class RecordeLogModal extends PureComponent {
   static aceId;
+
+  static messageSocket;
 
   static propTypes = {
     title: PropTypes.string,
@@ -41,7 +44,7 @@ class RecordeLogModal extends PureComponent {
   componentDidUpdate(preProps) {
     const { logData } = this.props;
     if (!isEqual(preProps.logData, logData) && logData) {
-      const buildLog = get(logData, 'buildLog') || '';
+      let buildLog = get(logData, 'buildLog') || '';
       const state = this.getFieldValue('buildStatus');
       let building = false;
       if (state === JENKINS_STATUS.BUILDING.name) {
@@ -49,6 +52,13 @@ class RecordeLogModal extends PureComponent {
         const id = get(logData, 'id') || null;
         const url = `${WSBaseUrl}/sei-manager/websocket/buildLog/${id}`;
         createWebSocket(url);
+        this.messageSocket = PubSub.subscribe('message', (topic, msgObj) => {
+          // message 为接收到的消息  这里进行业务处理
+          if (topic === 'message') {
+            buildLog = get(msgObj, 'buildLog') || '';
+            this.setState({ buildLog });
+          }
+        });
       }
       const stages = get(logData, 'stages') || [];
       this.counterStep(stages);
@@ -61,6 +71,7 @@ class RecordeLogModal extends PureComponent {
     if (closeFormModal) {
       closeFormModal();
       closeWebSocket();
+      PubSub.unsubscribe(this.messageSocket);
     }
   };
 
@@ -109,6 +120,7 @@ class RecordeLogModal extends PureComponent {
             theme="textmate"
             name={this.aceId}
             fontSize={14}
+            readOnly
             onChange={this.handlerAceChannge}
             showPrintMargin={false}
             showGutter={false}
