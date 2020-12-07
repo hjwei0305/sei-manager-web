@@ -7,6 +7,7 @@ import { Button, Input, Popconfirm } from 'antd';
 import { ExtTable, ListCard, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import JenkinsState from './JenkinsState';
+import RecordeLogModal from './RecordeLogModal';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
@@ -19,7 +20,7 @@ const FILTER_FIELDS = [
 ];
 
 @connect(({ publishRecord, loading }) => ({ publishRecord, loading }))
-class ApplicationModule extends Component {
+class PublishRecord extends Component {
   static tableRef;
 
   static listCardRef = null;
@@ -235,6 +236,35 @@ class ApplicationModule extends Component {
     });
   };
 
+  showRecordLog = row => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'publishRecord/updateState',
+      payload: {
+        showModal: true,
+        rowData: row,
+      },
+    });
+    dispatch({
+      type: 'publishRecord/getBuildDetail',
+      payload: {
+        id: row.id,
+      },
+    });
+  };
+
+  closeFormModal = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'publishRecord/updateState',
+      payload: {
+        showModal: false,
+        rowData: null,
+      },
+    });
+    this.reloadData();
+  };
+
   renderBuildBtn = row => {
     const { loading } = this.props;
     const { buildId } = this.state;
@@ -243,12 +273,14 @@ class ApplicationModule extends Component {
     }
     return (
       <Popconfirm title="确定要发起Jenkins构建吗？" onConfirm={() => this.build(row)}>
-        <ExtIcon type="play-circle" antd />
+        <ExtIcon type="play-circle" className="build" antd />
       </Popconfirm>
     );
   };
 
   render() {
+    const { publishRecord, loading } = this.props;
+    const { showModal, rowData, logData } = publishRecord;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -259,7 +291,15 @@ class ApplicationModule extends Component {
         className: 'action',
         required: true,
         render: (_text, record) => (
-          <span className={cls('action-box')}>{this.renderBuildBtn(record)}</span>
+          <span className={cls('action-box')}>
+            {this.renderBuildBtn(record)}
+            <ExtIcon
+              type="alert"
+              antd
+              tooltip={{ title: '构建详情' }}
+              onClick={() => this.showRecordLog(record)}
+            />
+          </span>
         ),
       },
       {
@@ -335,12 +375,20 @@ class ApplicationModule extends Component {
         },
       },
     };
+    const recordeLogModalProps = {
+      title: get(rowData, 'name'),
+      showModal,
+      logData,
+      closeFormModal: this.closeFormModal,
+      dataLoading: loading.effects['publishRecord/getBuildDetail'],
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
+        <RecordeLogModal {...recordeLogModalProps} />
       </div>
     );
   }
 }
 
-export default ApplicationModule;
+export default PublishRecord;

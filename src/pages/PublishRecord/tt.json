@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "message": "处理成功！",
+  "data": {
+    "id": "C670D133-3609-11EB-8A8C-0242C0A84603",
+    "envCode": "Dev",
+    "envName": "开发环境",
+    "appId": "410C7FC3-3600-11EB-800A-0242C0A84603",
+    "appName": "帮助测试",
+    "gitId": "1429",
+    "moduleCode": "ops-help",
+    "moduleName": "帮助前端",
+    "tagName": "6.0.1",
+    "frozen": false,
+    "name": "集成测试",
+    "remark": "",
+    "expCompleteTime": "2020-12-04 16:18:00",
+    "buildStatus": "BUILDING",
+    "buildStatusRemark": "构建中",
+    "stages": [
+      {
+        "id": "4DB57CDD-35E3-11EB-8946-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "33CA9121-35DD-11EB-ACB4-0242C0A84603",
+        "name": "Web Pre Git",
+        "remark": "获取Git代码",
+        "playscript": "    echo \"pre Git\"\r\n    dir(\"./\") {\r\n        if(fileExists(\"${params.PROJECT_NAME}\")) {\r\n            echo \" git exit\"\r\n            dir(\"./${params.PROJECT_NAME}\") {\r\n                checkout([$class: 'GitSCM', branches: [[name: 'dev']], userRemoteConfigs: [[credentialsId: \"rddgit.changhong.com\", url: \"${PROJECT_GIT_PATH}\"]]])\r\n            }\r\n        } else {\r\n            sh \" mkdir ${params.PROJECT_NAME}\"\r\n            dir(\"./${params.PROJECT_NAME}\") {\r\n                checkout([$class: 'GitSCM', branches: [[name: 'dev']], userRemoteConfigs: [[credentialsId: \"rddgit.changhong.com\", url: \"${PROJECT_GIT_PATH}\"]]])\r\n                \r\n                echo \" git is not exit\"\r\n            }\r\n        }\r\n    }",
+        "rank": 0
+      },
+      {
+        "id": "4DB7EDDF-35E3-11EB-8946-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "559D3562-35DE-11EB-8AB2-0242C0A84603",
+        "name": "Web Install",
+        "remark": "WEB前端npm run install",
+        "playscript": "    dir(\"./${params.PROJECT_NAME}\") {\r\n            sh \"npm config set registry http://rcsgit.changhong.com:8081/repository/npm_group/\"\r\n            sh \"npm-install-changed\"\r\n    }\r\n    echo \"npm run install\"",
+        "rank": 1
+      },
+      {
+        "id": "4DB814F0-35E3-11EB-8946-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "73A50B5B-35DE-11EB-8AB2-0242C0A84603",
+        "name": "Web Build",
+        "remark": "WEB前端npm run build",
+        "playscript": "    dir(\"./${params.PROJECT_NAME}\") { \r\n        sh \"npm run build\"\r\n    }\r\n    echo \"npm run build\"",
+        "rank": 2
+      },
+      {
+        "id": "4DB86312-35E3-11EB-8946-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "9730EDBA-35DE-11EB-8AB2-0242C0A84603",
+        "name": "Web Build Image",
+        "remark": "WEB前端构建镜像",
+        "playscript": "        echo \"generate docker image\"\r\n        dir(\"./${params.PROJECT_NAME}\") { \r\n            sh \"rm -rf docker/dist\"\r\n            sh \"cp -rf dist docker/dist\"\r\n            dir(\"./docker\") {\r\n                sh \"docker build -t rddhub.changhong.com/sei/${params.PROJECT_NAME}:dev .\"\r\n            }\r\n        }",
+        "rank": 3
+      },
+      {
+        "id": "4DB83C01-35E3-11EB-8946-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "E8E5D473-35DE-11EB-8AB2-0242C0A84603",
+        "name": "Push Image",
+        "remark": "推送镜像",
+        "playscript": "        echo \"push docker image\"\r\n        withCredentials([usernamePassword(credentialsId: 'rddhub.changhong.com', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {\r\n            sh \"docker login -u ${dockerUser} -p ${dockerPassword} rddhub.changhong.com\"\r\n            sh \"docker push rddhub.changhong.com/sei/${params.PROJECT_NAME}:dev\"\r\n        }\r\n        echo \"remove docker image\"\r\n        sh \"docker rmi rddhub.changhong.com/sei/${params.PROJECT_NAME}:dev\"",
+        "rank": 4
+      },
+      {
+        "id": "B72A256F-35FE-11EB-800A-0242C0A84603",
+        "templateId": "854D0AEA-35DF-11EB-8AB2-0242C0A84603",
+        "stageId": "2F153512-35DF-11EB-8AB2-0242C0A84603",
+        "name": "Deploy ",
+        "remark": "应用部署",
+        "playscript": "        echo \"deploy project\"\r\n        def remote = [:]\r\n        remote.name = \"deplay\"\r\n        remote.host = \"10.4.208.86\"\r\n        remote.allowAnyHosts = true\r\n        \r\n        withCredentials([usernamePassword(credentialsId: '10.4.208.86', passwordVariable: 'password', usernameVariable: 'userName')]) {\r\n            withCredentials([usernamePassword(credentialsId: 'rddhub.changhong.com', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {\r\n                remote.user = userName\r\n                remote.password = password\r\n                sshCommand remote: remote, command: \"/opt/sei4.0/container_update.sh \\\"docker login -u ${dockerUser} -p ${dockerPassword} rddhub.changhong.com\\\" \\\"rddhub.changhong.com/sei/${params.PROJECT_NAME}:dev\\\" \\\"${params.PROJECT_NAME}\\\"\"\r\n            }\r\n        }",
+        "rank": 6
+      }
+    ],
+    "buildLog": "构建任务[Dev_ops-help]不存在或存在错误."
+  }
+}

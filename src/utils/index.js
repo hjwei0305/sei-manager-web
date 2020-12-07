@@ -3,6 +3,7 @@ import eventBus from './eventBus';
 import * as userAuth from './userAuth';
 import * as tree from './tree';
 import * as userUtils from './user';
+import wsocket from './websocket';
 import speech from './speechSynthesis';
 
 const getAllParentIdsByNode = (treeData, nodeId) => {
@@ -60,4 +61,5 @@ export {
   speech,
   getAllParentIdsByNode,
   getAllChildIdsByNode,
+  wsocket,
 };

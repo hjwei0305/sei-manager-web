@@ -14,3 +14,12 @@ export async function build(params) {
     params,
   });
 }
+
+/** 获取构建详情 */
+export async function getBuildDetail(params) {
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/getBuildDetail`;
+  return request({
+    url,
+    params,
+  });
+}

@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-04 13:27:02
+ * @Last Modified time: 2020-12-07 15:21:07
  */
 import { name } from '../../package.json';
 
@@ -36,6 +36,11 @@ const APP_BASE = name;
 const LOCAL_PATH = process.env.NODE_ENV !== 'production' ? '..' : `../${APP_BASE}`;
 
 const SERVER_PATH = getServerPath();
+
+const WSBaseUrl =
+  process.env.NODE_ENV !== 'production'
+    ? 'ws://dsei.changhong.com'
+    : `ws://${window.location.host}`;
 
 const MANAGER_CONTEXT = `/sei-manager/`;
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -218,6 +223,7 @@ export default {
   APP_BASE,
   LOCAL_PATH,
   SERVER_PATH,
+  WSBaseUrl,
   IS_DEVELOPMENT,
   ENV_CATEGORY,
   LEVEL_CATEGORY,

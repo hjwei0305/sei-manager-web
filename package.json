@@ -35,6 +35,7 @@
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
+    "pubsub-js": "^1.9.1",
     "qs": "^6.9.3",
     "query-string": "^6.12.1",
     "rc-resize-observer": "^0.2.1",
