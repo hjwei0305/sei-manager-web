@@ -47,7 +47,7 @@ class RecordeLogModal extends PureComponent {
       if (state === JENKINS_STATUS.BUILDING.name) {
         building = true;
         const id = get(logData, 'id') || null;
-        const url = `${WSBaseUrl}/websocket/buildLog/${id}`;
+        const url = `${WSBaseUrl}/sei-manager/websocket/buildLog/${id}`;
         createWebSocket(url);
       }
       const stages = get(logData, 'stages') || [];
