@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import { PubSub } from 'pubsub-js';
+import copy from 'copy-to-clipboard';
 import { get, includes, isEqual } from 'lodash';
 import { Modal, Layout, Descriptions, Steps, Card } from 'antd';
-import { ListLoader, BannerTitle, ExtIcon, utils } from 'suid';
+import { ListLoader, BannerTitle, ExtIcon, utils, message } from 'suid';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -87,6 +88,11 @@ class RecordeLogModal extends PureComponent {
     }
   };
 
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
   getFieldValue = fieldName => {
     const { logData } = this.props;
     return get(logData, fieldName) || '-';
@@ -134,7 +140,16 @@ class RecordeLogModal extends PureComponent {
           </Steps>
         </div>
         <div className="log-box">
-          <div className="log-header">构建日志</div>
+          <div className="log-header">
+            构建日志-Console Output
+            <ExtIcon
+              type="copy"
+              className="copy-btn"
+              antd
+              tooltip={{ title: '复制内容到粘贴板' }}
+              onClick={() => this.handlerCopy(buildLog)}
+            />
+          </div>
           <div className="log-content">
             <AceEditor
               mode="markdown"
