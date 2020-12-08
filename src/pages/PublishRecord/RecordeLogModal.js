@@ -107,7 +107,7 @@ class RecordeLogModal extends PureComponent {
   handlerComplete = ace => {
     if (ace) {
       const { buildLog } = this.state;
-      ace.setOptions({ value: buildLog });
+      ace.setOptions({ value: buildLog || '暂无构建日志!' });
     }
   };
 
@@ -133,28 +133,31 @@ class RecordeLogModal extends PureComponent {
             ))}
           </Steps>
         </div>
-        <div className="log-content">
-          <AceEditor
-            mode="markdown"
-            theme="textmate"
-            name={this.aceId}
-            fontSize={14}
-            readOnly
-            showPrintMargin={false}
-            showGutter={false}
-            highlightActiveLine
-            width="100%"
-            height="100%"
-            onLoad={this.handlerComplete}
-            value={buildLog || '暂无构建日志!'}
-            setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true,
-              showLineNumbers: false,
-              tabSize: 4,
-            }}
-          />
+        <div className="log-box">
+          <div className="log-header">构建日志</div>
+          <div className="log-content">
+            <AceEditor
+              mode="markdown"
+              theme="textmate"
+              name={this.aceId}
+              fontSize={14}
+              readOnly
+              showPrintMargin={false}
+              showGutter={false}
+              highlightActiveLine={false}
+              width="100%"
+              height="100%"
+              onLoad={this.handlerComplete}
+              value={buildLog || '暂无构建日志!'}
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+                showLineNumbers: false,
+                tabSize: 4,
+              }}
+            />
+          </div>
         </div>
       </>
     );
