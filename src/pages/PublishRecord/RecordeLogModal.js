@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { PubSub } from 'pubsub-js';
 import { get, includes, isEqual } from 'lodash';
 import { Modal, Layout, Descriptions, Steps, Card } from 'antd';
-import { ListLoader, BannerTitle, ScrollBar, ExtIcon, utils } from 'suid';
+import { ListLoader, BannerTitle, ExtIcon, utils } from 'suid';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -178,28 +178,26 @@ class RecordeLogModal extends PureComponent {
       <Layout className="auto-height">
         <Sider width={360} className="auto-height left-content" theme="light">
           <Card className="auto-height" bordered={false} title={this.renderTitle()}>
-            <ScrollBar>
-              <Descriptions column={1} colon={false}>
-                <Descriptions.Item label="构建状态">
-                  <JenkinsState state={this.getFieldValue('buildStatus')} />
-                </Descriptions.Item>
-                <Descriptions.Item label="目标环境">
-                  {`${this.getFieldValue('envName')}(${this.getFieldValue('envCode')})`}
-                </Descriptions.Item>
-                <Descriptions.Item label="应用名称">
-                  {this.getFieldValue('appName')}
-                </Descriptions.Item>
-                <Descriptions.Item label="模块名称">
-                  {`${this.getFieldValue('moduleName')}(${this.getFieldValue('moduleCode')})`}
-                </Descriptions.Item>
-                <Descriptions.Item label="标签名称">
-                  {this.getFieldValue('tagName')}
-                </Descriptions.Item>
-                <Descriptions.Item label="期望完成时间">
-                  {this.getFieldValue('expCompleteTime')}
-                </Descriptions.Item>
-              </Descriptions>
-            </ScrollBar>
+            <Descriptions column={1} colon={false}>
+              <Descriptions.Item label="构建状态">
+                <JenkinsState state={this.getFieldValue('buildStatus')} />
+              </Descriptions.Item>
+              <Descriptions.Item label="目标环境">
+                {`${this.getFieldValue('envName')}(${this.getFieldValue('envCode')})`}
+              </Descriptions.Item>
+              <Descriptions.Item label="应用名称">
+                {this.getFieldValue('appName')}
+              </Descriptions.Item>
+              <Descriptions.Item label="模块名称">
+                {`${this.getFieldValue('moduleName')}(${this.getFieldValue('moduleCode')})`}
+              </Descriptions.Item>
+              <Descriptions.Item label="标签名称">
+                {this.getFieldValue('tagName')}
+              </Descriptions.Item>
+              <Descriptions.Item label="期望完成时间">
+                {this.getFieldValue('expCompleteTime')}
+              </Descriptions.Item>
+            </Descriptions>
           </Card>
         </Sider>
         <Content className={cls('main-content', 'auto-height', 'vertical')}>
