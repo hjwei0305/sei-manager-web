@@ -24,6 +24,8 @@ class RecordeLogModal extends PureComponent {
 
   static messageSocket;
 
+  static stages;
+
   static propTypes = {
     title: PropTypes.string,
     logData: PropTypes.object,
@@ -35,19 +37,22 @@ class RecordeLogModal extends PureComponent {
   constructor(props) {
     super(props);
     this.aceId = getUUID();
+    this.stages = [];
     this.state = {
       currentStage: 0,
+      stageStatus: [],
       buildLog: '',
       building: false,
+      buildStatus: '',
     };
   }
 
   componentDidUpdate(preProps) {
     const { logData } = this.props;
     if (!isEqual(preProps.logData, logData) && logData) {
-      let buildLog = get(logData, 'buildLog') || '';
+      const buildLog = get(logData, 'buildLog') || '';
       const state = this.getFieldValue('buildStatus');
-      const stages = get(logData, 'stages') || [];
+      this.stages = get(logData, 'stages') || [];
       let building = false;
       if (state === JENKINS_STATUS.BUILDING.name) {
         building = true;
@@ -57,16 +62,17 @@ class RecordeLogModal extends PureComponent {
         this.messageSocket = PubSub.subscribe('message', (topic, msgObj) => {
           // message 为接收到的消息  这里进行业务处理
           if (topic === 'message') {
-            buildLog = get(msgObj, 'buildLog') || '';
-            this.setState({ buildLog }, () => {
-              this.counterStep(stages);
+            const { buildLog: prevBuildLog } = this.state;
+            const wsLog = get(msgObj, 'buildLog') || '';
+            this.setState({ buildLog: `${prevBuildLog}${wsLog}` }, () => {
+              this.counterStep();
               this.resize();
             });
           }
         });
       }
-      this.setState({ buildLog, building }, () => {
-        this.counterStep(stages);
+      this.setState({ buildLog, building, buildStatus: state }, () => {
+        this.counterStep();
         this.resize();
       });
     }
@@ -103,16 +109,42 @@ class RecordeLogModal extends PureComponent {
     return get(logData, fieldName) || '-';
   };
 
-  counterStep = stages => {
-    const { buildLog } = this.state;
+  counterStep = () => {
+    const { buildLog, buildStatus: prevBuildStatus, building: preBuilding } = this.state;
     let currentStage = 0;
-    for (let i = 0; i < stages.length; i += 1) {
-      const { name } = stages[i];
+    const stageStatus = [];
+    for (let i = 0; i < this.stages.length; i += 1) {
+      const { name } = this.stages[i];
       if (includes(buildLog, name)) {
         currentStage = i;
+        stageStatus.push('finish');
+      } else {
+        stageStatus.push('wait');
       }
     }
-    this.setState({ currentStage });
+    let buildStatus = prevBuildStatus;
+    let building = preBuilding;
+    if (includes(buildLog, `Finished`)) {
+      building = false;
+    }
+    if (includes(buildLog, `Finished: ${JENKINS_STATUS.SUCCESS.name}`)) {
+      buildStatus = JENKINS_STATUS.SUCCESS.name;
+    }
+    if (includes(buildLog, `Finished: ${JENKINS_STATUS.FAILURE.name}`)) {
+      buildStatus = JENKINS_STATUS.FAILURE.name;
+    }
+    this.setState({ currentStage, stageStatus, buildStatus, building });
+  };
+
+  getCurrentStageStatus = () => {
+    const { buildLog } = this.state;
+    if (includes(buildLog, `Finished: ${JENKINS_STATUS.SUCCESS.name}`)) {
+      return JENKINS_STATUS.SUCCESS.stepResult;
+    }
+    if (includes(buildLog, `Finished: ${JENKINS_STATUS.FAILURE.name}`)) {
+      return JENKINS_STATUS.FAILURE.stepResult;
+    }
+    return 'process';
   };
 
   handlerComplete = ace => {
@@ -123,14 +155,12 @@ class RecordeLogModal extends PureComponent {
   };
 
   renderStages = () => {
-    const { currentStage, buildLog, building } = this.state;
-    const { logData } = this.props;
-    const stages = get(logData, 'stages') || [];
+    const { currentStage, buildLog, building, stageStatus } = this.state;
     return (
       <>
         <div className="step-box">
           <Steps current={currentStage} labelPlacement="horizontal">
-            {stages.map((item, idx) => (
+            {this.stages.map((item, idx) => (
               <Step
                 key={item.id}
                 icon={
@@ -138,6 +168,7 @@ class RecordeLogModal extends PureComponent {
                     <ExtIcon type="sync" antd spin style={{ marginRight: 4 }} />
                   ) : null
                 }
+                status={idx === currentStage ? this.getCurrentStageStatus() : stageStatus[idx]}
                 title={item.name}
                 description={item.remark}
               />
@@ -194,13 +225,14 @@ class RecordeLogModal extends PureComponent {
   };
 
   renderLogContent = () => {
+    const { buildStatus } = this.state;
     return (
       <Layout className="auto-height">
         <Sider width={360} className="auto-height left-content" theme="light">
           <Card className="auto-height" bordered={false} title={this.renderTitle()}>
             <Descriptions column={1} colon={false}>
               <Descriptions.Item label="构建状态">
-                <JenkinsState state={this.getFieldValue('buildStatus')} />
+                <JenkinsState state={buildStatus} />
               </Descriptions.Item>
               <Descriptions.Item label="目标环境">
                 {`${this.getFieldValue('envName')}(${this.getFieldValue('envCode')})`}

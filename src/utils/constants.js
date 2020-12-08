@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-08 08:52:24
+ * @Last Modified time: 2020-12-08 11:34:33
  */
 import { name } from '../../package.json';
 
@@ -181,15 +181,15 @@ const APPLY_STATUS = {
 };
 
 const JENKINS_STATUS = {
-  ALL: { remark: '全部', name: 'ALL', color: '' },
-  FAILURE: { remark: '构建失败', name: 'FAILURE', color: 'red' },
-  UNSTABLE: { remark: '不稳定', name: 'UNSTABLE', color: 'orange' },
-  BUILDING: { remark: '构建中', name: 'BUILDING', color: 'blue' },
-  ABORTED: { remark: '构建终止', name: 'ABORTED', color: 'magenta' },
-  SUCCESS: { remark: '构建成功', name: 'SUCCESS', color: 'green' },
-  UNKNOWN: { remark: '未知', name: 'UNKNOWN', color: '' },
-  CANCELLED: { remark: '构建取消', name: 'CANCELLED', color: 'purple' },
-  NOT_BUILT: { remark: '未构建', name: 'NOT_BUILT', color: 'cyan' },
+  ALL: { remark: '全部', name: 'ALL', color: '', stepResult: '' },
+  FAILURE: { remark: '构建失败', name: 'FAILURE', color: 'red', stepResult: 'error' },
+  UNSTABLE: { remark: '不稳定', name: 'UNSTABLE', color: 'orange', stepResult: 'finish' },
+  BUILDING: { remark: '构建中', name: 'BUILDING', color: 'blue', stepResult: 'process' },
+  ABORTED: { remark: '构建终止', name: 'ABORTED', color: 'magenta', stepResult: 'process' },
+  SUCCESS: { remark: '构建成功', name: 'SUCCESS', color: 'green', stepResult: 'finish' },
+  UNKNOWN: { remark: '未知', name: 'UNKNOWN', color: 'geekblue', stepResult: 'process' },
+  CANCELLED: { remark: '构建取消', name: 'CANCELLED', color: 'purple', stepResult: 'wait' },
+  NOT_BUILT: { remark: '未构建', name: 'NOT_BUILT', color: 'cyan', stepResult: 'wait' },
 };
 
 const APPLY_ORDER_TYPE = {

@@ -233,6 +233,11 @@ class PublishRecord extends Component {
       payload: {
         id: record.id,
       },
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+        }
+      },
     });
   };
 
@@ -386,7 +391,7 @@ class PublishRecord extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
-        <RecordeLogModal {...recordeLogModalProps} />
+        {showModal ? <RecordeLogModal {...recordeLogModalProps} /> : null}
       </div>
     );
   }
