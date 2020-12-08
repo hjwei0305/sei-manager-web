@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import { get, omit, isEqual } from 'lodash';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Form, Input } from 'antd';
-import { BannerTitle, utils } from 'suid';
+import { Button, Form, Input, Popover, Alert } from 'antd';
+import { BannerTitle, utils, ExtIcon } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-terminal';
@@ -29,6 +29,7 @@ class FeatureGroupForm extends PureComponent {
     const { globalParam = '{}' } = templateData || {};
     this.state = {
       globalParam,
+      valid: true,
     };
   }
 
@@ -44,8 +45,10 @@ class FeatureGroupForm extends PureComponent {
     const { form, saveDeployTemplate, templateData, handlerPopoverHide } = this.props;
     const { validateFields, getFieldsValue } = form;
     const { globalParam } = this.state;
+    const valid = this.validJson(globalParam);
+    this.setState({ valid });
     validateFields(errors => {
-      if (errors) {
+      if (errors || valid === false) {
         return;
       }
       const params = { globalParam };
@@ -55,14 +58,68 @@ class FeatureGroupForm extends PureComponent {
     });
   };
 
+  validJson = globalParam => {
+    let valid = true;
+    if (globalParam) {
+      try {
+        const str = globalParam.replace(/[\r\n\s]/g, '');
+        JSON.parse(str);
+      } catch (e) {
+        valid = false;
+      }
+    }
+    return valid;
+  };
+
   handlerAceChannge = globalParam => {
     this.setState({ globalParam });
+  };
+
+  paramsDemo = () => {
+    const demoAce = getUUID();
+    return (
+      <AceEditor
+        mode="json"
+        theme="github"
+        name={demoAce}
+        fontSize={14}
+        showPrintMargin={false}
+        showGutter={false}
+        readOnly
+        highlightActiveLine={false}
+        width="260px"
+        height="120px"
+        value={'{\n  "key1":1,\n  "key2":true,\n  "key3":"text"\n}'}
+        setOptions={{
+          enableBasicAutocompletion: false,
+          enableLiveAutocompletion: false,
+          enableSnippets: true,
+          showLineNumbers: false,
+          tabSize: 2,
+        }}
+      />
+    );
+  };
+
+  renderParamsTitle = () => {
+    return (
+      <>
+        模板参数(Json对象)
+        <Popover title="样例参考" content={this.paramsDemo()}>
+          <ExtIcon
+            antd
+            type="question-circle"
+            style={{ marginLeft: 4, position: 'relative', top: 4, cursor: 'pointer' }}
+          />
+        </Popover>
+      </>
+    );
   };
 
   render() {
     const { form, templateData, saving } = this.props;
     const { getFieldDecorator } = form;
-    const { globalParam } = this.state;
+    const { globalParam, valid } = this.state;
     const title = templateData ? '编辑' : '新建';
     return (
       <div key="form-box" className={cls(styles['form-box'])}>
@@ -70,6 +127,13 @@ class FeatureGroupForm extends PureComponent {
           <div className="header">
             <BannerTitle title={title} subTitle="模板" />
           </div>
+          {valid === false ? (
+            <Alert
+              type="error"
+              message="Json格式不正确。属性请使用双引号，值如果是字符串也需用双引号"
+              banner
+            />
+          ) : null}
           <Form {...formItemLayout}>
             <FormItem label="模板名称">
               {getFieldDecorator('name', {
@@ -93,7 +157,7 @@ class FeatureGroupForm extends PureComponent {
                 ],
               })(<Input maxLength={30} />)}
             </FormItem>
-            <FormItem label="模板参数(Json对象)">
+            <FormItem label={this.renderParamsTitle()}>
               <AceEditor
                 mode="json"
                 theme="terminal"
@@ -111,7 +175,7 @@ class FeatureGroupForm extends PureComponent {
                   enableLiveAutocompletion: false,
                   enableSnippets: true,
                   showLineNumbers: false,
-                  tabSize: 4,
+                  tabSize: 2,
                 }}
               />
             </FormItem>
