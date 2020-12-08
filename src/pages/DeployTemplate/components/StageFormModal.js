@@ -126,7 +126,7 @@ class StageFormModal extends PureComponent {
             mode="json"
             theme="terminal"
             name={this.aceId}
-            fontSize={16}
+            fontSize={14}
             onChange={this.handlerAceChannge}
             showPrintMargin={false}
             showGutter={false}

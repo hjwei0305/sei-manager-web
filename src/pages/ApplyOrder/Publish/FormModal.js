@@ -328,7 +328,7 @@ class FormModal extends PureComponent {
                     theme="textmate"
                     placeholder="请输入发布说明(例如：部署要求,脚本内容)"
                     name={this.aceId}
-                    fontSize={16}
+                    fontSize={14}
                     onChange={this.handlerAceChannge}
                     showPrintMargin={false}
                     showGutter={false}
