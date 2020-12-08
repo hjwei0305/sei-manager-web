@@ -8,7 +8,7 @@ import { ListLoader, BannerTitle, ExtIcon, utils, message } from 'suid';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
-import 'ace-builds/src-noconflict/theme-textmate';
+import 'ace-builds/src-noconflict/theme-kuroir';
 import { wsocket, constants } from '../../utils';
 import JenkinsState from './JenkinsState';
 import styles from './RecordeLogModal.less';
@@ -153,7 +153,7 @@ class RecordeLogModal extends PureComponent {
           <div className="log-content">
             <AceEditor
               mode="markdown"
-              theme="textmate"
+              theme="kuroir"
               name={this.aceId}
               fontSize={14}
               readOnly
