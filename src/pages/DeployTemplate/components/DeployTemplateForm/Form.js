@@ -26,7 +26,7 @@ class FeatureGroupForm extends PureComponent {
     super(props);
     this.aceId = getUUID();
     const { templateData } = props;
-    const { globalParam = '{↵    ↵}' } = templateData || {};
+    const { globalParam = '{}' } = templateData || {};
     this.state = {
       globalParam,
     };
@@ -35,7 +35,7 @@ class FeatureGroupForm extends PureComponent {
   componentDidUpdate(prevProps) {
     const { templateData } = this.props;
     if (!isEqual(prevProps.templateData, templateData)) {
-      const { globalParam = '{↵    ↵}' } = templateData || {};
+      const { globalParam = '{}' } = templateData || {};
       this.setState({ globalParam });
     }
   }
