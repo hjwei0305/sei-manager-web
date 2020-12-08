@@ -47,6 +47,7 @@ class RecordeLogModal extends PureComponent {
     if (!isEqual(preProps.logData, logData) && logData) {
       let buildLog = get(logData, 'buildLog') || '';
       const state = this.getFieldValue('buildStatus');
+      const stages = get(logData, 'stages') || [];
       let building = false;
       if (state === JENKINS_STATUS.BUILDING.name) {
         building = true;
@@ -57,13 +58,17 @@ class RecordeLogModal extends PureComponent {
           // message 为接收到的消息  这里进行业务处理
           if (topic === 'message') {
             buildLog = get(msgObj, 'buildLog') || '';
-            this.setState({ buildLog }, this.resize);
+            this.setState({ buildLog }, () => {
+              this.counterStep(stages);
+              this.resize();
+            });
           }
         });
       }
-      const stages = get(logData, 'stages') || [];
-      this.counterStep(stages);
-      this.setState({ buildLog, building }, this.resize);
+      this.setState({ buildLog, building }, () => {
+        this.counterStep(stages);
+        this.resize();
+      });
     }
   }
 
