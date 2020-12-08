@@ -260,6 +260,7 @@ class PublishRecord extends Component {
       payload: {
         showModal: false,
         rowData: null,
+        logData: null,
       },
     });
     this.reloadData();

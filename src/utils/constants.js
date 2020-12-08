@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-07 16:23:52
+ * @Last Modified time: 2020-12-08 08:52:24
  */
 import { name } from '../../package.json';
 
@@ -189,7 +189,7 @@ const JENKINS_STATUS = {
   SUCCESS: { remark: '构建成功', name: 'SUCCESS', color: 'green' },
   UNKNOWN: { remark: '未知', name: 'UNKNOWN', color: '' },
   CANCELLED: { remark: '构建取消', name: 'CANCELLED', color: 'purple' },
-  NOT_BUILT: { remark: '构建取消', name: 'NOT_BUILT', color: 'cyan' },
+  NOT_BUILT: { remark: '未构建', name: 'NOT_BUILT', color: 'cyan' },
 };
 
 const APPLY_ORDER_TYPE = {

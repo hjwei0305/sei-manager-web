@@ -56,15 +56,27 @@ class RecordeLogModal extends PureComponent {
           // message 为接收到的消息  这里进行业务处理
           if (topic === 'message') {
             buildLog = get(msgObj, 'buildLog') || '';
-            this.setState({ buildLog });
+            this.setState({ buildLog }, this.resize);
           }
         });
       }
       const stages = get(logData, 'stages') || [];
       this.counterStep(stages);
-      this.setState({ buildLog, building });
+      this.setState({ buildLog, building }, this.resize);
     }
   }
+
+  componentWillUnmount() {
+    closeWebSocket();
+    PubSub.unsubscribe(this.messageSocket);
+  }
+
+  resize = () => {
+    setTimeout(() => {
+      const resize = new Event('resize');
+      window.dispatchEvent(resize);
+    }, 300);
+  };
 
   closeFormModal = () => {
     const { closeFormModal } = this.props;
@@ -90,6 +102,13 @@ class RecordeLogModal extends PureComponent {
       }
     }
     this.setState({ currentStage });
+  };
+
+  handlerComplete = ace => {
+    if (ace) {
+      const { buildLog } = this.state;
+      ace.setOptions({ value: buildLog });
+    }
   };
 
   renderStages = () => {
@@ -121,12 +140,12 @@ class RecordeLogModal extends PureComponent {
             name={this.aceId}
             fontSize={14}
             readOnly
-            onChange={this.handlerAceChannge}
             showPrintMargin={false}
             showGutter={false}
             highlightActiveLine
             width="100%"
             height="100%"
+            onLoad={this.handlerComplete}
             value={buildLog || '暂无构建日志!'}
             setOptions={{
               enableBasicAutocompletion: true,
