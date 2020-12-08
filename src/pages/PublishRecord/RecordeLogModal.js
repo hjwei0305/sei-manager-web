@@ -20,6 +20,8 @@ const { WSBaseUrl, JENKINS_STATUS } = constants;
 const { closeWebSocket, createWebSocket } = wsocket;
 
 class RecordeLogModal extends PureComponent {
+  static ace;
+
   static aceId;
 
   static messageSocket;
@@ -67,6 +69,8 @@ class RecordeLogModal extends PureComponent {
             this.setState({ buildLog: `${prevBuildLog}${wsLog}` }, () => {
               this.counterStep();
               this.resize();
+              const lineNumber = this.ace.session.getLength();
+              this.ace.gotoLine(lineNumber);
             });
           }
         });
@@ -148,6 +152,7 @@ class RecordeLogModal extends PureComponent {
   };
 
   handlerComplete = ace => {
+    this.ace = ace;
     if (ace) {
       const { buildLog } = this.state;
       ace.setOptions({ value: buildLog || '暂无构建日志!' });
