@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, InputNumber } from 'antd';
-import { ExtModal, utils, message, BannerTitle, ListLoader } from 'suid';
+import { ExtModal, utils, message, BannerTitle, ListLoader, ExtIcon } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-terminal';
@@ -106,8 +106,18 @@ class StageFormModal extends PureComponent {
     );
   };
 
+  renderTitle = () => {
+    const { rowData, closeFormModal } = this.props;
+    return (
+      <>
+        <ExtIcon onClick={closeFormModal} type="left" className="trigger-back" antd />
+        <BannerTitle title={get(rowData, 'name')} subTitle="阶段执行脚本" />
+      </>
+    );
+  };
+
   render() {
-    const { closeFormModal, showModal, rowData, stageParamsLoading } = this.props;
+    const { closeFormModal, showModal, stageParamsLoading } = this.props;
     const { scriptText } = this.state;
     return (
       <ExtModal
@@ -116,7 +126,7 @@ class StageFormModal extends PureComponent {
         visible={showModal}
         centered
         wrapClassName={styles['stage-box']}
-        title={<BannerTitle title={get(rowData, 'name')} subTitle="阶段执行脚本" />}
+        title={this.renderTitle()}
         footer={this.renderFooter()}
       >
         {stageParamsLoading ? (

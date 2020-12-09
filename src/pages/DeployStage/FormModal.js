@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { get, omit, isEqual } from 'lodash';
 import { Form, Input, Row, Col } from 'antd';
-import { ExtModal, utils, ListLoader } from 'suid';
+import { ExtModal, utils, ListLoader, ExtIcon } from 'suid';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
@@ -100,11 +100,21 @@ class FormModal extends PureComponent {
     }
   };
 
+  renderTitle = () => {
+    const { closeFormModal, rowData } = this.props;
+    const title = rowData ? '修改部署阶段' : '新建部署阶段';
+    return (
+      <>
+        <ExtIcon onClick={closeFormModal} type="left" className="trigger-back" antd />
+        {title}
+      </>
+    );
+  };
+
   render() {
     const { form, rowData, closeFormModal, saving, showModal, stageParamsLoading } = this.props;
     const { getFieldDecorator } = form;
     const { scriptText } = this.state;
-    const title = rowData ? '修改部署阶段' : '新建部署阶段';
     return (
       <ExtModal
         destroyOnClose
@@ -113,7 +123,7 @@ class FormModal extends PureComponent {
         centered
         wrapClassName={styles['stage-box']}
         confirmLoading={saving}
-        title={title}
+        title={this.renderTitle()}
         onOk={this.handlerFormSubmit}
       >
         {stageParamsLoading ? (
