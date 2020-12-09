@@ -279,7 +279,12 @@ class PublishRecord extends Component {
     }
     return (
       <Popconfirm title="确定要开始构建吗？" onConfirm={() => this.build(row)}>
-        <ExtIcon type="play-circle" tooltip={{ title: '开始构建' }} className="build" antd />
+        <ExtIcon
+          type="play-circle"
+          tooltip={{ title: '开始构建', placement: 'bottom' }}
+          className="build"
+          antd
+        />
       </Popconfirm>
     );
   };
@@ -302,7 +307,7 @@ class PublishRecord extends Component {
             <ExtIcon
               type="alert"
               antd
-              tooltip={{ title: '构建详情' }}
+              tooltip={{ title: '构建详情', placement: 'bottom' }}
               onClick={() => this.showRecordLog(record)}
             />
           </span>
