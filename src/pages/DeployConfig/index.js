@@ -119,7 +119,7 @@ class DeployConfig extends Component {
   renderModuleName = item => {
     return (
       <>
-        {item.name}
+        {`${item.name}(${item.code})`}
         <span
           style={{ marginLeft: 4, fontSize: 12, color: '#999' }}
         >{`版本：${item.version}`}</span>
