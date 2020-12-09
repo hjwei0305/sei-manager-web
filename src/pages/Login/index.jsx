@@ -77,6 +77,10 @@ class Login extends Component {
     router.push('/retrievePwd');
   };
 
+  handlerUserSignup = () => {
+    router.push('/userSignup');
+  };
+
   render() {
     const { loading, user } = this.props;
     const { verifyCode } = user;
@@ -124,9 +128,14 @@ class Login extends Component {
           </Button>
         </LoginForm>
         <div className="tool-box">
-          <Button type="link" className="forget-pwd" onClick={this.handleRetrievePwd}>
-            <FormattedMessage id="login.forgot-password" defaultMessage="忘记密码?" />
-          </Button>
+          <span>
+            <Button type="link" className="btn-link" onClick={this.handlerUserSignup}>
+              <FormattedMessage id="user.signup" defaultMessage="注册" />
+            </Button>
+            <Button type="link" className="btn-link" onClick={this.handleRetrievePwd}>
+              <FormattedMessage id="login.forgot-password" defaultMessage="忘记密码?" />
+            </Button>
+          </span>
           <div className="tool-action">
             <SelectLang />
           </div>

@@ -11,6 +11,11 @@ const routes = [
     ],
   },
   {
+    name: '用户注册',
+    path: '/userSignup',
+    component: './UserSignup',
+  },
+  {
     name: 'updatePwd',
     path: '/updatePwd',
     component: './UpdatePassword',

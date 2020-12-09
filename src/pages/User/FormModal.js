@@ -49,10 +49,8 @@ class FormModal extends PureComponent {
   };
 
   validatePhone = (rule, value, callback) => {
-    const { form } = this.props;
     const reg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
     if (value && !reg.test(value)) {
-      form.validateFields(['phone'], { force: true });
       callback('手机号格式不正确');
     }
     callback();

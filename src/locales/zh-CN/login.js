@@ -11,6 +11,6 @@ export default {
   'login.signup': '注册账户',
   'login.login': '登录',
   'login.loginning': '登录中...',
-  'register.register': '注册',
+  'user.signup': '用户注册',
   'register.get-verification-code': '获取验证码',
 };

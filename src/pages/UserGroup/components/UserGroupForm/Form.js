@@ -31,6 +31,14 @@ class FeatureGroupForm extends PureComponent {
     });
   };
 
+  validateName = (rule, value, callback) => {
+    const reg = /^[a-z0-9A-Z-]*$/;
+    if (value && !reg.test(value)) {
+      callback('用户组名称格式不正确!');
+    }
+    callback();
+  };
+
   render() {
     const { form, groupData, saving } = this.props;
     const { getFieldDecorator } = form;
@@ -53,8 +61,17 @@ class FeatureGroupForm extends PureComponent {
                       defaultMessage: '名称不能为空',
                     }),
                   },
+                  {
+                    validator: this.validateName,
+                  },
                 ],
-              })(<Input />)}
+              })(
+                <Input
+                  disabled={!!groupData}
+                  autoComplete="off"
+                  placeholder="字母开头且由字母、数字或短横线组成"
+                />,
+              )}
             </FormItem>
             <FormItem label="用户组描述">
               {getFieldDecorator('description', {
@@ -65,7 +82,7 @@ class FeatureGroupForm extends PureComponent {
                     message: '用户组描述不能为空',
                   },
                 ],
-              })(<Input maxLength={30} />)}
+              })(<Input autoComplete="off" />)}
             </FormItem>
             <FormItem wrapperCol={{ span: 4, offset: 6 }} className="btn-submit">
               <Button type="primary" loading={saving} onClick={this.handlerFormSubmit}>

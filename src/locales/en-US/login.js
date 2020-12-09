@@ -7,10 +7,10 @@ export default {
   'login.message-invalid-credentials': 'Invalid username or password',
   'login.message-invalid-verification-code': 'Invalid verification code',
   'login.tab-login-credentials': 'Credentials',
-  'login.forgot-password': 'Forgot your password?',
+  'login.forgot-password': 'Forgot password?',
   'login.signup': 'Sign up',
   'login.login': 'Login',
   'login.loginning': 'Loginning...',
-  'register.register': 'Register',
+  'user.signup': 'Sign Up',
   'register.get-verification-code': 'Get code',
 };
