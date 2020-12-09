@@ -344,10 +344,11 @@ class PublishRecord extends Component {
         ...this.getColumnSearchProps('tagName'),
       },
       {
-        title: '期望完成时间',
-        dataIndex: 'expCompleteTime',
+        title: '最后一次构建时间',
+        dataIndex: 'buildTime',
         width: 180,
         required: true,
+        render: t => t || '-',
       },
     ];
     const toolBarProps = {
@@ -377,7 +378,7 @@ class PublishRecord extends Component {
       },
       sort: {
         field: {
-          expCompleteTime: 'desc',
+          buildTime: 'desc',
         },
       },
     };
