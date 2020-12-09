@@ -128,7 +128,7 @@ class DeployConfig extends Component {
           className="copy-btn"
           style={{ marginLeft: 4 }}
           antd
-          tooltip={{ title: '复制Git地址到粘贴板' }}
+          tooltip={{ title: `复制Git地址到粘贴板\n${item.gitHttpUrl}` }}
           onClick={e => {
             e.stopPropagation();
             this.handlerCopy(item.gitHttpUrl);
