@@ -278,8 +278,8 @@ class PublishRecord extends Component {
       return <ExtIcon className="loading" type="loading" antd />;
     }
     return (
-      <Popconfirm title="确定要发起Jenkins构建吗？" onConfirm={() => this.build(row)}>
-        <ExtIcon type="play-circle" className="build" antd />
+      <Popconfirm title="确定要开始构建吗？" onConfirm={() => this.build(row)}>
+        <ExtIcon type="play-circle" tooltip={{ title: '开始构建' }} className="build" antd />
       </Popconfirm>
     );
   };
