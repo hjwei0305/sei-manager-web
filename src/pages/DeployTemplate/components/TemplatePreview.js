@@ -45,6 +45,7 @@ class TemplatePreview extends PureComponent {
     const title = get(currentTemplate, 'name');
     return (
       <>
+        <ExtIcon onClick={this.handlerClose} type="left" className="trigger-back" antd />
         <BannerTitle title={title} subTitle="模板预览" />
         <ExtIcon
           type="copy"

@@ -271,6 +271,7 @@ class RecordeLogModal extends PureComponent {
         destroyOnClose
         visible={showModal}
         centered
+        onCancel={this.closeFormModal}
         closable={false}
         wrapClassName={styles['build-box']}
         footer={null}

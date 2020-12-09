@@ -26,7 +26,7 @@ class FeatureGroupForm extends PureComponent {
     super(props);
     this.aceId = getUUID();
     const { templateData } = props;
-    const { globalParam = '{}' } = templateData || {};
+    const { globalParam = '{\n}' } = templateData || {};
     this.state = {
       globalParam,
       valid: true,
@@ -36,7 +36,7 @@ class FeatureGroupForm extends PureComponent {
   componentDidUpdate(prevProps) {
     const { templateData } = this.props;
     if (!isEqual(prevProps.templateData, templateData)) {
-      const { globalParam = '{}' } = templateData || {};
+      const { globalParam = '{\n}' } = templateData || {};
       this.setState({ globalParam });
     }
   }
@@ -73,6 +73,15 @@ class FeatureGroupForm extends PureComponent {
 
   handlerAceChannge = globalParam => {
     this.setState({ globalParam });
+  };
+
+  handlerComplete = ace => {
+    const { globalParam } = this.state;
+    if (ace && globalParam) {
+      const str = globalParam.replace(/[\r\n\s]/g, '');
+      const json = JSON.parse(str);
+      ace.setValue(JSON.stringify(json, null, '\t'));
+    }
   };
 
   paramsDemo = () => {
@@ -163,6 +172,7 @@ class FeatureGroupForm extends PureComponent {
                 theme="terminal"
                 name={this.aceId}
                 fontSize={14}
+                onLoad={this.handlerComplete}
                 onChange={this.handlerAceChannge}
                 showPrintMargin={false}
                 showGutter={false}

@@ -4,6 +4,25 @@
   padding: 0;
   overflow: hidden;
   :global {
+    .trigger-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      font-weight: normal;
+      line-height: 58px;
+      cursor: pointer;
+      transition: all ease-in 0.2s;
+      &:hover {
+        color: @primary-color;
+        background-color: fade(@black, 2%);
+      }
+    }
+    .ant-drawer-title {
+      padding-left: 36px;
+    }
     .ant-drawer-header {
       border-color: transparent;
     }
