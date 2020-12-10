@@ -166,6 +166,7 @@ class UserSignup extends PureComponent {
               ],
             })(
               <Input
+                allowClear
                 autoComplete="off"
                 size="large"
                 placeholder="邮箱账户名"
@@ -184,6 +185,7 @@ class UserSignup extends PureComponent {
               ],
             })(
               <Input
+                allowClear
                 size="large"
                 placeholder="验证码"
                 autoComplete="off"
