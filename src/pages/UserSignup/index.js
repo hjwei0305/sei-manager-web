@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { router } from 'umi';
 import { get, isEqual } from 'lodash';
 import { Layout, Input, Button, Result, Form, Alert } from 'antd';
-import { Animate, ComboList } from 'suid';
+import { Animate, ComboList, message } from 'suid';
 import user from '@/assets/people.svg';
 import styles from './index.less';
 
@@ -76,7 +76,12 @@ class UserSignup extends PureComponent {
       if (err) {
         return;
       }
+      message.destroy();
       const { mailHost } = this.state;
+      if (!mailHost) {
+        message.error('邮箱Host不能为空!');
+        return;
+      }
       const mailName = get(formData, 'mailName');
       dispatch({
         type: 'userSignup/goSignup',
