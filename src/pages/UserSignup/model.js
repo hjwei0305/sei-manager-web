@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-10 10:04:26
+ * @Last Modified time: 2020-12-10 10:27:30
  */
 import { utils, message } from 'suid';
 import { getVerifyCode, goSignup } from './service';
@@ -12,6 +12,11 @@ const { modelExtend, model } = dvaModel;
 const suffixHostData = [
   { id: 1, host: '@changhong.com' },
   { id: 2, host: '@qq.com' },
+  { id: 3, host: '@gmail.com' },
+  { id: 4, host: '@hotmail.com' },
+  { id: 5, host: '@msn.com' },
+  { id: 6, host: '@163.com' },
+  { id: 7, host: '@163.net' },
 ];
 
 export default modelExtend(model, {
