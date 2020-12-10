@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
-import { Layout, Input, Button, Result, Form } from 'antd';
-import { Animate } from 'suid';
+import { get } from 'lodash';
+import { Layout, Input, Button, Result, Form, Alert } from 'antd';
+import { Animate, ComboList } from 'suid';
 import user from '@/assets/people.svg';
 import styles from './index.less';
 
@@ -12,6 +13,27 @@ const FormItem = Form.Item;
 @connect(({ userSignup, loading }) => ({ userSignup, loading }))
 @Form.create()
 class UserSignup extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mailHost: '@changhong.com',
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown = e => {
+    if (e.keyCode === 13) {
+      this.handlerFormSubmit();
+    }
+  };
+
   handleVertify = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -19,20 +41,40 @@ class UserSignup extends PureComponent {
     });
   };
 
+  handlerContinueSignup = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userSignup/updateState',
+      payload: {
+        successTip: '',
+      },
+    });
+    this.handleVertify();
+  };
+
   handlerGoBack = () => {
     router.push('/user/login');
   };
 
+  validMail = mailName => {
+    const { mailHost } = this.state;
+    const reg = /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/;
+    return reg.test(`${mailName}${mailHost}`);
+  };
+
   handlerFormSubmit = () => {
     const { form, dispatch } = this.props;
+    const { mailHost } = this.state;
     form.validateFields((err, formData) => {
-      if (err) {
+      const mailName = get(formData, 'mailName');
+      if (err || !this.validMail(mailName)) {
         return;
       }
       dispatch({
         type: 'userSignup/goSignup',
         payload: {
-          ...formData,
+          verifyCode: get(formData, 'verifyCode'),
+          email: `${mailName}${mailHost}`,
         },
         callback: res => {
           if (!res.success) {
@@ -45,29 +87,78 @@ class UserSignup extends PureComponent {
 
   renderForm = () => {
     const {
-      userSignup: { verifyCode },
+      userSignup: { verifyCode, successTip, suffixHostData },
       form,
       loading,
     } = this.props;
+    const { mailHost } = this.state;
     const { getFieldDecorator } = form;
     const submiting = loading.effects['userSignup/goSignup'];
+    const suffixProps = {
+      dataSource: suffixHostData,
+      showSearch: false,
+      value: mailHost,
+      style: { width: 180 },
+      pagination: false,
+      afterSelect: item => {
+        this.setState({ mailHost: item.host });
+      },
+      reader: {
+        name: 'host',
+      },
+    };
+    if (successTip) {
+      return (
+        <div className="signup-success-tip-box">
+          <Alert
+            message="注册申请提交成功"
+            description={successTip || 'aaa'}
+            type="success"
+            showIcon
+          />
+          <div className="tip-btn-box">
+            <Button
+              type="primary"
+              ghost
+              style={{ width: 140 }}
+              onClick={this.handlerContinueSignup}
+              size="large"
+            >
+              继续注册
+            </Button>
+            <Button
+              type="primary"
+              style={{ width: 140 }}
+              onClick={this.handlerGoBack}
+              disabled={submiting}
+              size="large"
+            >
+              去登录
+            </Button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="vertical">
         <Form>
-          <FormItem className="email">
-            {getFieldDecorator('email', {
+          <FormItem className="mailName">
+            {getFieldDecorator('mailName', {
               initialValue: '',
               rules: [
                 {
-                  type: 'email',
-                  message: '电子邮箱格式不正确!',
-                },
-                {
                   required: true,
-                  message: '电子邮箱不能为空',
+                  message: '邮箱账户名不能为空',
                 },
               ],
-            })(<Input autoComplete="off" size="large" placeholder="电子邮箱" />)}
+            })(
+              <Input
+                autoComplete="off"
+                size="large"
+                placeholder="邮箱账户名"
+                addonAfter={<ComboList {...suffixProps} />}
+              />,
+            )}
           </FormItem>
           <FormItem className="verifyCode">
             {getFieldDecorator('verifyCode', {

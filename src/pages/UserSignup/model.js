@@ -2,19 +2,25 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-09 15:37:27
+ * @Last Modified time: 2020-12-10 10:04:26
  */
 import { utils, message } from 'suid';
 import { getVerifyCode, goSignup } from './service';
 
 const { pathMatchRegexp, dvaModel, getUUID } = utils;
 const { modelExtend, model } = dvaModel;
+const suffixHostData = [
+  { id: 1, host: '@changhong.com' },
+  { id: 2, host: '@qq.com' },
+];
 
 export default modelExtend(model, {
   namespace: 'userSignup',
   state: {
     loginReqId: getUUID(),
     verifyCode: null,
+    successTip: '',
+    suffixHostData,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -44,14 +50,19 @@ export default modelExtend(model, {
       }
       return result;
     },
-    *goSignup({ payload, callback }, { call, select }) {
+    *goSignup({ payload, callback }, { call, select, put }) {
       const { loginReqId } = yield select(sel => sel.userSignup);
       const re = yield call(goSignup, { reqId: loginReqId, ...payload });
       const { success, message: msg } = re || {};
-      message.destroy();
       if (success) {
-        message.success(msg);
+        yield put({
+          type: 'updateState',
+          payload: {
+            successTip: msg,
+          },
+        });
       } else {
+        message.destroy();
         message.error(msg);
       }
       if (callback && callback instanceof Function) {
