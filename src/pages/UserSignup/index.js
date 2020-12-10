@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { Layout, Input, Button, Result, Form, Alert } from 'antd';
 import { Animate, ComboList } from 'suid';
 import user from '@/assets/people.svg';
@@ -15,13 +15,27 @@ const FormItem = Form.Item;
 class UserSignup extends PureComponent {
   constructor(props) {
     super(props);
+    const {
+      userSignup: { defaultMailHost },
+    } = props;
     this.state = {
-      mailHost: '@changhong.com',
+      mailHost: defaultMailHost,
     };
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown, false);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      userSignup: { defaultMailHost },
+    } = this.props;
+    if (!isEqual(prevProps.userSignup.defaultMailHost, defaultMailHost)) {
+      this.setState({
+        mailHost: defaultMailHost,
+      });
+    }
   }
 
   componentWillUnmount() {
