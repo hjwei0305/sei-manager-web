@@ -13,7 +13,8 @@
       background-repeat: no-repeat;
       background-size: cover;
       .ant-result {
-        width: 460px;
+        width: 520px;
+        padding: 0;
         .ant-input-lg {
           height: 48px;
           text-align: left;
@@ -22,20 +23,19 @@
           height: 48px;
         }
         .ant-result-icon {
+          margin-bottom: 0;
           img {
-            width: 340px;
-            height: 170px;
+            height: 280px;
           }
         }
         .ant-result-title {
           font-weight: 700;
-          font-size: 42px;
+          font-size: 36px;
           line-height: 36px;
-          line-height: 66px;
           .logo {
             margin-right: 8px;
             color: @primary-color;
-            font-size: 48px;
+            font-size: 36px;
             letter-spacing: 8px;
             .animated {
               display: inline-block;
@@ -44,11 +44,11 @@
         }
         .ant-result-subtitle {
           color: fade(@black, 45%);
-          font-size: 18px;
-          font-family: PingFang SC;
+          font-size: 16px;
+          line-height: 32px;
         }
         .ant-form {
-          width: 100%;
+          width: 80%;
           text-align: left;
           button {
             margin-bottom: 16px;
@@ -58,6 +58,17 @@
           }
           .ant-input-group-addon {
             width: 180px;
+            padding: 0;
+          }
+          .ant-select {
+            width: 100%;
+            height: 48px;
+            .ant-select-selection--single {
+              height: 48px;
+              .ant-select-selection__rendered {
+                line-height: 48px;
+              }
+            }
           }
         }
         .signup-success-tip-box {

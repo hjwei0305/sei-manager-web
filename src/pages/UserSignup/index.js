@@ -112,7 +112,6 @@ class UserSignup extends PureComponent {
       dataSource: suffixHostData,
       showSearch: false,
       value: mailHost,
-      style: { width: 180 },
       pagination: false,
       afterSelect: item => {
         this.setState({ mailHost: item.host });
