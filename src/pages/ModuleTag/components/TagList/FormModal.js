@@ -28,6 +28,14 @@ class FormModal extends PureComponent {
     });
   };
 
+  validateName = (rule, value, callback) => {
+    const reg = /^[1-9]\d?(\.(0|[1-9]\d?)){2}$/;
+    if (value && !reg.test(value)) {
+      callback('标签名称格式不正确!');
+    }
+    callback();
+  };
+
   render() {
     const { form, closeFormModal, saving, showTagModal } = this.props;
     const { getFieldDecorator } = form;
@@ -51,6 +59,9 @@ class FormModal extends PureComponent {
                 {
                   required: true,
                   message: '标签名称不能为空',
+                },
+                {
+                  validator: this.validateName,
                 },
               ],
             })(<Input />)}

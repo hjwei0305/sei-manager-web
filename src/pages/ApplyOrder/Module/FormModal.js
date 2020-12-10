@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { get, trim, isEqual } from 'lodash';
+import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Radio, Alert } from 'antd';
-import { ExtModal, ComboList, MoneyInput } from 'suid';
+import { ExtModal, ComboList } from 'suid';
 import { constants } from '../../../utils';
 
 const { TextArea } = Input;
@@ -71,7 +71,7 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
-      Object.assign(params, { version: `${appVersion}.${trim(params.version)}` });
+      Object.assign(params, { version: `${appVersion}.0.0` });
       if (approve) {
         saveToApprove(params);
       } else {
@@ -123,7 +123,7 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { appVersion, moduleType } = this.state;
+    const { moduleType } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -216,25 +216,13 @@ class FormModal extends PureComponent {
               ],
             })(<Input disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="模块版本">
-            {getFieldDecorator('version', {
-              initialValue: getVersion(rowData)[1],
-              rules: [
-                {
-                  required: true,
-                  message: '	模块版本不能为空',
-                },
-              ],
-            })(
-              <MoneyInput
-                disabled={onlyView}
-                textAlign="left"
-                thousand={false}
-                precision={0}
-                prefix={`${appVersion}.`}
-              />,
-            )}
-          </FormItem>
+          {onlyView ? (
+            <FormItem label="模块版本">
+              {getFieldDecorator('version', {
+                initialValue: get(rowData, 'version'),
+              })(<Input disabled />)}
+            </FormItem>
+          ) : null}
           <FormItem label="模块描述">
             {getFieldDecorator('remark', {
               initialValue: get(rowData, 'remark'),

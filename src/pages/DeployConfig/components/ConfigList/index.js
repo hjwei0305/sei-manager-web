@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card, Popconfirm } from 'antd';
+import { Button, Card, Popconfirm, Tag } from 'antd';
 import { ExtTable, BannerTitle, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
@@ -142,6 +142,20 @@ class ConfigList extends Component {
     );
   };
 
+  renderName = (name, row) => {
+    if (row.needRelease) {
+      return (
+        <>
+          {name}
+          <Tag color="blue" style={{ marginLeft: 4 }}>
+            需要发版
+          </Tag>
+        </>
+      );
+    }
+    return name;
+  };
+
   render() {
     const { deployConfig, loading } = this.props;
     const { currentModule, showModal, rowData } = deployConfig;
@@ -170,8 +184,9 @@ class ConfigList extends Component {
       {
         title: '部署配置名称',
         dataIndex: 'name',
-        width: 220,
+        width: 260,
         required: true,
+        render: this.renderName,
       },
       {
         title: '环境名称',
