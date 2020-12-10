@@ -258,15 +258,7 @@ class VersionRecord extends Component {
         render: t => t || '-',
       },
       {
-        title: '描述说明',
-        dataIndex: 'remark',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('remark'),
-      },
-      {
-        title: '标签名称',
+        title: 'CommitId',
         dataIndex: 'commitId',
         width: 420,
         required: true,
@@ -279,6 +271,14 @@ class VersionRecord extends Component {
         required: true,
         render: t => t || '-',
         ...this.getColumnSearchProps('imageName'),
+      },
+      {
+        title: '描述说明',
+        dataIndex: 'remark',
+        width: 320,
+        required: true,
+        render: t => t || '-',
+        ...this.getColumnSearchProps('remark'),
       },
     ];
     const toolBarProps = {
