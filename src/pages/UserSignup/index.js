@@ -31,7 +31,7 @@ class UserSignup extends PureComponent {
     const {
       userSignup: { defaultMailHost },
     } = this.props;
-    if (!isEqual(prevProps.userSignup.defaultMailHost, defaultMailHost)) {
+    if (!isEqual(prevProps.userSignup.defaultMailHost, defaultMailHost) && defaultMailHost) {
       this.setState({
         mailHost: defaultMailHost,
       });
@@ -70,20 +70,14 @@ class UserSignup extends PureComponent {
     router.push('/user/login');
   };
 
-  validMail = mailName => {
-    const { mailHost } = this.state;
-    const reg = /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/;
-    return reg.test(`${mailName}${mailHost}`);
-  };
-
   handlerFormSubmit = () => {
     const { form, dispatch } = this.props;
-    const { mailHost } = this.state;
     form.validateFields((err, formData) => {
-      const mailName = get(formData, 'mailName');
-      if (err || !this.validMail(mailName)) {
+      if (err) {
         return;
       }
+      const { mailHost } = this.state;
+      const mailName = get(formData, 'mailName');
       dispatch({
         type: 'userSignup/goSignup',
         payload: {
