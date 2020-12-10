@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
-import copy from 'copy-to-clipboard';
 import { Input, Empty, Layout, Tooltip } from 'antd';
-import { ListCard, message, ExtIcon } from 'suid';
+import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
 import TagList from './components/TagList';
@@ -95,11 +94,6 @@ class ModuleTag extends Component {
     return { filters };
   };
 
-  handlerCopy = text => {
-    copy(text);
-    message.success(`已复制到粘贴板`);
-  };
-
   renderCustomTool = () => (
     <>
       <DropdownApp onAction={this.handlerAppChange} />
@@ -116,24 +110,11 @@ class ModuleTag extends Component {
     </>
   );
 
-  renderModuleName = item => {
+  renderModuleDesc = item => {
     return (
       <>
-        {`${item.name}(${item.code})`}
-        <span
-          style={{ marginLeft: 4, fontSize: 12, color: '#999' }}
-        >{`版本：${item.version}`}</span>
-        <ExtIcon
-          type="copy"
-          className="copy-btn"
-          style={{ marginLeft: 4 }}
-          antd
-          tooltip={{ title: `复制Git地址到粘贴板\n${item.gitHttpUrl}` }}
-          onClick={e => {
-            e.stopPropagation();
-            this.handlerCopy(item.gitHttpUrl);
-          }}
-        />
+        <div>{`版本：${item.version}`}</div>
+        <div>{`描述：${item.remark}`}</div>
       </>
     );
   };
@@ -150,8 +131,8 @@ class ModuleTag extends Component {
       onListCardRef: ref => (this.listCardRef = ref),
       searchProperties: ['remark', 'name', 'code'],
       itemField: {
-        title: this.renderModuleName,
-        description: item => item.remark,
+        title: item => `${item.name}(${item.code})`,
+        description: this.renderModuleDesc,
       },
       remotePaging: true,
       store: {
@@ -165,7 +146,7 @@ class ModuleTag extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
-          <Sider width={480} className="auto-height" theme="light">
+          <Sider width={420} className="auto-height" theme="light">
             <ListCard {...moduleProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>

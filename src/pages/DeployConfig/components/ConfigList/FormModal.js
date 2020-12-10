@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
-import { Empty, Form, Input, Row, Col, Card } from 'antd';
+import { Empty, Form, Input, Row, Col, Card, Switch } from 'antd';
 import { ExtModal, ListCard, ComboList, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import empty from '@/assets/server_empty.svg';
@@ -237,6 +237,12 @@ class FormModal extends PureComponent {
                       },
                     ],
                   })(<TextArea style={{ resize: 'none' }} rows={3} />)}
+                </FormItem>
+                <FormItem label="需要发版">
+                  {getFieldDecorator('needRelease', {
+                    initialValue: get(rowData, 'needRelease', false),
+                    valuePropName: 'checked',
+                  })(<Switch size="small" />)}
                 </FormItem>
               </Form>
             </Card>
