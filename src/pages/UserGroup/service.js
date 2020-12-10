@@ -15,6 +15,16 @@ export async function saveUserGroup(data) {
   });
 }
 
+/** 多用户组保存 */
+export async function saveUserGroups(data) {
+  const url = `${SERVER_PATH}/sei-manager/userGroup/saveList`;
+  return request({
+    url,
+    method: 'POST',
+    data,
+  });
+}
+
 /** 用户组删除 */
 export async function delUserGroup(params) {
   const url = `${SERVER_PATH}/sei-manager/userGroup/delete/${params.id}`;

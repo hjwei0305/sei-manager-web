@@ -37,11 +37,17 @@ class UserGroup extends Component {
 
   saveUserGroup = (data, handlerPopoverHide) => {
     const { dispatch } = this.props;
+    let action = 'saveUserGroup';
+    let ds = null;
+    if (data && data instanceof Array) {
+      action = 'saveUserGroups';
+      ds = [...data];
+    } else {
+      ds = { ...data };
+    }
     dispatch({
-      type: 'userGroup/saveUserGroup',
-      payload: {
-        ...data,
-      },
+      type: `userGroup/${action}`,
+      payload: ds,
       callback: res => {
         if (res.success) {
           this.reloadUserGroupData();
@@ -170,7 +176,8 @@ class UserGroup extends Component {
   render() {
     const { loading, userGroup } = this.props;
     const { selectedUserGroup, showAssign } = userGroup;
-    const saving = loading.effects['userGroup/saveUserGroup'];
+    const saving =
+      loading.effects['userGroup/saveUserGroup'] || loading.effects['userGroup/saveUserGroups'];
     const selectedKeys = selectedUserGroup ? [selectedUserGroup.id] : [];
     const userGroupProps = {
       className: 'left-content',

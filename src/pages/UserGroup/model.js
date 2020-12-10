@@ -1,6 +1,12 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { delUserGroup, saveUserGroup, assignUsers, removeAssignedUsers } from './service';
+import {
+  delUserGroup,
+  saveUserGroup,
+  assignUsers,
+  removeAssignedUsers,
+  saveUserGroups,
+} from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -25,6 +31,18 @@ export default modelExtend(model, {
             selectedUserGroup: re.data,
           },
         });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *saveUserGroups({ payload, callback }, { call }) {
+      const re = yield call(saveUserGroups, payload);
+      message.destroy();
+      if (re.success) {
+        message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
       } else {
         message.error(re.message);
       }

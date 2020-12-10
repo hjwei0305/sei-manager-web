@@ -105,6 +105,7 @@ class UnAssignUsers extends Component {
       onSelectChange: this.handlerSelectRow,
       searchProperties: ['nickname', 'phone', 'email'],
       checkbox: true,
+      showArrow: false,
       itemField: {
         title: item => item.nickname,
         description: item => item.email,
