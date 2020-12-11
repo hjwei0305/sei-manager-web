@@ -17,19 +17,6 @@ const formItemLayout = {
   },
 };
 
-const getVersion = rowData => {
-  let moduleCode = '';
-  let appVersion = '0';
-  if (rowData) {
-    const version = get(rowData, 'version') || '';
-    const vers = version.split('.');
-    if (vers.length === 2) {
-      [appVersion, moduleCode] = vers;
-    }
-  }
-  return [appVersion, moduleCode];
-};
-
 @Form.create()
 class FormModal extends PureComponent {
   static propTypes = {
@@ -46,9 +33,7 @@ class FormModal extends PureComponent {
   constructor(props) {
     super(props);
     const { rowData } = props;
-    const [appVersion] = getVersion(rowData);
     this.state = {
-      appVersion,
       moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
     };
   }
@@ -56,14 +41,12 @@ class FormModal extends PureComponent {
   componentDidUpdate(preProps) {
     const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
-      const [appVersion] = getVersion(rowData);
-      this.setState({ appVersion, moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
+      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
   handlerFormSubmit = approve => {
     const { form, save, rowData, saveToApprove } = this.props;
-    const { appVersion } = this.state;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -71,7 +54,6 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
-      Object.assign(params, { version: `${appVersion}.0.0` });
       if (approve) {
         saveToApprove(params);
       } else {
@@ -139,7 +121,7 @@ class FormModal extends PureComponent {
         },
       },
       afterSelect: item => {
-        this.setState({ appVersion: item.version });
+        form.setFieldsValue({ version: `${item.version}.0.0` });
       },
       remotePaging: true,
       field: ['appId'],
@@ -216,13 +198,17 @@ class FormModal extends PureComponent {
               ],
             })(<Input disabled={onlyView} />)}
           </FormItem>
-          {onlyView ? (
-            <FormItem label="模块版本">
-              {getFieldDecorator('version', {
-                initialValue: get(rowData, 'version'),
-              })(<Input disabled />)}
-            </FormItem>
-          ) : null}
+          <FormItem label="模块版本">
+            {getFieldDecorator('version', {
+              initialValue: get(rowData, 'version'),
+              rules: [
+                {
+                  required: true,
+                  message: '模块版本不能为空',
+                },
+              ],
+            })(<Input disabled />)}
+          </FormItem>
           <FormItem label="模块描述">
             {getFieldDecorator('remark', {
               initialValue: get(rowData, 'remark'),
