@@ -2,27 +2,25 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
 import { constants } from '@/utils';
 import { approve, stopApprove } from '../services/service';
-import { del, editSave, createSave, getPublish } from '../services/applyPublish';
+import { del, editSave, createSave, getPublish } from '../services/applyDeploy';
 
-const { FLOW_OPERATION_TYPE, VERSION_TYPE } = constants;
+const { FLOW_OPERATION_TYPE } = constants;
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
-const VERSION_TYPE_DATA = Object.keys(VERSION_TYPE).map(key => VERSION_TYPE[key]);
 
 export default modelExtend(model, {
-  namespace: 'applyPublish',
+  namespace: 'applyDeploy',
 
   state: {
     rowData: null,
     showModal: false,
     onlyView: false,
     filter: {},
-    versionTypeData: VERSION_TYPE_DATA,
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (pathMatchRegexp('/my-center/apply/publish/new', location.pathname)) {
+        if (pathMatchRegexp('/my-center/apply/deploy/new', location.pathname)) {
           dispatch({
             type: 'updateState',
             payload: {

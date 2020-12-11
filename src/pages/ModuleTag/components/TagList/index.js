@@ -35,6 +35,34 @@ class TagList extends Component {
       payload: {
         showTagModal: true,
         tagData: null,
+        onlyView: false,
+      },
+    });
+    dispatch({
+      type: 'moduleTag/getNewTag',
+    });
+  };
+
+  gitlabAsync = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'moduleTag/gitlabAsync',
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+        }
+      },
+    });
+  };
+
+  view = tagData => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'moduleTag/updateState',
+      payload: {
+        onlyView: true,
+        showTagModal: true,
+        tagData,
       },
     });
   };
@@ -96,6 +124,7 @@ class TagList extends Component {
       payload: {
         showTagModal: false,
         tagData: null,
+        onlyView: false,
       },
     });
   };
@@ -124,33 +153,29 @@ class TagList extends Component {
 
   render() {
     const { moduleTag, loading } = this.props;
-    const { currentModule, showTagModal } = moduleTag;
+    const { currentModule, showTagModal, tagData } = moduleTag;
+    const gitlabAsyncLoading = loading.effects['moduleTag/gitlabAsync'];
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 80,
+        width: 100,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
+            <ExtIcon className="edit" onClick={() => this.view(record)} type="tag" antd />
             {this.renderDelBtn(record)}
           </span>
         ),
       },
       {
         title: '标签名称',
-        dataIndex: 'name',
-        width: 220,
+        dataIndex: 'tagName',
+        width: 420,
         required: true,
-      },
-      {
-        title: '标签描述',
-        dataIndex: 'message',
-        width: 480,
-        render: t => t || '-',
       },
     ];
     const toolBarProps = {
@@ -159,6 +184,11 @@ class TagList extends Component {
           <Button type="primary" onClick={this.add}>
             添加标签
           </Button>
+          <Popconfirm title="确定要同步Gitlab上的标签吗？" onConfirm={() => this.gitlabAsync()}>
+            <Button type="primary" loading={gitlabAsyncLoading} ghost>
+              同步GitLab
+            </Button>
+          </Popconfirm>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
@@ -168,24 +198,26 @@ class TagList extends Component {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
-      rowKey: 'name',
+      rowKey: 'tagName',
       onTableRef: ref => (this.tableRef = ref),
-      searchPlaceHolder: '输入标签名称、标签消息关键字',
-      searchProperties: ['tagName', 'tagMessage'],
+      searchPlaceHolder: '输入标签名称关键字',
+      searchProperties: ['tagName'],
       searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-manager/appModule/getTags`,
+        url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
       cascadeParams: {
-        gitId: get(currentModule, 'gitId'),
+        moduleCode: get(currentModule, 'code'),
       },
     };
     const formModalProps = {
       showTagModal,
       currentModule,
+      tagData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['moduleTag/createTag'],
       save: this.save,
+      dataLoading: loading.effects['moduleTag/getNewTag'],
     };
     return (
       <div className={cls(styles['user-box'])}>

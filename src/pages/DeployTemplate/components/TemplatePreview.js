@@ -92,7 +92,7 @@ class TemplatePreview extends PureComponent {
               enableLiveAutocompletion: false,
               enableSnippets: false,
               showLineNumbers: true,
-              tabSize: 4,
+              tabSize: 2,
             }}
           />
         )}

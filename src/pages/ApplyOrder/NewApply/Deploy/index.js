@@ -2,17 +2,17 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
 import { utils } from 'suid';
-import FormModal from '../../Publish/FormModal';
+import FormModal from '../../Deploy/FormModal';
 import styles from './index.less';
 
 const { eventBus } = utils;
 
-@connect(({ applyPublish, loading }) => ({ applyPublish, loading }))
-class NewPublish extends PureComponent {
+@connect(({ applyDeploy, loading }) => ({ applyDeploy, loading }))
+class NewDeploy extends PureComponent {
   save = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: `applyPublish/createSave`,
+      type: `applyDeploy/createSave`,
       payload: {
         ...data,
       },
@@ -27,7 +27,7 @@ class NewPublish extends PureComponent {
   saveToApprove = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'applyPublish/saveToApprove',
+      type: 'applyDeploy/saveToApprove',
       payload: {
         ...data,
       },
@@ -42,27 +42,26 @@ class NewPublish extends PureComponent {
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'applyPublish/updateState',
+      type: 'applyDeploy/updateState',
       payload: {
         showModal: false,
         rowData: null,
       },
     });
-    eventBus.emit('closeTab', ['publish']);
+    eventBus.emit('closeTab', ['deploy']);
   };
 
   render() {
-    const { applyPublish, loading } = this.props;
-    const { showModal, rowData, versionTypeData } = applyPublish;
+    const { applyDeploy, loading } = this.props;
+    const { showModal, rowData } = applyDeploy;
     const formModalProps = {
       save: this.save,
       rowData,
       showModal,
-      versionTypeData,
       closeFormModal: this.closeFormModal,
-      saving: loading.effects['applyPublish/createSave'],
+      saving: loading.effects['applyDeploy/createSave'],
       saveToApprove: this.saveToApprove,
-      saveToApproving: loading.effects['applyPublish/saveToApprove'],
+      saveToApproving: loading.effects['applyDeploy/saveToApprove'],
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -72,4 +71,4 @@ class NewPublish extends PureComponent {
   }
 }
 
-export default NewPublish;
+export default NewDeploy;

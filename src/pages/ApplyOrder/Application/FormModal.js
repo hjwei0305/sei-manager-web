@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Button } from 'antd';
-import { ExtModal, ComboList, MoneyInput } from 'suid';
+import { ExtModal, ComboList } from 'suid';
 import { constants } from '../../../utils';
 
 const { TextArea } = Input;
@@ -45,6 +45,14 @@ class FormModal extends PureComponent {
         save(params);
       }
     });
+  };
+
+  validateVersion = (rule, value, callback) => {
+    const reg = /^[1-9]\d{0,1}$/;
+    if (value && !reg.test(value)) {
+      callback('版本式不正确!');
+    }
+    callback();
   };
 
   renderFooterBtn = () => {
@@ -121,7 +129,7 @@ class FormModal extends PureComponent {
                   message: '应用代码不能为空',
                 },
               ],
-            })(<Input disabled={onlyView} />)}
+            })(<Input autoComplete="off" disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用名称">
             {getFieldDecorator('name', {
@@ -132,7 +140,7 @@ class FormModal extends PureComponent {
                   message: '应用名称不能为空',
                 },
               ],
-            })(<Input disabled={onlyView} />)}
+            })(<Input autoComplete="off" disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用所属组">
             {getFieldDecorator('groupName', {
@@ -153,8 +161,17 @@ class FormModal extends PureComponent {
                   required: true,
                   message: '应用版本不能为空',
                 },
+                {
+                  validator: this.validateVersion,
+                },
               ],
-            })(<MoneyInput textAlign="left" thousand={false} precision={0} disabled={onlyView} />)}
+            })(
+              <Input
+                placeholder="最多2位数字且不能以0开始"
+                autoComplete="off"
+                disabled={onlyView}
+              />,
+            )}
           </FormItem>
           <FormItem label="应用描述">
             {getFieldDecorator('remark', {

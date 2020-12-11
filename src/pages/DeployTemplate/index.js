@@ -14,7 +14,7 @@ import UnAssignStage from './components/UnAssignStage';
 import TemplatePreview from './components/TemplatePreview';
 import styles from './index.less';
 
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, TEMPLATE_TYPE } = constants;
 const { Search } = Input;
 const { Sider, Content } = Layout;
 
@@ -27,7 +27,7 @@ class DeployTemplate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      delId: null,
+      dealId: null,
     };
   }
 
@@ -68,7 +68,7 @@ class DeployTemplate extends Component {
     const { dispatch } = this.props;
     this.setState(
       {
-        delId: data.id,
+        dealId: data.id,
       },
       () => {
         dispatch({
@@ -79,10 +79,28 @@ class DeployTemplate extends Component {
           callback: res => {
             if (res.success) {
               this.setState({
-                delId: null,
+                dealId: null,
               });
               this.reloadTemplateData();
             }
+          },
+        });
+      },
+    );
+  };
+
+  syncJenkinsJob = (data, e) => {
+    if (e) e.stopPropagation();
+    const { dispatch } = this.props;
+    this.setState(
+      {
+        dealId: data.id,
+      },
+      () => {
+        dispatch({
+          type: 'deployTemplate/syncJenkinsJob',
+          payload: {
+            id: data.id,
           },
         });
       },
@@ -189,7 +207,7 @@ class DeployTemplate extends Component {
 
   renderItemAction = item => {
     const { loading } = this.props;
-    const { delId } = this.state;
+    const { dealId } = this.state;
     const saving = loading.effects['deployTemplate/saveDeployTemplate'];
     return (
       <>
@@ -199,16 +217,37 @@ class DeployTemplate extends Component {
             saveDeployTemplate={this.saveDeployTemplate}
             templateData={item}
           />
-          <Popconfirm
-            title={formatMessage({ id: 'global.delete.confirm', defaultMessage: '确定要删除吗?' })}
-            onConfirm={e => this.delDeployTemplate(item, e)}
-          >
-            {loading.effects['deployTemplate/delDeployTemplate'] && delId === item.id ? (
-              <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
-            ) : (
-              <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
-            )}
-          </Popconfirm>
+          {item.type === TEMPLATE_TYPE.DEPLOY ? (
+            <Popconfirm
+              title={formatMessage({
+                id: 'global.delete.confirm',
+                defaultMessage: '确定要删除吗?',
+              })}
+              onConfirm={e => this.delDeployTemplate(item, e)}
+            >
+              {loading.effects['deployTemplate/delDeployTemplate'] && dealId === item.id ? (
+                <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
+              ) : (
+                <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
+              )}
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="确定要同步Jenkins任务吗?"
+              onConfirm={e => this.syncJenkinsJob(item, e)}
+            >
+              {loading.effects['deployTemplate/syncJenkinsJob'] && dealId === item.id ? (
+                <ExtIcon className={cls('action-item', 'loading')} type="sync" spin antd />
+              ) : (
+                <ExtIcon
+                  className={cls('action-item')}
+                  tooltip={{ title: '同步Jenkins任务' }}
+                  type="sync"
+                  antd
+                />
+              )}
+            </Popconfirm>
+          )}
           <ExtIcon
             className={cls('action-item')}
             onClick={() => this.previewTemplate(item)}

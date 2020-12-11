@@ -77,3 +77,16 @@ export async function getStageParameters(params) {
     params,
   });
 }
+
+/**
+ * 同步Jenkins任务
+ * @id string
+ */
+export async function syncJenkinsJob(params) {
+  const url = `${SERVER_PATH}/sei-manager/deployTemplate/syncJenkinsJob`;
+  return request({
+    url,
+    method: 'POST',
+    params,
+  });
+}

@@ -176,7 +176,7 @@ class FormModal extends PureComponent {
                       enableLiveAutocompletion: true,
                       enableSnippets: true,
                       showLineNumbers: false,
-                      tabSize: 4,
+                      tabSize: 2,
                     }}
                   />
                 </div>

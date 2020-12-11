@@ -19,8 +19,8 @@ const FILTER_FIELDS = [
   { fieldName: 'moduleName', operator: 'LK', value: null },
 ];
 
-@connect(({ applyPublish, loading }) => ({ applyPublish, loading }))
-class ApplyPublish extends PureComponent {
+@connect(({ applyDeploy, loading }) => ({ applyDeploy, loading }))
+class ApplyDeploy extends PureComponent {
   static tableRef;
 
   static messageText;
@@ -45,7 +45,7 @@ class ApplyPublish extends PureComponent {
   add = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'applyPublish/updateState',
+      type: 'applyDeploy/updateState',
       payload: {
         showModal: true,
         rowData: null,
@@ -60,7 +60,7 @@ class ApplyPublish extends PureComponent {
       action = 'editSave';
     }
     dispatch({
-      type: `applyPublish/${action}`,
+      type: `applyDeploy/${action}`,
       payload: {
         ...data,
       },
@@ -75,14 +75,14 @@ class ApplyPublish extends PureComponent {
   saveToApprove = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'applyPublish/saveToApprove',
+      type: 'applyDeploy/saveToApprove',
       payload: {
         ...data,
       },
       callback: res => {
         if (res.success) {
           dispatch({
-            type: 'applyPublish/updateState',
+            type: 'applyDeploy/updateState',
             payload: {
               showModal: false,
             },
@@ -97,7 +97,7 @@ class ApplyPublish extends PureComponent {
     const { dispatch } = this.props;
     message.loading('正在提交审核...');
     dispatch({
-      type: 'applyPublish/approve',
+      type: 'applyDeploy/approve',
       payload: {
         ...rowData,
       },
@@ -112,7 +112,7 @@ class ApplyPublish extends PureComponent {
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'applyPublish/updateState',
+      type: 'applyDeploy/updateState',
       payload: {
         onlyView: false,
         showModal: false,
@@ -126,14 +126,14 @@ class ApplyPublish extends PureComponent {
     switch (key) {
       case APPLY_APPLICATION_ACTION.VIEW:
         dispatch({
-          type: 'applyPublish/updateState',
+          type: 'applyDeploy/updateState',
           payload: {
             onlyView: true,
             showModal: true,
           },
         });
         dispatch({
-          type: 'applyPublish/getPublish',
+          type: 'applyDeploy/getPublish',
           payload: {
             id: rowData.relationId,
           },
@@ -141,13 +141,13 @@ class ApplyPublish extends PureComponent {
         break;
       case APPLY_APPLICATION_ACTION.EDIT:
         dispatch({
-          type: 'applyPublish/updateState',
+          type: 'applyDeploy/updateState',
           payload: {
             showModal: true,
           },
         });
         dispatch({
-          type: 'applyPublish/getPublish',
+          type: 'applyDeploy/getPublish',
           payload: {
             showModal: true,
             id: rowData.relationId,
@@ -194,7 +194,7 @@ class ApplyPublish extends PureComponent {
               cancelButtonProps: { disabled: true },
             });
             dispatch({
-              type: 'applyPublish/stopApprove',
+              type: 'applyDeploy/stopApprove',
               payload: {
                 id: rowData.id,
                 messageText: this.messageText,
@@ -245,7 +245,7 @@ class ApplyPublish extends PureComponent {
             cancelButtonProps: { disabled: true },
           });
           dispatch({
-            type: 'applyPublish/del',
+            type: 'applyDeploy/del',
             payload: {
               id: rowData.relationId,
             },
@@ -272,13 +272,13 @@ class ApplyPublish extends PureComponent {
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
-    const { dispatch, applyPublish } = this.props;
-    const { filter: originFilter } = applyPublish;
+    const { dispatch, applyDeploy } = this.props;
+    const { filter: originFilter } = applyDeploy;
     const filter = { ...originFilter };
     Object.assign(filter, { [dataIndex]: selectedKeys[0] });
     confirm();
     dispatch({
-      type: 'applyPublish/updateState',
+      type: 'applyDeploy/updateState',
       payload: {
         filter,
       },
@@ -286,13 +286,13 @@ class ApplyPublish extends PureComponent {
   };
 
   handleColumnSearchReset = (dataIndex, clearFilter) => {
-    const { dispatch, applyPublish } = this.props;
-    const { filter: originFilter } = applyPublish;
+    const { dispatch, applyDeploy } = this.props;
+    const { filter: originFilter } = applyDeploy;
     const filter = { ...originFilter };
     Object.assign(filter, { [dataIndex]: '' });
     clearFilter();
     dispatch({
-      type: 'applyPublish/updateState',
+      type: 'applyDeploy/updateState',
       payload: {
         filter,
       },
@@ -443,8 +443,8 @@ class ApplyPublish extends PureComponent {
   };
 
   getFilter = () => {
-    const { applyPublish } = this.props;
-    const { filter } = applyPublish;
+    const { applyDeploy } = this.props;
+    const { filter } = applyDeploy;
     const filters = [];
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
@@ -463,8 +463,8 @@ class ApplyPublish extends PureComponent {
   };
 
   render() {
-    const { applyPublish, loading } = this.props;
-    const { showModal, rowData, onlyView, versionTypeData } = applyPublish;
+    const { applyDeploy, loading } = this.props;
+    const { showModal, rowData, onlyView } = applyDeploy;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -489,7 +489,7 @@ class ApplyPublish extends PureComponent {
         render: t => <ApplyState state={t} />,
       },
       {
-        title: '发版主题',
+        title: '部署主题',
         dataIndex: 'name',
         width: 260,
         required: true,
@@ -509,19 +509,23 @@ class ApplyPublish extends PureComponent {
         required: true,
         ...this.getColumnSearchProps('moduleName'),
       },
+      {
+        title: '期望完成时间',
+        dataIndex: 'expCompleteTime',
+        width: 180,
+        required: true,
+      },
     ];
     const formModalProps = {
       save: this.save,
       onlyView,
       rowData,
       showModal,
-      versionTypeData,
       closeFormModal: this.closeFormModal,
-      dataLoading: loading.effects['applyPublish/getPublish'],
-      saving:
-        loading.effects['applyPublish/createSave'] || loading.effects['applyPublish/editSave'],
+      dataLoading: loading.effects['applyDeploy/getPublish'],
+      saving: loading.effects['applyDeploy/createSave'] || loading.effects['applyDeploy/editSave'],
       saveToApprove: this.saveToApprove,
-      saveToApproving: loading.effects['applyPublish/saveToApprove'],
+      saveToApproving: loading.effects['applyDeploy/saveToApprove'],
     };
     const toolBarProps = {
       left: (
@@ -540,7 +544,7 @@ class ApplyPublish extends PureComponent {
       columns,
       onTableRef: ref => (this.tableRef = ref),
       showSearchTooltip: false,
-      searchPlaceHolder: '请输入发版主题关键字查询',
+      searchPlaceHolder: '请输入部署主题关键字查询',
       searchProperties: ['name'],
       searchWidth: 260,
       remotePaging: true,
@@ -549,11 +553,11 @@ class ApplyPublish extends PureComponent {
       },
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/releaseVersion/findRequisitionByPage`,
+        url: `${SERVER_PATH}/sei-manager/releaseRecord/findRequisitionByPage`,
       },
       sort: {
         field: {
-          name: 'desc',
+          expCompleteTime: 'desc',
         },
       },
     };
@@ -566,4 +570,4 @@ class ApplyPublish extends PureComponent {
   }
 }
 
-export default ApplyPublish;
+export default ApplyDeploy;

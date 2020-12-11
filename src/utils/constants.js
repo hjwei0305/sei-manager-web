@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-08 11:34:33
+ * @Last Modified time: 2020-12-11 17:31:31
  */
 import { name } from '../../package.json';
 
@@ -62,8 +62,14 @@ export const NoMenuNewApply = {
   publish: {
     id: 'publish',
     icon: 'rocket',
-    title: '发布申请',
+    title: '发版申请',
     url: '/my-center/apply/publish/new',
+  },
+  deploy: {
+    id: 'deploy',
+    icon: 'share-alt',
+    title: '部署申请',
+    url: '/my-center/apply/deploy/new',
   },
 };
 
@@ -196,8 +202,19 @@ const APPLY_ORDER_TYPE = {
   ALL: { remark: '全部', name: 'ALL' },
   APPLICATION: { remark: '应用申请', name: 'APPLICATION' },
   MODULE: { remark: '模块申请', name: 'MODULE' },
-  PUBLISH: { remark: '发布申请', name: 'PUBLISH' },
+  PUBLISH: { remark: '发版申请', name: 'PUBLISH' },
   DEPLOY: { remark: '部署申请', name: 'DEPLOY' },
+};
+
+const VERSION_TYPE = {
+  BETA: { remark: '公测版', name: 'Beta' },
+  RELEASE: { remark: '正式版', name: 'Release' },
+};
+
+const TEMPLATE_TYPE = {
+  PUBLISH_WEB: 'PUBLISH_WEB',
+  PUBLISH_JAVA: 'PUBLISH_JAVA',
+  DEPLOY: 'DEPLOY',
 };
 
 /**
@@ -242,4 +259,6 @@ export default {
   APPLY_ORDER_TYPE,
   FLOW_OPERATION_TYPE,
   JENKINS_STATUS,
+  VERSION_TYPE,
+  TEMPLATE_TYPE,
 };

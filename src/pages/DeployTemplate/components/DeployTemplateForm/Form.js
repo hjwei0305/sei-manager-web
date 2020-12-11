@@ -84,6 +84,14 @@ class FeatureGroupForm extends PureComponent {
     }
   };
 
+  validateName = (rule, value, callback) => {
+    const reg = /^([0-9a-zA-Z-._])*$/;
+    if (value && !reg.test(value)) {
+      callback('格式不正确!');
+    }
+    callback();
+  };
+
   paramsDemo = () => {
     const demoAce = getUUID();
     return (
@@ -144,7 +152,7 @@ class FeatureGroupForm extends PureComponent {
             />
           ) : null}
           <Form {...formItemLayout}>
-            <FormItem label="模板名称">
+            <FormItem label="模板标题">
               {getFieldDecorator('name', {
                 initialValue: get(templateData, 'name'),
                 rules: [
@@ -152,8 +160,11 @@ class FeatureGroupForm extends PureComponent {
                     required: true,
                     message: '模板名称不能为空',
                   },
+                  {
+                    validator: this.validateName,
+                  },
                 ],
-              })(<Input />)}
+              })(<Input autoComplete="off" placeholder="标题格式为字母、数字或 - . _ 组合" />)}
             </FormItem>
             <FormItem label="模板描述">
               {getFieldDecorator('remark', {

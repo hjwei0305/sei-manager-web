@@ -7,7 +7,7 @@ const { SERVER_PATH } = constants;
 
 /** 创建保存 */
 export async function createSave(data) {
-  const url = `${SERVER_PATH}/sei-manager/releaseVersion/createRequisition`;
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/createRequisition`;
   return request({
     url,
     method: 'POST',
@@ -17,7 +17,7 @@ export async function createSave(data) {
 
 /** 修改保存 */
 export async function editSave(data) {
-  const url = `${SERVER_PATH}/sei-manager/releaseVersion/modifyRequisition`;
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/modifyRequisition`;
   return request({
     url,
     method: 'POST',
@@ -27,7 +27,7 @@ export async function editSave(data) {
 
 /** 获取申请 */
 export async function getPublish(params) {
-  const url = `${SERVER_PATH}/sei-manager/releaseVersion/findOne`;
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/findOne`;
   return request({
     url,
     params,
@@ -36,7 +36,7 @@ export async function getPublish(params) {
 
 /** 删除 */
 export async function del(params) {
-  const url = `${SERVER_PATH}/sei-manager/releaseVersion/deleteRequisition/${params.id}`;
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/deleteRequisition/${params.id}`;
   return request({
     url,
     method: 'DELETE',

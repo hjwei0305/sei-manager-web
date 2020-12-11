@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
-import { Empty, Form, Input, Row, Col, Card, Switch } from 'antd';
+import { Empty, Form, Input, Row, Col, Card } from 'antd';
 import { ExtModal, ListCard, ComboList, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import empty from '@/assets/server_empty.svg';
 import styles from './FormModal.less';
 
 const FormItem = Form.Item;
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, TEMPLATE_TYPE } = constants;
 const { TextArea, Search } = Input;
 const formItemLayout = {
   labelCol: {
@@ -147,6 +147,9 @@ class FormModal extends PureComponent {
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/deployTemplate/findByPage`,
+        params: {
+          filters: [{ fieldName: 'type', operator: 'EQ', value: TEMPLATE_TYPE.DEPLOY }],
+        },
       },
       field: ['tempId'],
       reader: {
@@ -237,12 +240,6 @@ class FormModal extends PureComponent {
                       },
                     ],
                   })(<TextArea style={{ resize: 'none' }} rows={3} />)}
-                </FormItem>
-                <FormItem label="需要发版">
-                  {getFieldDecorator('needRelease', {
-                    initialValue: get(rowData, 'needRelease', false),
-                    valuePropName: 'checked',
-                  })(<Switch size="small" />)}
                 </FormItem>
               </Form>
             </Card>

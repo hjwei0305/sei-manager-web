@@ -8,6 +8,7 @@ import {
   saveTemplateStage,
   getStageParameters,
   getTemplateXml,
+  syncJenkinsJob,
 } from './service';
 
 const { dvaModel } = utils;
@@ -27,6 +28,15 @@ export default modelExtend(model, {
     templateXml: '',
   },
   effects: {
+    *syncJenkinsJob({ payload }, { call }) {
+      const res = yield call(syncJenkinsJob, payload);
+      message.destroy();
+      if (res.success) {
+        message.success('Jenkins任务同步成功');
+      } else {
+        message.error(res.message);
+      }
+    },
     *getTemplateXml({ payload }, { call, put }) {
       const res = yield call(getTemplateXml, payload);
       let templateXml = '';

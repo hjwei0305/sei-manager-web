@@ -173,13 +173,23 @@ const routes = [
           },
           {
             path: '/my-center/apply/publish',
-            name: '发布申请',
+            name: '发版申请',
             component: './ApplyOrder/Publish',
           },
           {
             path: '/my-center/apply/publish/new',
-            name: '发布申请-新建',
+            name: '发版申请-新建',
             component: './ApplyOrder/NewApply/Publish',
+          },
+          {
+            path: '/my-center/apply/deploy',
+            name: '部署申请',
+            component: './ApplyOrder/Deploy',
+          },
+          {
+            path: '/my-center/apply/deploy/new',
+            name: '部署申请-新建',
+            component: './ApplyOrder/NewApply/Deploy',
           },
         ],
       },

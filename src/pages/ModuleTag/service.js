@@ -7,7 +7,7 @@ const { SERVER_PATH } = constants;
 
 /** 创建标签 */
 export async function createTag(data) {
-  const url = `${SERVER_PATH}/sei-manager/appModule/createTag`;
+  const url = `${SERVER_PATH}/sei-manager/tag/create`;
   return request({
     url,
     method: 'POST',
@@ -17,11 +17,35 @@ export async function createTag(data) {
 
 /** 删除标签 */
 export async function removeTag(data) {
-  const { gitId, tagName } = data;
-  const url = `${SERVER_PATH}/sei-manager/appModule/deleteRelease/${gitId}?tagName=${tagName}`;
+  const url = `${SERVER_PATH}/sei-manager/tag/delete/${data.id}`;
   return request({
     url,
     method: 'DELETE',
     data: {},
+  });
+}
+
+/**
+ * 获取当前最新标签
+ * @moduleCode string
+ */
+export async function getNewTag(params) {
+  const url = `${SERVER_PATH}/sei-manager/tag/getLastTag`;
+  return request({
+    url,
+    params,
+  });
+}
+
+/**
+ * 同步Gitlab上的模块标签
+ * @moduleCode string
+ */
+export async function gitlabAsync(params) {
+  const url = `${SERVER_PATH}/sei-manager/tag/syncTag`;
+  return request({
+    url,
+    method: 'POST',
+    params,
   });
 }

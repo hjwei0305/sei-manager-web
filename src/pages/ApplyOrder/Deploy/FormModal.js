@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Row, Col, Radio } from 'antd';
+import moment from 'moment';
+import { Form, Input, Button, Row, Col, DatePicker } from 'antd';
 import { ExtModal, ComboList, utils, ListLoader } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -35,17 +36,14 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
     saveToApprove: PropTypes.func,
     saveToApproving: PropTypes.bool,
-    versionTypeData: PropTypes.array,
   };
 
   constructor(props) {
     super(props);
-    const { rowData, versionTypeData } = props;
+    const { rowData } = props;
     const { remark = '' } = rowData || {};
-    const currentVersionType = versionTypeData.length > 0 ? versionTypeData[0] : null;
     this.state = {
       remark,
-      currentVersionType,
     };
     this.aceId = getUUID();
   }
@@ -61,7 +59,7 @@ class FormModal extends PureComponent {
   }
 
   handlerFormSubmit = approve => {
-    const { remark, currentVersionType } = this.state;
+    const { remark } = this.state;
     const { form, save, rowData, saveToApprove } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
@@ -72,7 +70,7 @@ class FormModal extends PureComponent {
       Object.assign(params, formData);
       Object.assign(params, {
         remark,
-        version: `${get(params, 'refTag')} ${currentVersionType.name}`,
+        expCompleteTime: moment(params.expCompleteTime).format('YYYY-MM-DD HH:mm:00'),
       });
       if (approve) {
         saveToApprove(params);
@@ -86,20 +84,16 @@ class FormModal extends PureComponent {
     this.setState({ remark });
   };
 
+  disabledDate = current => {
+    return current && current < moment().startOf('day');
+  };
+
   closeFormModal = () => {
     const { closeFormModal } = this.props;
     this.setState({ remark: '' });
     if (closeFormModal) {
       closeFormModal();
     }
-  };
-
-  handlerVersionTypeChange = e => {
-    const { versionTypeData } = this.props;
-    const versionTypeKey = e.target.value;
-    const ds = versionTypeData.filter(v => v.name === versionTypeKey);
-    const currentVersionType = ds.length === 1 ? ds[0] : null;
-    this.setState({ currentVersionType });
   };
 
   renderFooterBtn = () => {
@@ -136,13 +130,30 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { remark, currentVersionType } = this.state;
-    const { form, rowData, showModal, onlyView, dataLoading, versionTypeData } = this.props;
+    const { remark } = this.state;
+    const { form, rowData, showModal, onlyView, dataLoading } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '修改发版申请' : '新建发版申请';
+    const title = rowData ? '修改部署申请' : '新建部署申请';
+    getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
     getFieldDecorator('gitId', { initialValue: get(rowData, 'gitId') });
     getFieldDecorator('moduleCode', { initialValue: get(rowData, 'moduleCode') });
+    const envProps = {
+      form,
+      name: 'envName',
+      store: {
+        url: `${SERVER_PATH}/sei-manager/env/findAllUnfrozen`,
+      },
+      placeholder: '选择要部署到哪个环境',
+      showSearch: false,
+      pagination: false,
+      field: ['envCode'],
+      reader: {
+        name: 'name',
+        description: 'remark',
+        field: ['code'],
+      },
+    };
     const appProps = {
       form,
       name: 'appName',
@@ -153,9 +164,9 @@ class FormModal extends PureComponent {
           filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
         },
       },
-      placeholder: '选择要发版的应用',
+      placeholder: '选择要部署的应用',
       afterSelect: () => {
-        form.setFieldsValue({ moduleName: '', gitId: '', refTag: '' });
+        form.setFieldsValue({ moduleName: '', gitId: '', tagName: '' });
       },
       remotePaging: true,
       field: ['appId'],
@@ -172,7 +183,7 @@ class FormModal extends PureComponent {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/appModule/findByPage`,
       },
-      placeholder: '请先选择要发版的应用',
+      placeholder: '请先选择要部署的应用',
       cascadeParams: {
         filters: [
           { fieldName: 'frozen', operator: 'EQ', value: false },
@@ -180,7 +191,7 @@ class FormModal extends PureComponent {
         ],
       },
       afterSelect: () => {
-        form.setFieldsValue({ refTag: '' });
+        form.setFieldsValue({ tagName: '' });
       },
       remotePaging: true,
       field: ['gitId', 'moduleCode'],
@@ -192,19 +203,21 @@ class FormModal extends PureComponent {
     };
     const tagProps = {
       form,
-      name: 'refTag',
+      name: 'tagName',
       store: {
-        url: `${SERVER_PATH}sei-manager/tag/getTags`,
+        url: `${SERVER_PATH}/sei-manager/appModule/getTags`,
       },
       cascadeParams: {
-        moduleCode: form.getFieldValue('moduleCode') || '',
+        gitId: form.getFieldValue('gitId') || '',
       },
-      placeholder: '请先选择要发版的模块',
+      placeholder: '请先选择要部署的模块',
       reader: {
-        name: 'tagName',
+        name: 'name',
+        description: 'message',
       },
     };
-    const modalTitle = onlyView || dataLoading ? '发版详情' : title;
+    const expCompleteTime = get(rowData, 'expCompleteTime');
+    const modalTitle = onlyView || dataLoading ? '部署详情' : title;
     return (
       <ExtModal
         maskClosable={false}
@@ -226,30 +239,35 @@ class FormModal extends PureComponent {
               <div className="item-box">
                 <div className="form-body">
                   <Form {...formItemLayout} layout="horizontal">
-                    <FormItem label="发版主题">
+                    <FormItem label="部署主题">
                       {getFieldDecorator('name', {
                         initialValue: get(rowData, 'name'),
                         rules: [
                           {
                             required: true,
-                            message: '发版主题不能为空',
+                            message: '部署主题不能为空',
                           },
                         ],
-                      })(
-                        <Input
-                          autoComplete="off"
-                          placeholder="请输入发版主题"
-                          disabled={onlyView}
-                        />,
-                      )}
+                      })(<Input placeholder="请输入部署主题" disabled={onlyView} />)}
                     </FormItem>
-                    <FormItem label="发版应用">
+                    <FormItem label="部署环境">
+                      {getFieldDecorator('envName', {
+                        initialValue: get(rowData, 'envName'),
+                        rules: [
+                          {
+                            required: true,
+                            message: '部署环境不能为空',
+                          },
+                        ],
+                      })(<ComboList {...envProps} disabled={onlyView} />)}
+                    </FormItem>
+                    <FormItem label="部署应用">
                       {getFieldDecorator('appName', {
                         initialValue: get(rowData, 'appName'),
                         rules: [
                           {
                             required: true,
-                            message: '发版应用不能为空',
+                            message: '部署应用不能为空',
                           },
                         ],
                       })(<ComboList {...appProps} disabled={onlyView} />)}
@@ -266,8 +284,8 @@ class FormModal extends PureComponent {
                       })(<ComboList {...moduleProps} disabled={onlyView} />)}
                     </FormItem>
                     <FormItem label="标签名称">
-                      {getFieldDecorator('refTag', {
-                        initialValue: get(rowData, 'refTag'),
+                      {getFieldDecorator('tagName', {
+                        initialValue: get(rowData, 'tagName'),
                         rules: [
                           {
                             required: true,
@@ -276,21 +294,25 @@ class FormModal extends PureComponent {
                         ],
                       })(<ComboList {...tagProps} disabled={onlyView} />)}
                     </FormItem>
-                    <FormItem label="版本类型">
-                      <Radio.Group
-                        onChange={this.handlerVersionTypeChange}
-                        disabled={onlyView}
-                        value={currentVersionType.name}
-                        size="small"
-                      >
-                        {versionTypeData.map(vt => {
-                          return (
-                            <Radio.Button key={vt.name} value={vt.name}>
-                              {`${vt.remark}-${vt.name}`}
-                            </Radio.Button>
-                          );
-                        })}
-                      </Radio.Group>
+                    <FormItem label="期望完成时间">
+                      {getFieldDecorator('expCompleteTime', {
+                        initialValue: expCompleteTime ? moment(expCompleteTime) : null,
+                        rules: [
+                          {
+                            required: true,
+                            message: '期望完成时间不能为空',
+                          },
+                        ],
+                      })(
+                        <DatePicker
+                          allowClear={false}
+                          disabledDate={this.disabledDate}
+                          style={{ width: '100%' }}
+                          showTime={{ format: 'HH:mm' }}
+                          format="YYYY-MM-DD HH:mm:00"
+                          disabled={onlyView}
+                        />,
+                      )}
                     </FormItem>
                   </Form>
                 </div>
@@ -298,13 +320,13 @@ class FormModal extends PureComponent {
             </Col>
             <Col span={14}>
               <div className="item-box">
-                <div className="item-label">发版说明(支持Markdown)</div>
+                <div className="item-label">部署说明(支持Markdown)</div>
                 <div className="item-body">
                   <AceEditor
                     style={{ marginBottom: 24 }}
                     mode="markdown"
                     theme="textmate"
-                    placeholder="请输入发版说明(例如：部署要求,脚本内容)"
+                    placeholder="请输入部署说明(例如：部署要求,脚本内容)"
                     name={this.aceId}
                     fontSize={14}
                     onChange={this.handlerAceChannge}
