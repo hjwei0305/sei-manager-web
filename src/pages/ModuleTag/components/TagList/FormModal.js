@@ -29,7 +29,7 @@ class FormModal extends PureComponent {
   };
 
   validateName = (rule, value, callback) => {
-    const reg = /^[1-9]\d{0,1}?(\.(0|[1-9]\d?))(\.(0{0,3}|[1-9]\d?){1,3})$/;
+    const reg = /^[1-9]\d{0,1}?(\.(0|[1-9]\d?))(\.(0{0,2}|[1-9]\d?){1,3})$/;
     if (value && !reg.test(value)) {
       callback('标签名称格式不正确!');
     }
