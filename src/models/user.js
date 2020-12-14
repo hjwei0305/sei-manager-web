@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-04 14:05:27
+ * @Last Modified time: 2020-12-14 16:41:50
  */
 import { router } from 'umi';
 import { notification } from 'antd';
@@ -125,7 +125,7 @@ export default {
     },
     *userLogin({ payload }, { call, put, take }) {
       const result = yield call(userLogin, { ...payload, locale: adaptLocale(getCurrentLocale()) });
-      const { success, data } = result || {};
+      const { success, data, message: msg } = result || {};
       if (success) {
         yield put({
           type: 'menu/updateState',
@@ -150,6 +150,11 @@ export default {
           },
         });
         router.replace('/');
+      } else {
+        notification.error({
+          message: '登录失败',
+          description: msg,
+        });
       }
       return result;
     },
