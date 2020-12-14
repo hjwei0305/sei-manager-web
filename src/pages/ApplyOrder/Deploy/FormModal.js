@@ -166,7 +166,7 @@ class FormModal extends PureComponent {
       },
       placeholder: '选择要部署的应用',
       afterSelect: () => {
-        form.setFieldsValue({ moduleName: '', gitId: '', refTag: '' });
+        form.setFieldsValue({ moduleName: '', gitId: '', tagName: '' });
       },
       remotePaging: true,
       field: ['appId'],
@@ -191,7 +191,7 @@ class FormModal extends PureComponent {
         ],
       },
       afterSelect: () => {
-        form.setFieldsValue({ refTag: '' });
+        form.setFieldsValue({ tagName: '' });
       },
       remotePaging: true,
       field: ['gitId', 'moduleCode'],
@@ -203,7 +203,7 @@ class FormModal extends PureComponent {
     };
     const tagProps = {
       form,
-      name: 'refTag',
+      name: 'tagName',
       store: {
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
@@ -283,8 +283,8 @@ class FormModal extends PureComponent {
                       })(<ComboList {...moduleProps} disabled={onlyView} />)}
                     </FormItem>
                     <FormItem label="标签名称">
-                      {getFieldDecorator('refTag', {
-                        initialValue: get(rowData, 'refTag'),
+                      {getFieldDecorator('tagName', {
+                        initialValue: get(rowData, 'tagName'),
                         rules: [
                           {
                             required: true,
