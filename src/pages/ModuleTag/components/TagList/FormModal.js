@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Alert, Row, Col } from 'antd';
+import { Form, Input, Alert, Row, Col, Button } from 'antd';
 import { ExtModal, ListLoader, utils } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -32,6 +32,7 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
     dataLoading: PropTypes.bool,
     tagData: PropTypes.object,
+    newTag: PropTypes.bool,
   };
 
   constructor(props) {
@@ -95,32 +96,53 @@ class FormModal extends PureComponent {
     this.setState({ message });
   };
 
+  renderFooterBtn = () => {
+    const { saving, onlyView, closeFormModal } = this.props;
+    if (onlyView) {
+      return (
+        <Button type="primary" onClick={closeFormModal}>
+          关闭
+        </Button>
+      );
+    }
+    return (
+      <>
+        <Button disabled={saving} onClick={closeFormModal}>
+          取消
+        </Button>
+        <Button loading={saving} onClick={() => this.handlerFormSubmit()}>
+          确定
+        </Button>
+      </>
+    );
+  };
+
   render() {
     const { message } = this.state;
     const {
       form,
       closeFormModal,
-      saving,
       showTagModal,
       dataLoading,
       onlyView,
       tagData,
+      newTag,
     } = this.props;
     const { getFieldDecorator } = form;
-    const title = tagData && tagData.id ? '显示标签' : '新建标签';
+    const title = newTag ? '新建标签' : '显示标签';
+    const modalProps = {
+      destroyOnClose: true,
+      onCancel: closeFormModal,
+      visible: showTagModal,
+      centered: true,
+      width: 780,
+      wrapClassName: styles['form-box'],
+      bodyStyle: { padding: 0 },
+      footer: this.renderFooterBtn(),
+      title,
+    };
     return (
-      <ExtModal
-        destroyOnClose
-        onCancel={closeFormModal}
-        visible={showTagModal}
-        centered
-        width={780}
-        wrapClassName={styles['form-box']}
-        bodyStyle={{ padding: 0 }}
-        confirmLoading={saving}
-        onOk={this.handlerFormSubmit}
-        title={title}
-      >
+      <ExtModal {...modalProps}>
         {dataLoading ? (
           <ListLoader />
         ) : (
@@ -128,7 +150,9 @@ class FormModal extends PureComponent {
             <Col span={10}>
               <div className="item-box">
                 <div className="form-body">
-                  <Alert message="请合并代码到 master 分支后，再创建标签!" banner />
+                  {onlyView ? null : (
+                    <Alert message="请合并代码到 master 分支后，再创建标签!" banner />
+                  )}
                   <Form {...formItemLayout} layout="horizontal">
                     <FormItem label="主版本">
                       {getFieldDecorator('major', {

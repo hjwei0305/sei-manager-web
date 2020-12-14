@@ -13,6 +13,7 @@ export default modelExtend(model, {
     showTagModal: false,
     tagData: null,
     onlyView: false,
+    newTag: false,
     moduleFilter: {},
   },
   effects: {
@@ -37,6 +38,7 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             tagData: re.data,
+            newTag: true,
           },
         });
       } else {

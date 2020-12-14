@@ -125,6 +125,7 @@ class TagList extends Component {
         showTagModal: false,
         tagData: null,
         onlyView: false,
+        newTag: false,
       },
     });
   };
@@ -153,7 +154,7 @@ class TagList extends Component {
 
   render() {
     const { moduleTag, loading } = this.props;
-    const { currentModule, showTagModal, tagData, onlyView } = moduleTag;
+    const { currentModule, showTagModal, tagData, onlyView, newTag } = moduleTag;
     const gitlabAsyncLoading = loading.effects['moduleTag/gitlabAsync'];
     const columns = [
       {
@@ -215,6 +216,7 @@ class TagList extends Component {
       currentModule,
       tagData,
       onlyView,
+      newTag,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['moduleTag/createTag'],
       save: this.save,
