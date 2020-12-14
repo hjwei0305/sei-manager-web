@@ -153,7 +153,7 @@ class TagList extends Component {
 
   render() {
     const { moduleTag, loading } = this.props;
-    const { currentModule, showTagModal, tagData } = moduleTag;
+    const { currentModule, showTagModal, tagData, onlyView } = moduleTag;
     const gitlabAsyncLoading = loading.effects['moduleTag/gitlabAsync'];
     const columns = [
       {
@@ -214,6 +214,7 @@ class TagList extends Component {
       showTagModal,
       currentModule,
       tagData,
+      onlyView,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['moduleTag/createTag'],
       save: this.save,

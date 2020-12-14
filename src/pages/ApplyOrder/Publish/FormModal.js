@@ -194,7 +194,7 @@ class FormModal extends PureComponent {
       form,
       name: 'refTag',
       store: {
-        url: `${SERVER_PATH}sei-manager/tag/getTags`,
+        url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
       cascadeParams: {
         moduleCode: form.getFieldValue('moduleCode') || '',

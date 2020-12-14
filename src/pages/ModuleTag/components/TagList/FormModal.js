@@ -155,6 +155,7 @@ class FormModal extends PureComponent {
                         ],
                       })(
                         <Input
+                          disabled={onlyView}
                           autoComplete="off"
                           onBlur={this.setTagName}
                           placeholder="最多3位数字"
@@ -175,6 +176,7 @@ class FormModal extends PureComponent {
                         ],
                       })(
                         <Input
+                          disabled={onlyView}
                           autoComplete="off"
                           onBlur={this.setTagName}
                           placeholder="最多4位数字"
