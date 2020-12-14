@@ -106,12 +106,7 @@ class ForgotPassword extends PureComponent {
     if (successTip) {
       return (
         <div className="signup-success-tip-box">
-          <Alert
-            message="注册申请提交成功"
-            description={successTip || 'aaa'}
-            type="success"
-            showIcon
-          />
+          <Alert message="密码成功找回" description={successTip || ''} type="success" showIcon />
           <div className="tip-btn-box">
             <Button
               type="primary"
