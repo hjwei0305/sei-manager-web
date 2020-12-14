@@ -67,10 +67,10 @@ class UserIcon extends React.Component {
           <Icon type="setting" />
           个人设置
         </Menu.Item>
-        <Menu.Item key="my-dashboard-home" onClick={this.handlerDashboardCustom}>
+        {/* <Menu.Item key="my-dashboard-home" onClick={this.handlerDashboardCustom}>
           <Icon type="home" />
           {formatMessage({ id: 'app.dashboard.custom', desc: '自定义首页' })}
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="apply" onClick={this.handlerMyApply}>
           <Icon type="project" />
           我的申请单

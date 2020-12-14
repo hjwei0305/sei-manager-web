@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-14 13:01:50
+ * @Last Modified time: 2020-12-14 16:33:09
  */
 import { name } from '../../package.json';
 
@@ -90,11 +90,11 @@ export const NoMenuPage = {
     title: '个人设置',
     url: '/my-center/userProfile',
   },
-  'my-dashboard-home': {
-    id: 'my-dashboard-home',
-    title: '自定义首页',
-    url: '/sei-dashboard-web/scene/myHome',
-  },
+  // 'my-dashboard-home': {
+  //   id: 'my-dashboard-home',
+  //   title: '自定义首页',
+  //   url: '/sei-dashboard-web/scene/myHome',
+  // },
 };
 
 export const NoMenuPages = Object.keys(NoMenuPage)
