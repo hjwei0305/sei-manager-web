@@ -146,19 +146,19 @@ class Certificate extends Component {
         ),
       },
       {
-        title: '凭证名称',
+        title: '凭据名称',
         dataIndex: 'name',
         width: 280,
         required: true,
       },
       {
-        title: '凭证的值',
+        title: '凭据的值',
         dataIndex: 'value',
         width: 280,
         required: true,
       },
       {
-        title: '凭证描述',
+        title: '凭据描述',
         dataIndex: 'remark',
         width: 380,
       },
@@ -185,7 +185,7 @@ class Certificate extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable
-          searchPlaceHolder="凭证名称、凭证的值、凭证描述"
+          searchPlaceHolder="凭据名称、凭据的值、凭据描述"
           searchProperties={['name', 'value', 'remark']}
           showSearchTooltip
           loading={loading.effects['certificate/queryList']}

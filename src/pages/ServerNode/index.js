@@ -152,7 +152,7 @@ class ServerNode extends Component {
         required: true,
       },
       {
-        title: '凭证名称',
+        title: '凭据名称',
         dataIndex: 'certificateName',
         width: 180,
       },

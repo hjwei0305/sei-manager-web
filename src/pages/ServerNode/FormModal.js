@@ -90,13 +90,13 @@ class FormModal extends PureComponent {
               ],
             })(<ComboList {...envProps} />)}
           </FormItem>
-          <FormItem label="凭证">
+          <FormItem label="凭据">
             {getFieldDecorator('certificateName', {
               initialValue: get(rowData, 'certificateName'),
               rules: [
                 {
                   required: true,
-                  message: '凭证不能为空',
+                  message: '凭据不能为空',
                 },
               ],
             })(<ComboList {...certificateProps} />)}

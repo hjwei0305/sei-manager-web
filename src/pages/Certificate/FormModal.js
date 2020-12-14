@@ -31,7 +31,7 @@ class FormModal extends PureComponent {
   render() {
     const { form, rowData, closeFormModal, saving, showModal } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '修改凭证' : '新建凭证';
+    const title = rowData ? '修改凭据' : '新建凭据';
     return (
       <ExtModal
         destroyOnClose
@@ -45,29 +45,29 @@ class FormModal extends PureComponent {
         onOk={this.handlerFormSubmit}
       >
         <Form {...formItemLayout} layout="horizontal">
-          <FormItem label="凭证名称">
+          <FormItem label="凭据名称">
             {getFieldDecorator('name', {
               initialValue: get(rowData, 'name'),
               rules: [
                 {
                   required: true,
-                  message: '凭证名称不能为空',
+                  message: '凭据名称不能为空',
                 },
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="凭证的值">
+          <FormItem label="凭据的值">
             {getFieldDecorator('value', {
               initialValue: get(rowData, 'value'),
               rules: [
                 {
                   required: true,
-                  message: '凭证的值不能为空',
+                  message: '凭据的值不能为空',
                 },
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="凭证描述">
+          <FormItem label="凭据描述">
             {getFieldDecorator('remark', {
               initialValue: get(rowData, 'remark'),
             })(<Input />)}
