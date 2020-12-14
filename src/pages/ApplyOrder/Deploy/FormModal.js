@@ -166,7 +166,7 @@ class FormModal extends PureComponent {
       },
       placeholder: '选择要部署的应用',
       afterSelect: () => {
-        form.setFieldsValue({ moduleName: '', gitId: '', tagName: '' });
+        form.setFieldsValue({ moduleName: '', gitId: '', refTag: '' });
       },
       remotePaging: true,
       field: ['appId'],
@@ -191,7 +191,7 @@ class FormModal extends PureComponent {
         ],
       },
       afterSelect: () => {
-        form.setFieldsValue({ tagName: '' });
+        form.setFieldsValue({ refTag: '' });
       },
       remotePaging: true,
       field: ['gitId', 'moduleCode'],
@@ -203,17 +203,16 @@ class FormModal extends PureComponent {
     };
     const tagProps = {
       form,
-      name: 'tagName',
+      name: 'refTag',
       store: {
-        url: `${SERVER_PATH}/sei-manager/appModule/getTags`,
+        url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
       cascadeParams: {
-        gitId: form.getFieldValue('gitId') || '',
+        moduleCode: form.getFieldValue('moduleCode') || '',
       },
       placeholder: '请先选择要部署的模块',
       reader: {
-        name: 'name',
-        description: 'message',
+        name: 'tagName',
       },
     };
     const expCompleteTime = get(rowData, 'expCompleteTime');
@@ -284,8 +283,8 @@ class FormModal extends PureComponent {
                       })(<ComboList {...moduleProps} disabled={onlyView} />)}
                     </FormItem>
                     <FormItem label="标签名称">
-                      {getFieldDecorator('tagName', {
-                        initialValue: get(rowData, 'tagName'),
+                      {getFieldDecorator('refTag', {
+                        initialValue: get(rowData, 'refTag'),
                         rules: [
                           {
                             required: true,
