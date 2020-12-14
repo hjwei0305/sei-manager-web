@@ -74,7 +74,7 @@ class Login extends Component {
   };
 
   handleRetrievePwd = () => {
-    router.push('/retrievePwd');
+    router.push('/userForgotPassword');
   };
 
   handlerUserSignup = () => {

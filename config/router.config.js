@@ -16,14 +16,14 @@ const routes = [
     component: './UserSignup',
   },
   {
+    name: '忘记密码',
+    path: '/userForgotPassword',
+    component: './ForgotPassword',
+  },
+  {
     name: 'updatePwd',
     path: '/updatePwd',
     component: './UpdatePassword',
-  },
-  {
-    name: 'retrievePwd',
-    path: '/retrievePwd',
-    component: './RetrievePwd',
   },
   {
     path: '/',
