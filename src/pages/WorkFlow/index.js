@@ -20,6 +20,8 @@ class WorkFlow extends Component {
       type: 'workflow/updateState',
       payload: {
         showModal: false,
+        currentFlowType: null,
+        rowData: null,
       },
     });
   }
