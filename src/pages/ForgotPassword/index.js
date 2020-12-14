@@ -42,17 +42,6 @@ class ForgotPassword extends PureComponent {
     });
   };
 
-  handlerContinueSignup = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'forgotPassword/updateState',
-      payload: {
-        successTip: '',
-      },
-    });
-    this.handleVertify();
-  };
-
   handlerGoBack = () => {
     router.push('/user/login');
   };

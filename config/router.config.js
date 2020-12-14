@@ -21,11 +21,6 @@ const routes = [
     component: './ForgotPassword',
   },
   {
-    name: 'updatePwd',
-    path: '/updatePwd',
-    component: './UpdatePassword',
-  },
-  {
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['./src/components/PrivateRoute'],
@@ -190,6 +185,11 @@ const routes = [
             path: '/my-center/apply/deploy/new',
             name: '部署申请-新建',
             component: './ApplyOrder/NewApply/Deploy',
+          },
+          {
+            name: '个人设置',
+            path: '/my-center/userProfile',
+            component: './UserProfile',
           },
         ],
       },

@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-11 17:31:31
+ * @Last Modified time: 2020-12-14 13:01:50
  */
 import { name } from '../../package.json';
 
@@ -88,7 +88,7 @@ export const NoMenuPage = {
   userProfile: {
     id: 'userProfile',
     title: '个人设置',
-    url: '/sei-basic-web/userProfile',
+    url: '/my-center/userProfile',
   },
   'my-dashboard-home': {
     id: 'my-dashboard-home',

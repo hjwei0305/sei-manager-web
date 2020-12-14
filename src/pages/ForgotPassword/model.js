@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-14 12:40:21
+ * @Last Modified time: 2020-12-14 13:54:00
  */
 import { utils, message } from 'suid';
 import { getVerifyCode, checkUser, sendForgetPassword } from './service';
@@ -54,7 +54,6 @@ export default modelExtend(model, {
     *sendForgetPassword({ callback }, { call, put, select }) {
       const { sign } = yield select(sel => sel.forgotPassword);
       const re = yield call(sendForgetPassword, { sign });
-      message.destroy();
       if (re.success) {
         yield put({
           type: 'updateState',
