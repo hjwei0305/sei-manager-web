@@ -8,6 +8,8 @@ export default modelExtend(model, {
 
   state: {
     filter: {},
+    currentModule: null,
+    showModal: false,
   },
   effects: {},
 });

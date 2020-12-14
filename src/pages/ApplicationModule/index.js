@@ -4,9 +4,10 @@ import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { Button, Input } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard, message, ExtIcon } from 'suid';
 import { constants } from '@/utils';
+import ModuleUser from './ModuleUser';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
@@ -249,8 +250,51 @@ class ApplicationModule extends Component {
     return { filters };
   };
 
+  showModuleUser = currentModule => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        currentModule,
+        showModal: true,
+      },
+    });
+  };
+
+  closeModal = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        currentModule: null,
+        showModal: false,
+      },
+    });
+  };
+
   render() {
+    const { applicationModule } = this.props;
+    const { currentModule, showModal } = applicationModule;
     const columns = [
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 100,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        render: (text, record) => (
+          <span className={cls('action-box')}>
+            <ExtIcon
+              onClick={() => this.showModuleUser(record)}
+              type="team"
+              antd
+              tooltip={{ title: '查看模块成员' }}
+            />
+          </span>
+        ),
+      },
       {
         title: '应用名称',
         dataIndex: 'appName',
@@ -337,9 +381,15 @@ class ApplicationModule extends Component {
         },
       },
     };
+    const moduleUserProps = {
+      currentModule,
+      showModal,
+      closeModal: this.closeModal,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
+        <ModuleUser {...moduleUserProps} />
       </div>
     );
   }

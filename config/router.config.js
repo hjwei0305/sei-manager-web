@@ -94,6 +94,11 @@ const routes = [
             name: '用户',
             component: './User',
           },
+          {
+            path: '/auth/workflow',
+            name: '流程配置',
+            component: './WorkFlow',
+          },
         ],
       },
       {
