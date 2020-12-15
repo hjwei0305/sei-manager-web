@@ -34,10 +34,14 @@ export default modelExtend(model, {
       const { currentModule } = yield select(sel => sel.moduleTag);
       const re = yield call(getNewTag, { moduleCode: get(currentModule, 'code') });
       if (re.success) {
+        const tagData = { ...re.data };
+        const { major, minor, revised: originRevised } = tagData;
+        const revised = originRevised + 1;
+        Object.assign(tagData, { revised, tagName: `${major}.${minor}.${revised}` });
         yield put({
           type: 'updateState',
           payload: {
-            tagData: re.data,
+            tagData,
             newTag: true,
           },
         });
