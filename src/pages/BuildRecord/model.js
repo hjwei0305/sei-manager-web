@@ -5,7 +5,7 @@ const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 
 export default modelExtend(model, {
-  namespace: 'publishRecord',
+  namespace: 'buildRecord',
 
   state: {
     filter: {},

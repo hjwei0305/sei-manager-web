@@ -19,8 +19,8 @@ const FILTER_FIELDS = [
   { fieldName: 'tagName', operator: 'LK', value: null },
 ];
 
-@connect(({ publishRecord, loading }) => ({ publishRecord, loading }))
-class PublishRecord extends Component {
+@connect(({ buildRecord, loading }) => ({ buildRecord, loading }))
+class BuildRecord extends Component {
   static tableRef;
 
   static listCardRef = null;
@@ -40,13 +40,13 @@ class PublishRecord extends Component {
   };
 
   handleColumnSearch = (selectedKeys, dataIndex, confirm) => {
-    const { dispatch, publishRecord } = this.props;
-    const { filter: originFilter } = publishRecord;
+    const { dispatch, buildRecord } = this.props;
+    const { filter: originFilter } = buildRecord;
     const filter = { ...originFilter };
     Object.assign(filter, { [dataIndex]: selectedKeys[0] });
     confirm();
     dispatch({
-      type: 'publishRecord/updateState',
+      type: 'buildRecord/updateState',
       payload: {
         filter,
       },
@@ -54,13 +54,13 @@ class PublishRecord extends Component {
   };
 
   handleColumnSearchReset = (dataIndex, clearFilter) => {
-    const { dispatch, publishRecord } = this.props;
-    const { filter: originFilter } = publishRecord;
+    const { dispatch, buildRecord } = this.props;
+    const { filter: originFilter } = buildRecord;
     const filter = { ...originFilter };
     Object.assign(filter, { [dataIndex]: '' });
     clearFilter();
     dispatch({
-      type: 'publishRecord/updateState',
+      type: 'buildRecord/updateState',
       payload: {
         filter,
       },
@@ -211,8 +211,8 @@ class PublishRecord extends Component {
   };
 
   getFilter = () => {
-    const { publishRecord } = this.props;
-    const { filter } = publishRecord;
+    const { buildRecord } = this.props;
+    const { filter } = buildRecord;
     const filters = [{ fieldName: 'frozen', operator: 'EQ', value: false }];
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
@@ -229,7 +229,7 @@ class PublishRecord extends Component {
     const { dispatch } = this.props;
     this.setState({ buildId: record.id });
     dispatch({
-      type: 'publishRecord/build',
+      type: 'buildRecord/build',
       payload: {
         id: record.id,
       },
@@ -244,14 +244,14 @@ class PublishRecord extends Component {
   showRecordLog = row => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'publishRecord/updateState',
+      type: 'buildRecord/updateState',
       payload: {
         showModal: true,
         rowData: row,
       },
     });
     dispatch({
-      type: 'publishRecord/getBuildDetail',
+      type: 'buildRecord/getBuildDetail',
       payload: {
         id: row.id,
       },
@@ -261,7 +261,7 @@ class PublishRecord extends Component {
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'publishRecord/updateState',
+      type: 'buildRecord/updateState',
       payload: {
         showModal: false,
         rowData: null,
@@ -274,7 +274,7 @@ class PublishRecord extends Component {
   renderBuildBtn = row => {
     const { loading } = this.props;
     const { buildId } = this.state;
-    if (loading.effects['publishRecord/build'] && buildId === row.id) {
+    if (loading.effects['buildRecord/build'] && buildId === row.id) {
       return <ExtIcon className="loading" type="loading" antd />;
     }
     return (
@@ -290,8 +290,8 @@ class PublishRecord extends Component {
   };
 
   render() {
-    const { publishRecord, loading } = this.props;
-    const { showModal, rowData, logData } = publishRecord;
+    const { buildRecord, loading } = this.props;
+    const { showModal, rowData, logData } = buildRecord;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -392,7 +392,7 @@ class PublishRecord extends Component {
       showModal,
       logData,
       closeFormModal: this.closeFormModal,
-      dataLoading: loading.effects['publishRecord/getBuildDetail'],
+      dataLoading: loading.effects['buildRecord/getBuildDetail'],
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -403,4 +403,4 @@ class PublishRecord extends Component {
   }
 }
 
-export default PublishRecord;
+export default BuildRecord;

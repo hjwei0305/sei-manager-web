@@ -126,9 +126,9 @@ const routes = [
             component: './DeployConfig',
           },
           {
-            path: '/integration/publishRecord',
-            name: '发布记录',
-            component: './PublishRecord',
+            path: '/integration/buildRecord',
+            name: '构建记录',
+            component: './BuildRecord',
           },
           {
             path: '/integration/versionRecord',
