@@ -167,7 +167,7 @@ class FormModal extends PureComponent {
                         message: '审核步骤名称不能为空',
                       },
                     ],
-                  })(<Input />)}
+                  })(<Input autoComplete="off" />)}
                 </FormItem>
                 <FormItem label="审核步骤描述">
                   {getFieldDecorator('remark', {
