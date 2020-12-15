@@ -116,7 +116,7 @@ class Notify extends PureComponent {
         size="small"
         extra={
           <Button type="link" onClick={this.handlerShowWorktodo}>
-            我的工作台
+            进入工作台
           </Button>
         }
       >
