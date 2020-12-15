@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
-import { Badge, Icon, Dropdown, Card, Empty, List } from 'antd';
+import { Badge, Icon, Dropdown, Card, Empty, List, Button } from 'antd';
 import { ScrollBar } from 'suid';
 import { AplayAudio } from '@/components';
 import emtpy from '@/assets/notice_emtpy.svg';
@@ -89,10 +89,37 @@ class Notify extends PureComponent {
     });
   };
 
+  handlerShowWorktodo = () => {
+    const { dispatch } = this.props;
+    const url = `/my-center/workTodo?t=ALL`;
+    const activedMenu = NoMenuPage.myTodoList;
+    Object.assign(activedMenu, { url });
+    dispatch({
+      type: 'menu/openTab',
+      payload: {
+        activedMenu,
+      },
+    }).then(() => {
+      router.push(activedMenu.url);
+    });
+    this.setState({
+      visible: false,
+    });
+  };
+
   renderTodoList = () => {
     const { todoData } = this.state;
     return (
-      <Card title="待办信息" bordered={false} size="small">
+      <Card
+        title="待办信息"
+        bordered={false}
+        size="small"
+        extra={
+          <Button type="link" onClick={this.handlerShowWorktodo}>
+            工作台
+          </Button>
+        }
+      >
         {todoData.length === 0 ? (
           <Empty image={emtpy} description="你已完成所有待办" />
         ) : (
