@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
 import { get } from 'lodash';
-import { Layout, Input, Button, Form, Alert, Steps } from 'antd';
+import { Layout, Input, Button, Form, Result, Steps } from 'antd';
 import { ExtIcon } from 'suid';
 import styles from './index.less';
 
@@ -95,6 +95,17 @@ class ForgotPassword extends PureComponent {
     });
   };
 
+  renderAlert = successTip => {
+    return (
+      <>
+        {successTip}
+        <Button type="link" style={{ width: 140 }} onClick={this.handlerGoBack}>
+          立即登录
+        </Button>
+      </>
+    );
+  };
+
   renderForm = () => {
     const {
       forgotPassword: { verifyCode, successTip },
@@ -106,18 +117,21 @@ class ForgotPassword extends PureComponent {
     if (successTip) {
       return (
         <div className="signup-success-tip-box">
-          <Alert message="密码成功找回" description={successTip || ''} type="success" showIcon />
-          <div className="tip-btn-box">
-            <Button
-              type="primary"
-              style={{ width: 140 }}
-              onClick={this.handlerGoBack}
-              disabled={submiting}
-              size="large"
-            >
-              去登录
-            </Button>
-          </div>
+          <Result
+            status="success"
+            title="密码找回成功"
+            subTitle={successTip}
+            extra={[
+              <Button
+                type="primary"
+                size="large"
+                style={{ width: 140 }}
+                onClick={this.handlerGoBack}
+              >
+                立即登录
+              </Button>,
+            ]}
+          />
         </div>
       );
     }

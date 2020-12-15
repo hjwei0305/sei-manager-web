@@ -272,8 +272,22 @@ class ApplicationModule extends Component {
     });
   };
 
+  removeModuleUser = gitUserIds => {
+    const {
+      dispatch,
+      applicationModule: { currentModule },
+    } = this.props;
+    dispatch({
+      type: 'applicationModule/removeModuleUser',
+      payload: {
+        gitUserIds,
+        gitId: get(currentModule, 'gitId', ''),
+      },
+    });
+  };
+
   render() {
-    const { applicationModule } = this.props;
+    const { applicationModule, loading } = this.props;
     const { currentModule, showModal } = applicationModule;
     const columns = [
       {
@@ -290,7 +304,7 @@ class ApplicationModule extends Component {
               onClick={() => this.showModuleUser(record)}
               type="team"
               antd
-              tooltip={{ title: '查看模块成员' }}
+              tooltip={{ title: '模块成员管理' }}
             />
           </span>
         ),
@@ -385,6 +399,8 @@ class ApplicationModule extends Component {
       currentModule,
       showModal,
       closeModal: this.closeModal,
+      removeUser: this.removeModuleUser,
+      removing: loading.effects['applicationModule/removeModuleUser'],
     };
     return (
       <div className={cls(styles['container-box'])}>
