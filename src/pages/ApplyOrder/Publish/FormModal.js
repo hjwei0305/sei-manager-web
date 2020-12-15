@@ -72,7 +72,7 @@ class FormModal extends PureComponent {
       Object.assign(params, formData);
       Object.assign(params, {
         remark,
-        version: `${get(params, 'refTag')} ${currentVersionType.name}`,
+        version: `${get(params, 'refTag')}${currentVersionType.name}`,
       });
       if (approve) {
         saveToApprove(params);
