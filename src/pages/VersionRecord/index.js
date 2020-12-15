@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
-import { Button, Input } from 'antd';
+import { Button, Input, Tag } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard } from 'suid';
 import { constants } from '@/utils';
@@ -221,6 +221,22 @@ class VersionRecord extends Component {
     return { filters };
   };
 
+  renderVersionName = (v, row) => {
+    const { available } = row;
+    let color = 'red';
+    if (available) {
+      color = 'blue';
+    }
+    return (
+      <>
+        {v || '-'}
+        <Tag color={color} style={{ marginLeft: 4, marginRight: 0 }}>
+          可用
+        </Tag>
+      </>
+    );
+  };
+
   render() {
     const columns = [
       {
@@ -240,15 +256,14 @@ class VersionRecord extends Component {
       {
         title: '版本名称',
         dataIndex: 'name',
-        width: 120,
-        render: t => t || '-',
+        width: 200,
         ...this.getColumnSearchProps('name'),
       },
       {
         title: '版本号',
         dataIndex: 'version',
-        width: 120,
-        render: t => t || '-',
+        width: 180,
+        render: this.renderVersionName,
         ...this.getColumnSearchProps('version'),
       },
       {
