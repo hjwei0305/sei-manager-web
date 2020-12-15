@@ -186,7 +186,7 @@ class FormModal extends PureComponent {
                         />,
                       )}
                     </FormItem>
-                    <FormItem label="修订版本">
+                    <FormItem label="修订版本(提示:默认在当前版本上自增1)">
                       {getFieldDecorator('revised', {
                         initialValue: get(tagData, 'revised'),
                         rules: [
