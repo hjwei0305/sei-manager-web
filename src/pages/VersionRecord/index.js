@@ -279,14 +279,6 @@ class VersionRecord extends Component {
         required: true,
         ...this.getColumnSearchProps('commitId'),
       },
-      {
-        title: '描述说明',
-        dataIndex: 'remark',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('remark'),
-      },
     ];
     const toolBarProps = {
       left: (
