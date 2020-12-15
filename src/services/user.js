@@ -2,14 +2,14 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2020-11-25 10:21:56
+ * @Last Modified time: 2020-12-15 11:02:50
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
 
 const { request } = utils;
 
-const { SERVER_PATH, MOCKER_PATH } = constants;
+const { SERVER_PATH } = constants;
 
 /** 更新密码 */
 export const updatePwd = data =>
@@ -89,7 +89,7 @@ export async function getVerifyCode(reqId) {
 export const getPortrait = (params = {}) =>
   request({
     method: 'GET',
-    url: `${MOCKER_PATH}/sei-basic/userProfile/findPortrait`,
+    url: `${SERVER_PATH}/sei-manager/user/getUserAvatar`,
     params,
   });
 
