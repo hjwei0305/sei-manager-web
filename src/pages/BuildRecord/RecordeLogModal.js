@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
 import 'ace-builds/src-noconflict/theme-kuroir';
-import { wsocket, constants } from '../../utils';
-import JenkinsState from './JenkinsState';
+import { JenkinsState } from '@/components';
+import { wsocket, constants } from '@/utils';
 import styles from './RecordeLogModal.less';
 
 const { Sider, Content } = Layout;

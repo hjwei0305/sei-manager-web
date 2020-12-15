@@ -5,7 +5,8 @@ import { trim, get } from 'lodash';
 import { Button, Modal, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, message, ListCard } from 'suid';
-import { constants } from '../../../utils';
+import { constants } from '@/utils';
+import { JenkinsState } from '@/components';
 import ApplyState from '../components/ApplyState';
 import ExtAction from './ExtAction';
 import FormModal from './FormModal';
@@ -487,6 +488,13 @@ class ApplyPublish extends PureComponent {
         width: 100,
         required: true,
         render: t => <ApplyState state={t} />,
+      },
+      {
+        title: '构建状态',
+        dataIndex: 'buildStatus',
+        width: 100,
+        required: true,
+        render: t => <JenkinsState state={t} />,
       },
       {
         title: '发版主题',

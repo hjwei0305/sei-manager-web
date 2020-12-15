@@ -6,7 +6,7 @@ import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Input, Popconfirm } from 'antd';
 import { ExtTable, ListCard, ExtIcon } from 'suid';
 import { constants } from '@/utils';
-import JenkinsState from './JenkinsState';
+import { JenkinsState } from '@/components';
 import RecordeLogModal from './RecordeLogModal';
 import styles from './index.less';
 
