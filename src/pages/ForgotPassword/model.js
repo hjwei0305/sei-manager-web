@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-14 13:54:00
+ * @Last Modified time: 2020-12-15 08:33:24
  */
 import { utils, message } from 'suid';
 import { getVerifyCode, checkUser, sendForgetPassword } from './service';
@@ -52,13 +52,13 @@ export default modelExtend(model, {
       }
     },
     *sendForgetPassword({ callback }, { call, put, select }) {
-      const { sign } = yield select(sel => sel.forgotPassword);
+      const { sign, email } = yield select(sel => sel.forgotPassword);
       const re = yield call(sendForgetPassword, { sign });
       if (re.success) {
         yield put({
           type: 'updateState',
           payload: {
-            successTip: re.message,
+            successTip: `密码已发送到你的 ${email} 邮箱!`,
           },
         });
       } else {

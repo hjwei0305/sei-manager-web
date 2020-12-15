@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { get, omit } from 'lodash';
+import md5 from 'md5';
 import { Form, Input, Card, Button } from 'antd';
 
 const FormItem = Form.Item;
@@ -27,8 +28,8 @@ class Account extends PureComponent {
       if (err) {
         return;
       }
-      const params = {};
-      Object.assign(params, omit(formData, ['confirmPassword']));
+      const params = { password: md5(get(formData, 'password')) };
+      Object.assign(params, omit(formData, ['confirmPassword', 'password']));
       save(params, res => {
         if (res.success) {
           form.resetFields(['oldPassword', 'password', 'confirmPassword']);
