@@ -28,8 +28,11 @@ class Account extends PureComponent {
       if (err) {
         return;
       }
-      const params = { password: md5(get(formData, 'password')) };
-      Object.assign(params, omit(formData, ['confirmPassword', 'password']));
+      const params = {
+        oldPassword: md5(get(formData, 'oldPassword')),
+        password: md5(get(formData, 'password')),
+      };
+      Object.assign(params, omit(formData, ['confirmPassword', 'password', 'oldPassword']));
       save(params, res => {
         if (res.success) {
           form.resetFields(['oldPassword', 'password', 'confirmPassword']);
