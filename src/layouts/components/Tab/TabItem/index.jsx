@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Trigger from 'rc-trigger';
 import classNames from 'classnames';
@@ -212,20 +212,20 @@ export default class TabItem extends React.Component {
                 />
               )}
               {isMore && this.getDropdownComponent()}
-              {actived ? (
-                <Fragment>
-                  {/* <Icon
+              {/* {actived ? ( */}
+              {/* <Fragment> */}
+              {/* <Icon
                     className="icon"
                     type="star"
                     onClick={e => this.handleCollect(e, showItem.id, showItem.url)}
                   /> */}
-                  <Icon
+              {/* <Icon
                     className="icon"
                     type="sync"
                     onClick={e => this.handleRefresh(e, showItem.id, showItem.url)}
                   />
                 </Fragment>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </Dropdown>
