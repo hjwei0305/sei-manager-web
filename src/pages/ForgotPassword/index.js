@@ -27,6 +27,15 @@ class ForgotPassword extends PureComponent {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeyDown);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'forgotPassword/updateState',
+      payload: {
+        successTip: '',
+        email: '',
+        sign: '',
+      },
+    });
   }
 
   onKeyDown = e => {
@@ -113,7 +122,8 @@ class ForgotPassword extends PureComponent {
       loading,
     } = this.props;
     const { getFieldDecorator } = form;
-    const submiting = loading.effects['forgotPassword/checkUser'];
+    const checking = loading.effects['forgotPassword/checkUser'];
+    const finishing = loading.effects['forgotPassword/sendForgetPassword'];
     if (successTip) {
       return (
         <div className="signup-success-tip-box">
@@ -171,7 +181,7 @@ class ForgotPassword extends PureComponent {
           <Button
             style={{ width: '100%' }}
             onClick={this.handlerFormSubmit}
-            loading={submiting}
+            loading={checking || finishing}
             type="primary"
             size="large"
           >
@@ -180,7 +190,7 @@ class ForgotPassword extends PureComponent {
           <Button
             style={{ width: '100%' }}
             onClick={this.handlerGoBack}
-            disabled={submiting}
+            disabled={checking || finishing}
             size="large"
           >
             返回
