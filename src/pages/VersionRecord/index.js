@@ -280,14 +280,6 @@ class VersionRecord extends Component {
         ...this.getColumnSearchProps('commitId'),
       },
       {
-        title: '镜像名',
-        dataIndex: 'imageName',
-        width: 320,
-        required: true,
-        render: t => t || '-',
-        ...this.getColumnSearchProps('imageName'),
-      },
-      {
         title: '描述说明',
         dataIndex: 'remark',
         width: 320,
