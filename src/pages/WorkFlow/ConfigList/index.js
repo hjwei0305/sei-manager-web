@@ -150,6 +150,7 @@ class ConfigList extends Component {
         title: '审核人',
         dataIndex: 'handleUserName',
         width: 100,
+        render: t => t || '-',
       },
       {
         title: '审核节点描述',
