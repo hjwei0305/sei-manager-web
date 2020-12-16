@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { Input, Empty, Layout, Popconfirm } from 'antd';
+import { Input, Empty, Layout, Popconfirm, Tooltip } from 'antd';
 import { ListCard, ExtIcon } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
@@ -148,6 +148,15 @@ class WorkFlow extends Component {
     );
   };
 
+  renderTooltip = item => {
+    return (
+      <>
+        <div style={{ fontSize: 12 }}>{`发布账号：${item.publishedAccount || '-'}`}</div>
+        <div style={{ fontSize: 12 }}>{`发布时间：${item.publishedTime || '-'}`}</div>
+      </>
+    );
+  };
+
   render() {
     const { workflow } = this.props;
     const { currentFlowType, showFlowHistory, historyFlowType } = workflow;
@@ -167,7 +176,11 @@ class WorkFlow extends Component {
       itemField: {
         title: item => item.name,
         description: item => item.remark,
-        extra: item => <span style={{ fontSize: 12, marginRight: 8 }}>{`V${item.version}`}</span>,
+        extra: item => (
+          <Tooltip title={this.renderTooltip(item)}>
+            <span style={{ fontSize: 12, marginRight: 8 }}>{`V${item.version}`}</span>
+          </Tooltip>
+        ),
       },
       itemTool: this.renderItemAction,
     };
