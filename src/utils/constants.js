@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-15 17:37:40
+ * @Last Modified time: 2020-12-16 16:22:17
  */
 import { name } from '../../package.json';
 
@@ -181,7 +181,7 @@ const USER_BTN_KEY = {
 const APPLY_STATUS = {
   ALL: { remark: '全部', name: 'ALL', color: '' },
   INITIAL: { remark: '草稿', name: 'INITIAL', color: '' },
-  PROCESSING: { remark: '审核中', name: 'PROCESSING', color: 'orange' },
+  PROCESSING: { remark: '审核中', name: 'PROCESSING', color: 'blue' },
   PASSED: { remark: '审核通过', name: 'PASSED', color: 'green' },
   UNPASSED: { remark: '审核未通过', name: 'UNPASSED', color: 'red' },
 };
