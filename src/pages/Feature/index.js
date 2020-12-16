@@ -220,7 +220,7 @@ class Feature extends Component {
           <Sider width={420} className="auto-height" theme="light">
             <ListCard {...featurePageProps} />
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {showPageHandler ? (
               <FeatureHandler {...featureHandlerProps} />
             ) : (

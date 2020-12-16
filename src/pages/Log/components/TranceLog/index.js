@@ -147,7 +147,7 @@ class TranceLog extends PureComponent {
           <Sider width={480} className={cls('left-content', 'auto-height')} theme="light">
             <ListCard {...tranceListProps} />
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             <Card
               bordered={false}
               title="日志详情"

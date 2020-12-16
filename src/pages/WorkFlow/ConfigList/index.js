@@ -3,14 +3,13 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card, Tag, Popconfirm } from 'antd';
+import { Button, Card, Tag, Popconfirm, Drawer } from 'antd';
 import { ExtTable, BannerTitle, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
-const FILTER_FIELDS = [];
 
 @connect(({ workflow, loading }) => ({ workflow, loading }))
 class ConfigList extends Component {
@@ -19,7 +18,7 @@ class ConfigList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      delRowId: null,
+      selectedRowKeys: [],
     };
   }
 
@@ -54,7 +53,7 @@ class ConfigList extends Component {
   save = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'workflow/save',
+      type: 'workflow/saveFlowTypeNode',
       payload: {
         ...data,
       },
@@ -66,29 +65,33 @@ class ConfigList extends Component {
     });
   };
 
-  del = record => {
+  handlerSelectRow = selectedRowKeys => {
+    this.setState({
+      selectedRowKeys,
+    });
+  };
+
+  onCancelBatchRemove = () => {
+    this.setState({
+      selectedRowKeys: [],
+    });
+  };
+
+  deleteFlowTypeNode = () => {
     const { dispatch } = this.props;
-    this.setState(
-      {
-        delRowId: record.id,
+    const { selectedRowKeys: ids } = this.state;
+    dispatch({
+      type: 'workflow/deleteFlowTypeNode',
+      payload: ids,
+      callback: res => {
+        if (res.success) {
+          this.setState({
+            selectedRowKeys: [],
+          });
+          this.reloadData();
+        }
       },
-      () => {
-        dispatch({
-          type: 'workflow/remove',
-          payload: {
-            id: record.id,
-          },
-          callback: res => {
-            if (res.success) {
-              this.setState({
-                delRowId: null,
-              });
-              this.reloadData();
-            }
-          },
-        });
-      },
-    );
+    });
   };
 
   closeFormModal = () => {
@@ -102,62 +105,25 @@ class ConfigList extends Component {
     });
   };
 
-  getFilter = () => {
-    const { workflow } = this.props;
-    const { configFilter, currentFlowType } = workflow;
-    const filters = [
-      { fieldName: 'flowType', operator: 'EQ', value: get(currentFlowType, 'name') },
-    ];
-    FILTER_FIELDS.forEach(f => {
-      const value = get(configFilter, f.fieldName, null) || null;
-      if (value !== null && value !== '') {
-        const param = { ...f };
-        Object.assign(param, { value });
-        filters.push(param);
-      }
-    });
-    return { filters };
-  };
-
-  renderDelBtn = row => {
-    const { loading } = this.props;
-    const { delRowId } = this.state;
-    if (loading.effects['workflow/remove'] && delRowId === row.id) {
-      return <ExtIcon className="del-loading" type="loading" antd />;
-    }
-    if (row.release === true) {
-      return <ExtIcon className="disabled" type="delete" antd />;
-    }
-    return (
-      <Popconfirm
-        title={formatMessage({
-          id: 'global.delete.confirm',
-          defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-        })}
-        onConfirm={() => this.del(row)}
-      >
-        <ExtIcon className="del" type="delete" antd />
-      </Popconfirm>
-    );
-  };
-
   renderNodeName = (t, row) => {
     return (
       <>
-        <Tag>{row.rank}</Tag>
+        <Tag>{row.code}</Tag>
         {t}
       </>
     );
   };
 
   render() {
+    const { selectedRowKeys } = this.state;
+    const hasSelected = selectedRowKeys.length > 0;
     const { workflow, loading } = this.props;
     const { currentFlowType, showModal, rowData } = workflow;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 120,
+        width: 80,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -171,50 +137,74 @@ class ConfigList extends Component {
               ignore="true"
               antd
             />
-            {this.renderDelBtn(record)}
           </span>
         ),
       },
       {
-        title: '审核步骤名称',
+        title: '审核节点名称',
         dataIndex: 'name',
-        width: 280,
+        width: 220,
         render: this.renderNodeName,
       },
       {
-        title: '审核步骤描述',
+        title: '审核人',
+        dataIndex: 'handleUserName',
+        width: 100,
+      },
+      {
+        title: '审核节点描述',
         dataIndex: 'remark',
-        width: 480,
+        width: 280,
         render: t => t || '-',
       },
     ];
+    const removing = loading.effects['workflow/deleteFlowTypeNode'];
     const toolBarProps = {
       left: (
         <>
           <Button type="primary" onClick={this.add}>
-            新建审核步骤
+            新建审核节点
           </Button>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
+          <Drawer
+            placement="top"
+            closable={false}
+            mask={false}
+            height={44}
+            getContainer={false}
+            style={{ position: 'absolute' }}
+            visible={hasSelected}
+          >
+            <Button onClick={this.onCancelBatchRemove} disabled={removing}>
+              取消
+            </Button>
+            <Popconfirm title="确定要移除选择的节点吗？" onConfirm={this.deleteFlowTypeNode}>
+              <Button type="danger" loading={removing}>
+                {`删除( ${selectedRowKeys.length} )`}
+              </Button>
+            </Popconfirm>
+          </Drawer>
         </>
       ),
     };
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
-      rowKey: 'name',
+      checkbox: true,
+      selectedRowKeys,
+      onSelectRow: this.handlerSelectRow,
       onTableRef: ref => (this.tableRef = ref),
-      searchPlaceHolder: '输入部署名称、描述关键字',
+      searchPlaceHolder: '节点名称、描述关键字',
       searchProperties: ['name', 'remark'],
       searchWidth: 260,
-      remotePaging: true,
       store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/workflow/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/flow/definition/getTypeNode`,
       },
+      lineNumber: false,
       cascadeParams: {
-        ...this.getFilter(),
+        typeId: get(currentFlowType, 'id'),
       },
     };
     const formModalProps = {
@@ -222,13 +212,13 @@ class ConfigList extends Component {
       rowData,
       currentFlowType,
       closeFormModal: this.closeFormModal,
-      saving: loading.effects['workflow/save'],
+      saving: loading.effects['workflow/saveFlowTypeNode'],
       save: this.save,
     };
     return (
       <div className={cls(styles['user-box'])}>
         <Card
-          title={<BannerTitle title={get(currentFlowType, 'remark')} subTitle="审核步骤列表" />}
+          title={<BannerTitle title={get(currentFlowType, 'remark')} subTitle="审核节点列表" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />

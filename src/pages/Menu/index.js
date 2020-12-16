@@ -409,7 +409,7 @@ class AppMenu extends Component {
               </div>
             </Card>
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {currentNode ? (
               <NodeForm {...nodeFormProps} />
             ) : (

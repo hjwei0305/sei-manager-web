@@ -77,7 +77,7 @@ class ApplyOrder extends PureComponent {
               </ScrollBar>
             </Card>
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             <Card
               bordered={false}
               title={<BannerTitle title={currentAppyType.remark} subTitle="单据列表" />}

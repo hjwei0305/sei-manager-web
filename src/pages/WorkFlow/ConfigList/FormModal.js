@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Row, Col, Card } from 'antd';
-import { ExtModal, ListCard, MoneyInput } from 'suid';
+import { Form, Input } from 'antd';
+import { ExtModal, ComboList, MoneyInput } from 'suid';
 import { constants } from '@/utils';
 import styles from './FormModal.less';
 
 const FormItem = Form.Item;
 const { SERVER_PATH } = constants;
-const { TextArea, Search } = Input;
+const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
     span: 24,
@@ -20,8 +20,6 @@ const formItemLayout = {
 
 @Form.create()
 class FormModal extends PureComponent {
-  static listCardRef;
-
   static propTypes = {
     rowData: PropTypes.object,
     showModal: PropTypes.bool,
@@ -30,103 +28,47 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      nodeUser: [],
-    };
-  }
-
   handlerFormSubmit = () => {
     const { form, save, currentFlowType, rowData } = this.props;
-    const { nodeUser } = this.state;
     form.validateFields((err, formData) => {
       if (err) {
         return;
       }
       const params = {
-        flowType: get(currentFlowType, 'name'),
+        typeId: get(currentFlowType, 'id'),
       };
       Object.assign(params, rowData);
       Object.assign(params, formData);
-      Object.assign(params, {
-        nodes: nodeUser.join(','),
-      });
       save(params);
     });
   };
 
-  handlerNodeUserSelect = keys => {
-    this.setState({
-      nodeUser: [...keys],
-    });
-  };
-
-  handlerSearchChange = v => {
-    this.listCardRef.handlerSearchChange(v);
-  };
-
-  handlerPressEnter = () => {
-    this.listCardRef.handlerPressEnter();
-  };
-
-  handlerSearch = v => {
-    this.listCardRef.handlerSearch(v);
-  };
-
   closeFormModal = () => {
     const { closeFormModal } = this.props;
-    this.setState({ nodeUser: [] });
     if (closeFormModal) {
       closeFormModal();
     }
   };
 
-  renderNodeUser = item => {
-    return (
-      <>
-        <div>{`账号：${item.account}`}</div>
-        <div>{`电子邮箱：${item.email}`}</div>
-      </>
-    );
-  };
-
-  renderCustomTool = () => (
-    <>
-      <Search
-        allowClear
-        placeholder="代码、名称、描述"
-        onChange={e => this.handlerSearchChange(e.target.value)}
-        onSearch={this.handlerSearch}
-        onPressEnter={this.handlerPressEnter}
-        style={{ width: '100%' }}
-      />
-    </>
-  );
-
   render() {
-    const { nodeUser } = this.state;
     const { form, saving, showModal, rowData } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '新建审核步骤' : '修改审核步骤';
+    getFieldDecorator('handleAccount', { initialValue: get(rowData, 'handleAccount') });
+    const title = rowData ? '修改审核节点' : '新建审核节点';
     const nodeUserListProps = {
-      className: 'left-content',
-      selectedKeys: nodeUser,
-      title: '审核人员',
-      showSearch: false,
-      onSelectChange: this.handlerNodeUserSelect,
-      customTool: this.renderCustomTool,
-      searchProperties: ['account', 'nickname'],
-      onListCardRef: ref => (this.listCardRef = ref),
-      itemField: {
-        title: item => item.nickname,
-        description: this.renderNodeUser,
-      },
-      checkbox: true,
-      remotePaging: true,
+      form,
+      name: 'handleUserName',
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/user/findByPage`,
+      },
+      placeholder: '请先选择审核人',
+      remotePaging: true,
+      field: ['handleAccount'],
+      reader: {
+        name: 'nickname',
+        description: 'account',
+        field: ['account'],
       },
     };
     return (
@@ -135,7 +77,7 @@ class FormModal extends PureComponent {
         onCancel={this.closeFormModal}
         visible={showModal}
         centered
-        width={820}
+        width={420}
         maskClosable={false}
         wrapClassName={styles['form-box']}
         bodyStyle={{ paddingBottom: 0 }}
@@ -143,50 +85,52 @@ class FormModal extends PureComponent {
         onOk={this.handlerFormSubmit}
         title={title}
       >
-        <Row gutter={8}>
-          <Col span={12}>
-            <Card bordered={false} className="item-box" title="步骤信息">
-              <Form {...formItemLayout} layout="horizontal">
-                <FormItem label="序号">
-                  {getFieldDecorator('rank', {
-                    initialValue: get(rowData, 'rank'),
-                    rules: [
-                      {
-                        required: true,
-                        message: '序号不能为空',
-                      },
-                    ],
-                  })(<MoneyInput textAlign="left" thousand={false} precision={0} />)}
-                </FormItem>
-                <FormItem label="审核步骤名称">
-                  {getFieldDecorator('name', {
-                    initialValue: get(rowData, 'name'),
-                    rules: [
-                      {
-                        required: true,
-                        message: '审核步骤名称不能为空',
-                      },
-                    ],
-                  })(<Input autoComplete="off" />)}
-                </FormItem>
-                <FormItem label="审核步骤描述">
-                  {getFieldDecorator('remark', {
-                    initialValue: get(rowData, 'remark'),
-                    rules: [
-                      {
-                        required: true,
-                        message: '审核步骤描述不能为空',
-                      },
-                    ],
-                  })(<TextArea style={{ resize: 'none' }} rows={3} />)}
-                </FormItem>
-              </Form>
-            </Card>
-          </Col>
-          <Col span={12}>
-            <ListCard {...nodeUserListProps} />
-          </Col>
-        </Row>
+        <Form {...formItemLayout} layout="horizontal">
+          <FormItem label="序号">
+            {getFieldDecorator('code', {
+              initialValue: get(rowData, 'code'),
+              rules: [
+                {
+                  required: true,
+                  message: '序号不能为空',
+                },
+              ],
+            })(<MoneyInput max={9999} min={0} textAlign="left" thousand={false} precision={0} />)}
+          </FormItem>
+          <FormItem label="审核节点名称">
+            {getFieldDecorator('name', {
+              initialValue: get(rowData, 'name'),
+              rules: [
+                {
+                  required: true,
+                  message: '审核节点名称不能为空',
+                },
+              ],
+            })(<Input autoComplete="off" />)}
+          </FormItem>
+          <FormItem label="审核节点描述">
+            {getFieldDecorator('remark', {
+              initialValue: get(rowData, 'remark'),
+              rules: [
+                {
+                  required: true,
+                  message: '审核节点描述不能为空',
+                },
+              ],
+            })(<TextArea style={{ resize: 'none' }} rows={3} />)}
+          </FormItem>
+          <FormItem label="审核人">
+            {getFieldDecorator('handleUserName', {
+              initialValue: get(rowData, 'handleUserName'),
+              rules: [
+                {
+                  required: true,
+                  message: '审核人不能为空',
+                },
+              ],
+            })(<ComboList {...nodeUserListProps} />)}
+          </FormItem>
+        </Form>
       </ExtModal>
     );
   }

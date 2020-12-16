@@ -311,7 +311,7 @@ class DeployTemplate extends Component {
           <Sider width={320} className="auto-height" theme="light">
             <ListCard {...deployTemplateProps} />
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {selectedTemplate ? (
               <AssignedStage onRef={this.handlerAssignedRef} />
             ) : (

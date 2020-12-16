@@ -211,7 +211,7 @@ class UserGroup extends Component {
           <Sider width={320} className="auto-height" theme="light">
             <ListCard {...userGroupProps} />
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {selectedUserGroup ? (
               <AssignedUser onRef={this.handlerAssignedRef} />
             ) : (

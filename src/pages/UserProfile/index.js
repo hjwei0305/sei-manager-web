@@ -82,7 +82,7 @@ class UserProfile extends PureComponent {
               <Menu.Item key={cmpType.account}>账户管理</Menu.Item>
             </Menu>
           </Sider>
-          <Content style={{ paddingLeft: 8 }}>
+          <Content style={{ paddingLeft: 4 }}>
             <div className="content-box">
               <ScrollBar>{this.renderContent()}</ScrollBar>
             </div>

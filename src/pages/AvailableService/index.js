@@ -141,7 +141,7 @@ class AvailableService extends PureComponent {
         <Sider width={380} className={cls('left-content', 'auto-height')} theme="light">
           <ListCard {...serviceListProps} />
         </Sider>
-        <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+        <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
           {currentService ? (
             <ServiceConfig {...configProps} />
           ) : (

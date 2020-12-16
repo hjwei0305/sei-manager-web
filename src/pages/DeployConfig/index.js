@@ -149,7 +149,7 @@ class DeployConfig extends Component {
           <Sider width={420} className="auto-height" theme="light">
             <ListCard {...moduleProps} />
           </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 8 }}>
+          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {currentModule ? (
               <ConfigList />
             ) : (
