@@ -122,12 +122,6 @@ class FormModal extends PureComponent {
           <FormItem label="审核人">
             {getFieldDecorator('handleUserName', {
               initialValue: get(rowData, 'handleUserName'),
-              rules: [
-                {
-                  required: true,
-                  message: '审核人不能为空',
-                },
-              ],
             })(<ComboList {...nodeUserListProps} />)}
           </FormItem>
         </Form>
