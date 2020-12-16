@@ -154,7 +154,7 @@ class ConfigList extends Component {
       {
         title: '审核节点描述',
         dataIndex: 'remark',
-        width: 280,
+        width: 260,
         render: t => t || '-',
       },
     ];
@@ -218,7 +218,7 @@ class ConfigList extends Component {
     return (
       <div className={cls(styles['user-box'])}>
         <Card
-          title={<BannerTitle title={get(currentFlowType, 'remark')} subTitle="审核节点列表" />}
+          title={<BannerTitle title={get(currentFlowType, 'remark')} subTitle="审核节点配置" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />

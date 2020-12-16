@@ -40,7 +40,7 @@ class NodeList extends PureComponent {
       {
         title: '审核节点描述',
         dataIndex: 'remark',
-        width: 280,
+        width: 260,
         render: t => t || '-',
       },
     ];
