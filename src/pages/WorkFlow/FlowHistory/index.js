@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cls from 'classnames';
 import { get } from 'lodash';
-import { Empty, Layout, Input } from 'antd';
+import { Empty, Layout, Input, Tooltip } from 'antd';
 import { ListCard, ExtModal, BannerTitle } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
@@ -78,6 +78,11 @@ class FlowHistory extends PureComponent {
       },
       itemField: {
         title: item => `V${item.version}`,
+        description: item => (
+          <Tooltip title={`发布账号：${item.publishedAccount || '-'}`}>
+            {item.publishedTime}
+          </Tooltip>
+        ),
       },
     };
     const nodeListProps = {
