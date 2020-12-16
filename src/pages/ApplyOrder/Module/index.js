@@ -480,7 +480,7 @@ class Certificate extends PureComponent {
 
   render() {
     const { applyModule, loading } = this.props;
-    const { showModal, rowData, onlyView } = applyModule;
+    const { showModal, rowData, onlyView, flowNodeData } = applyModule;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -554,6 +554,7 @@ class Certificate extends PureComponent {
       onlyView,
       rowData,
       showModal,
+      flowNodeData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['applyModule/createSave'] || loading.effects['applyModule/editSave'],
       saveToApprove: this.saveToApprove,

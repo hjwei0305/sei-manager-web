@@ -53,12 +53,13 @@ class NewPublish extends PureComponent {
 
   render() {
     const { applyPublish, loading } = this.props;
-    const { showModal, rowData, versionTypeData } = applyPublish;
+    const { showModal, rowData, versionTypeData, flowNodeData } = applyPublish;
     const formModalProps = {
       save: this.save,
       rowData,
       showModal,
       versionTypeData,
+      flowNodeData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['applyPublish/createSave'],
       saveToApprove: this.saveToApprove,

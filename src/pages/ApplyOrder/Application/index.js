@@ -248,7 +248,7 @@ class Application extends PureComponent {
 
   render() {
     const { applyApplication, loading } = this.props;
-    const { showModal, rowData, onlyView } = applyApplication;
+    const { showModal, rowData, onlyView, flowNodeData } = applyApplication;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -316,6 +316,7 @@ class Application extends PureComponent {
       onlyView,
       rowData,
       showModal,
+      flowNodeData,
       closeFormModal: this.closeFormModal,
       saving:
         loading.effects['applyApplication/createSave'] ||

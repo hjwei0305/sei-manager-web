@@ -465,7 +465,7 @@ class ApplyPublish extends PureComponent {
 
   render() {
     const { applyPublish, loading } = this.props;
-    const { showModal, rowData, onlyView, versionTypeData } = applyPublish;
+    const { showModal, rowData, onlyView, versionTypeData, flowNodeData } = applyPublish;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -523,6 +523,7 @@ class ApplyPublish extends PureComponent {
       onlyView,
       rowData,
       showModal,
+      flowNodeData,
       versionTypeData,
       closeFormModal: this.closeFormModal,
       dataLoading: loading.effects['applyPublish/getPublish'],

@@ -16,6 +16,26 @@ export default modelExtend(model, {
     rowData: null,
     showModal: false,
     onlyView: false,
+    flowNodeData: [
+      {
+        id: 'B47C31FA-3F7A-11EB-B2F1-0242C0A84603',
+        typeId: '1',
+        code: '1',
+        name: '产品经理审核',
+        handleAccount: 'cheng.yi',
+        handleUserName: '易成',
+        remark: '产品经理审核',
+      },
+      {
+        id: 'C9AEFBD8-3F7A-11EB-B2F1-0242C0A84603',
+        typeId: '1',
+        code: '2',
+        name: '配置管理员确认',
+        handleAccount: 'admin',
+        handleUserName: '管理员',
+        remark: '配置管理员确认',
+      },
+    ],
   },
   subscriptions: {
     setup({ dispatch, history }) {

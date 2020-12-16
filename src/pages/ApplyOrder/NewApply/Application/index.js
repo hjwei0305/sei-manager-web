@@ -53,11 +53,12 @@ class NewApplication extends PureComponent {
 
   render() {
     const { applyApplication, loading } = this.props;
-    const { showModal, rowData } = applyApplication;
+    const { showModal, rowData, flowNodeData } = applyApplication;
     const formModalProps = {
       save: this.save,
       rowData,
       showModal,
+      flowNodeData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['applyApplication/createSave'],
       saveToApprove: this.saveToApprove,

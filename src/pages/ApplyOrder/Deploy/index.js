@@ -465,7 +465,7 @@ class ApplyDeploy extends PureComponent {
 
   render() {
     const { applyDeploy, loading } = this.props;
-    const { showModal, rowData, onlyView } = applyDeploy;
+    const { showModal, rowData, onlyView, flowNodeData } = applyDeploy;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -529,6 +529,7 @@ class ApplyDeploy extends PureComponent {
       onlyView,
       rowData,
       showModal,
+      flowNodeData,
       closeFormModal: this.closeFormModal,
       dataLoading: loading.effects['applyDeploy/getPublish'],
       saving: loading.effects['applyDeploy/createSave'] || loading.effects['applyDeploy/editSave'],
