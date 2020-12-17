@@ -53,12 +53,11 @@ class NewDeploy extends PureComponent {
 
   render() {
     const { applyDeploy, loading } = this.props;
-    const { showModal, rowData, flowNodeData } = applyDeploy;
+    const { showModal, rowData } = applyDeploy;
     const formModalProps = {
       save: this.save,
       rowData,
       showModal,
-      flowNodeData,
       closeFormModal: this.closeFormModal,
       saving: loading.effects['applyDeploy/createSave'],
       saveToApprove: this.saveToApprove,
