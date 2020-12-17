@@ -235,7 +235,9 @@ class AssignedStage extends Component {
       bordered: false,
       toolBar: toolBarProps,
       columns,
-      checkbox: true,
+      checkbox: {
+        rowCheck: false,
+      },
       selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
       rowKey: 'stageId',

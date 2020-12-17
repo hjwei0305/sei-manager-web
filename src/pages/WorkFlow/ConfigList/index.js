@@ -193,7 +193,9 @@ class ConfigList extends Component {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
-      checkbox: true,
+      checkbox: {
+        rowCheck: false,
+      },
       selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
       onTableRef: ref => (this.tableRef = ref),
