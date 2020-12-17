@@ -302,6 +302,7 @@ class Application extends PureComponent {
         title: '所属组代码',
         dataIndex: 'groupCode',
         width: 200,
+        optinal: true,
         render: t => t || '-',
       },
       {
