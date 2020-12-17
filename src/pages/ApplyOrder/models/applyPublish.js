@@ -72,7 +72,7 @@ export default modelExtend(model, {
     },
     *editSave({ payload, callback }, { call, put }) {
       const data = { ...payload };
-      Object.assign(data, { id: data.relationId });
+      Object.assign(data, { id: data.id });
       const re = yield call(editSave, data);
       message.destroy();
       if (re.success) {
@@ -106,7 +106,7 @@ export default modelExtend(model, {
       const data = { ...payload };
       let re;
       if (data.id) {
-        Object.assign(data, { id: data.relationId });
+        Object.assign(data, { id: data.id });
         re = yield call(editSave, data);
       } else {
         re = yield call(createSave, data);
