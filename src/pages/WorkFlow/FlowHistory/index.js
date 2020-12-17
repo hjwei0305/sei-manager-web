@@ -46,6 +46,13 @@ class FlowHistory extends PureComponent {
     this.listCardRef.handlerSearch(v);
   };
 
+  closeFormModal = () => {
+    const { closeFormModal } = this.props;
+    if (closeFormModal) {
+      this.setState({ currentVersion: null }, closeFormModal);
+    }
+  };
+
   renderCustomTool = () => (
     <>
       <Search
@@ -61,7 +68,7 @@ class FlowHistory extends PureComponent {
 
   render() {
     const { currentVersion } = this.state;
-    const { historyFlowType, showFlowHistory, closeFormModal } = this.props;
+    const { historyFlowType, showFlowHistory } = this.props;
     const workflowTypeProps = {
       className: 'left-content',
       title: '版本列表',
@@ -74,7 +81,7 @@ class FlowHistory extends PureComponent {
         url: `${SERVER_PATH}/sei-manager/flow/definition/getTypeVersion`,
       },
       cascadeParams: {
-        typeId: get(historyFlowType, 'id'),
+        typeCode: get(historyFlowType, 'code'),
       },
       itemField: {
         title: item => `V${item.version}`,
@@ -92,7 +99,7 @@ class FlowHistory extends PureComponent {
     return (
       <ExtModal
         destroyOnClose
-        onCancel={closeFormModal}
+        onCancel={this.closeFormModal}
         visible={showFlowHistory}
         centered
         width={880}

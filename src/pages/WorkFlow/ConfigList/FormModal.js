@@ -80,12 +80,12 @@ class FormModal extends PureComponent {
         width={420}
         maskClosable={false}
         wrapClassName={styles['form-box']}
-        bodyStyle={{ paddingBottom: 0 }}
+        bodyStyle={{ padding: 0 }}
         confirmLoading={saving}
         onOk={this.handlerFormSubmit}
         title={title}
       >
-        <Form {...formItemLayout} layout="horizontal">
+        <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
           <FormItem label="序号">
             {getFieldDecorator('code', {
               initialValue: get(rowData, 'code'),
@@ -122,6 +122,12 @@ class FormModal extends PureComponent {
           <FormItem label="审核人">
             {getFieldDecorator('handleUserName', {
               initialValue: get(rowData, 'handleUserName'),
+              rules: [
+                {
+                  required: true,
+                  message: '审核人不能为空',
+                },
+              ],
             })(<ComboList {...nodeUserListProps} />)}
           </FormItem>
         </Form>

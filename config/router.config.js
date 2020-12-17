@@ -96,8 +96,13 @@ const routes = [
           },
           {
             path: '/auth/workflow',
-            name: '流程配置',
+            name: '流程全局配置',
             component: './WorkFlow',
+          },
+          {
+            path: '/auth/flowRedefined',
+            name: '流程评审配置',
+            component: './FlowRedefined',
           },
         ],
       },

@@ -40,7 +40,7 @@ class NodeList extends PureComponent {
       {
         title: '审核节点描述',
         dataIndex: 'remark',
-        width: 260,
+        width: 200,
         render: t => t || '-',
       },
     ];
@@ -49,11 +49,10 @@ class NodeList extends PureComponent {
       showSearch: false,
       lineNumber: false,
       store: {
-        url: `${SERVER_PATH}/sei-manager/flow/definition/getTypeNodeRecord`,
+        url: `${SERVER_PATH}/sei-manager/flow/definition/getTaskByInstanceId`,
       },
       cascadeParams: {
-        typeId: get(currentVersion, 'typeId'),
-        version: get(currentVersion, 'version'),
+        instanceId: get(currentVersion, 'id'),
       },
     };
 
