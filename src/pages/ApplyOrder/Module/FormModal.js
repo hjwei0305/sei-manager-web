@@ -1,29 +1,26 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import cls from 'classnames';
-import { Form, Input, Button, Radio, Alert, Layout, Card, List, Tag } from 'antd';
-import { ExtModal, ComboList } from 'suid';
+import copy from 'copy-to-clipboard';
+import { Form, Input, Button, Radio, Alert } from 'antd';
+import { ExtModal, ComboList, message, ExtIcon } from 'suid';
 import { constants } from '../../../utils';
-import styles from './FormModal.less';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const { Sider, Content } = Layout;
 const { SERVER_PATH } = constants;
 const formItemLayout = {
   labelCol: {
-    span: 6,
+    span: 24,
   },
   wrapperCol: {
-    span: 18,
+    span: 24,
   },
 };
 
 @Form.create()
 class FormModal extends PureComponent {
   static propTypes = {
-    flowNodeData: PropTypes.array,
     onlyView: PropTypes.bool,
     showModal: PropTypes.bool,
     closeFormModal: PropTypes.func,
@@ -36,17 +33,16 @@ class FormModal extends PureComponent {
 
   constructor(props) {
     super(props);
-    const { rowData, flowNodeData } = props;
+    const { rowData } = props;
     this.state = {
       moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
-      flowNodeData,
     };
   }
 
   componentDidUpdate(preProps) {
-    const { rowData, flowNodeData } = this.props;
-    if (!isEqual(preProps.rowData, rowData) || !isEqual(preProps.flowNodeData, flowNodeData)) {
-      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' }, flowNodeData);
+    const { rowData } = this.props;
+    if (!isEqual(preProps.rowData, rowData)) {
+      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
@@ -109,8 +105,34 @@ class FormModal extends PureComponent {
     this.setState({ moduleType });
   };
 
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
+  renderGitAddress = () => {
+    const { rowData } = this.props;
+    const gitUrl = get(rowData, 'gitHttpUrl');
+    if (gitUrl) {
+      return (
+        <>
+          Git地址
+          <ExtIcon
+            type="copy"
+            className="copy-btn"
+            antd
+            style={{ marginTop: 4 }}
+            tooltip={{ title: '复制Git地址到粘贴板' }}
+            onClick={() => this.handlerCopy(gitUrl)}
+          />
+        </>
+      );
+    }
+    return ' Git地址';
+  };
+
   render() {
-    const { moduleType, flowNodeData } = this.state;
+    const { moduleType } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -136,165 +158,116 @@ class FormModal extends PureComponent {
         field: ['id'],
       },
     };
-    const nodeUserListProps = {
-      form,
-      name: 'handleUserName',
-      store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
-      },
-      style: { width: 160 },
-      width: 220,
-      placeholder: '请先选择审核人',
-      remotePaging: true,
-      field: ['handleAccount'],
-      reader: {
-        name: 'nickname',
-        description: 'account',
-        field: ['account'],
-      },
-    };
     return (
       <ExtModal
         maskClosable={false}
         centered
         destroyOnClose
-        width={880}
-        wrapClassName={styles['form-box']}
+        width={580}
         visible={showModal}
         onCancel={closeFormModal}
         bodyStyle={{ padding: 0 }}
         title={onlyView ? '模块详情' : title}
         footer={this.renderFooterBtn()}
       >
-        <Layout className="auto-height">
-          <Sider width={380} className="auto-height" theme="light">
-            <Alert message="提示:模块代码一旦创建后不能修改" banner />
-            <Form {...formItemLayout} layout="horizontal" style={{ margin: 24 }}>
-              <FormItem label="所属应用">
-                {getFieldDecorator('appName', {
-                  initialValue: get(rowData, 'appName'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '所属应用不能为空',
-                    },
-                  ],
-                })(<ComboList {...appProps} disabled={onlyView} />)}
-              </FormItem>
-              <FormItem style={{ marginBottom: 0, marginLeft: 84 }}>
-                {getFieldDecorator('moduleType', {
-                  initialValue: moduleType,
-                  rules: [
-                    {
-                      required: true,
-                      message: '模块类型不能为空',
-                    },
-                  ],
-                })(
-                  <Radio.Group
-                    onChange={this.handlerModuleTypeChange}
-                    disabled={onlyView}
-                    size="small"
-                  >
-                    <Radio.Button key="web" value="web">
-                      前端模块
-                    </Radio.Button>
-                    <Radio.Button key="java" value="java">
-                      后端模块
-                    </Radio.Button>
-                  </Radio.Group>,
-                )}
-              </FormItem>
-              <FormItem label="模块代码">
-                {getFieldDecorator('code', {
-                  initialValue: get(rowData, 'code'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '模块代码不能为空',
-                    },
-                  ],
-                })(<Input autoComplete="off" disabled={!!rowData || onlyView} />)}
-              </FormItem>
-              <FormItem label="模块名称">
-                {getFieldDecorator('name', {
-                  initialValue: get(rowData, 'name'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '模块名称不能为空',
-                    },
-                  ],
-                })(<Input autoComplete="off" disabled={onlyView} />)}
-              </FormItem>
-              <FormItem label="模块版本">
-                {getFieldDecorator('version', {
-                  initialValue: get(rowData, 'version'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '模块版本不能为空',
-                    },
-                  ],
+        <Alert message="提示:模块代码一旦创建后不能修改" banner />
+        <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
+          <FormItem label="所属应用">
+            {getFieldDecorator('appName', {
+              initialValue: get(rowData, 'appName'),
+              rules: [
+                {
+                  required: true,
+                  message: '所属应用不能为空',
+                },
+              ],
+            })(<ComboList {...appProps} disabled={onlyView} />)}
+          </FormItem>
+          <FormItem style={{ marginBottom: 0 }}>
+            {getFieldDecorator('moduleType', {
+              initialValue: moduleType,
+              rules: [
+                {
+                  required: true,
+                  message: '模块类型不能为空',
+                },
+              ],
+            })(
+              <Radio.Group onChange={this.handlerModuleTypeChange} disabled={onlyView} size="small">
+                <Radio.Button key="web" value="web">
+                  前端模块
+                </Radio.Button>
+                <Radio.Button key="java" value="java">
+                  后端模块
+                </Radio.Button>
+              </Radio.Group>,
+            )}
+          </FormItem>
+          <FormItem label="模块代码">
+            {getFieldDecorator('code', {
+              initialValue: get(rowData, 'code'),
+              rules: [
+                {
+                  required: true,
+                  message: '模块代码不能为空',
+                },
+              ],
+            })(<Input disabled={!!rowData || onlyView} />)}
+          </FormItem>
+          <FormItem label="模块名称">
+            {getFieldDecorator('name', {
+              initialValue: get(rowData, 'name'),
+              rules: [
+                {
+                  required: true,
+                  message: '模块名称不能为空',
+                },
+              ],
+            })(<Input disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="模块版本">
+            {getFieldDecorator('version', {
+              initialValue: get(rowData, 'version'),
+              rules: [
+                {
+                  required: true,
+                  message: '模块版本不能为空',
+                },
+              ],
+            })(<Input disabled />)}
+          </FormItem>
+          <FormItem label="模块描述">
+            {getFieldDecorator('remark', {
+              initialValue: get(rowData, 'remark'),
+              rules: [
+                {
+                  required: true,
+                  message: '模块描述不能为空',
+                },
+              ],
+            })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="命名空间(包路径)">
+            {getFieldDecorator('nameSpace', {
+              initialValue: get(rowData, 'nameSpace'),
+              rules: [
+                {
+                  required: moduleType === 'java',
+                  message: '命名空间(包路径)不能为空',
+                },
+              ],
+            })(<Input disabled={onlyView || moduleType === 'web'} />)}
+          </FormItem>
+          {onlyView ? (
+            <>
+              <FormItem label={this.renderGitAddress()}>
+                {getFieldDecorator('gitHttpUrl', {
+                  initialValue: get(rowData, 'gitHttpUrl'),
                 })(<Input disabled />)}
               </FormItem>
-              <FormItem label="模块描述">
-                {getFieldDecorator('remark', {
-                  initialValue: get(rowData, 'remark'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '模块描述不能为空',
-                    },
-                  ],
-                })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
-              </FormItem>
-              <FormItem label="命名空间">
-                {getFieldDecorator('nameSpace', {
-                  initialValue: get(rowData, 'nameSpace'),
-                  rules: [
-                    {
-                      required: moduleType === 'java',
-                      message: '命名空间(包路径)不能为空',
-                    },
-                  ],
-                })(
-                  <Input
-                    autoComplete="off"
-                    placeholder="命名空间(包路径)"
-                    disabled={onlyView || moduleType === 'web'}
-                  />,
-                )}
-              </FormItem>
-              {onlyView ? (
-                <>
-                  <FormItem label="Git地址">
-                    {getFieldDecorator('gitUrl', {
-                      initialValue: get(rowData, 'gitUrl'),
-                    })(<Input disabled />)}
-                  </FormItem>
-                </>
-              ) : null}
-            </Form>
-          </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
-            <Card title="评审活动" bordered={false} size="small">
-              <List
-                dataSource={flowNodeData}
-                renderItem={(item, idx) => (
-                  <List.Item>
-                    <span>
-                      <Tag>{idx + 1}</Tag>
-                      {item.name}
-                    </span>
-                    <ComboList {...nodeUserListProps} />
-                  </List.Item>
-                )}
-              />
-            </Card>
-          </Content>
-        </Layout>
+            </>
+          ) : null}
+        </Form>
       </ExtModal>
     );
   }

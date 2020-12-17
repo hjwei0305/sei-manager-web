@@ -1,29 +1,25 @@
 import React, { PureComponent } from 'react';
-import { get, isEqual } from 'lodash';
+import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import cls from 'classnames';
-import { Form, Input, Button, Card, List, Tag, Layout } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { ExtModal, ComboList } from 'suid';
 import { constants } from '../../../utils';
-import styles from './FormModal.less';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const { Sider, Content } = Layout;
 const { SERVER_PATH } = constants;
 const formItemLayout = {
   labelCol: {
-    span: 7,
+    span: 24,
   },
   wrapperCol: {
-    span: 17,
+    span: 24,
   },
 };
 
 @Form.create()
 class FormModal extends PureComponent {
   static propTypes = {
-    flowNodeData: PropTypes.array,
     onlyView: PropTypes.bool,
     showModal: PropTypes.bool,
     closeFormModal: PropTypes.func,
@@ -33,21 +29,6 @@ class FormModal extends PureComponent {
     saveToApprove: PropTypes.func,
     saveToApproving: PropTypes.bool,
   };
-
-  constructor(props) {
-    super(props);
-    const { flowNodeData } = props;
-    this.state = {
-      flowNodeData,
-    };
-  }
-
-  componentDidUpdate(preProps) {
-    const { flowNodeData } = this.props;
-    if (!isEqual(preProps.flowNodeData, flowNodeData)) {
-      this.setState({ flowNodeData });
-    }
-  }
 
   handlerFormSubmit = approve => {
     const { form, save, rowData, saveToApprove } = this.props;
@@ -108,7 +89,6 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { flowNodeData } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改应用申请' : '新建应用申请';
@@ -128,122 +108,83 @@ class FormModal extends PureComponent {
         field: ['code'],
       },
     };
-    const nodeUserListProps = {
-      form,
-      name: 'handleUserName',
-      store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
-      },
-      style: { width: 160 },
-      width: 220,
-      placeholder: '请先选择审核人',
-      remotePaging: true,
-      field: ['handleAccount'],
-      reader: {
-        name: 'nickname',
-        description: 'account',
-        field: ['account'],
-      },
-    };
     return (
       <ExtModal
         maskClosable={false}
         centered
         destroyOnClose
-        wrapClassName={styles['form-box']}
         visible={showModal}
-        width={780}
         onCancel={closeFormModal}
+        bodyStyle={{ padding: 0 }}
         title={onlyView ? '应用详情' : title}
         footer={this.renderFooterBtn()}
       >
-        <Layout className="auto-height">
-          <Sider width={340} className="auto-height" theme="light">
-            <Form {...formItemLayout} layout="horizontal">
-              <FormItem label="应用代码">
-                {getFieldDecorator('code', {
-                  initialValue: get(rowData, 'code'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '应用代码不能为空',
-                    },
-                  ],
-                })(<Input autoComplete="off" disabled={onlyView} />)}
-              </FormItem>
-              <FormItem label="应用名称">
-                {getFieldDecorator('name', {
-                  initialValue: get(rowData, 'name'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '应用名称不能为空',
-                    },
-                  ],
-                })(<Input autoComplete="off" disabled={onlyView} />)}
-              </FormItem>
-              <FormItem label="所属组">
-                {getFieldDecorator('groupName', {
-                  initialValue: get(rowData, 'groupName'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '所属组不能为空',
-                    },
-                  ],
-                })(<ComboList {...groupProps} disabled={onlyView} />)}
-              </FormItem>
-              <FormItem label="初始版本">
-                {getFieldDecorator('version', {
-                  initialValue: get(rowData, 'version'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '初始版本不能为空',
-                    },
-                    {
-                      validator: this.validateVersion,
-                    },
-                  ],
-                })(
-                  <Input
-                    placeholder="最多2位数字且不能以0开始"
-                    autoComplete="off"
-                    disabled={onlyView}
-                  />,
-                )}
-              </FormItem>
-              <FormItem label="应用描述">
-                {getFieldDecorator('remark', {
-                  initialValue: get(rowData, 'remark'),
-                  rules: [
-                    {
-                      required: true,
-                      message: '应用描述不能为空',
-                    },
-                  ],
-                })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
-              </FormItem>
-            </Form>
-          </Sider>
-          <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
-            <Card title="评审活动" bordered={false} size="small">
-              <List
-                dataSource={flowNodeData}
-                renderItem={(item, idx) => (
-                  <List.Item>
-                    <span>
-                      <Tag>{idx + 1}</Tag>
-                      {item.name}
-                    </span>
-                    <ComboList {...nodeUserListProps} />
-                  </List.Item>
-                )}
-              />
-            </Card>
-          </Content>
-        </Layout>
+        <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
+          <FormItem label="应用代码">
+            {getFieldDecorator('code', {
+              initialValue: get(rowData, 'code'),
+              rules: [
+                {
+                  required: true,
+                  message: '应用代码不能为空',
+                },
+              ],
+            })(<Input autoComplete="off" disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="应用名称">
+            {getFieldDecorator('name', {
+              initialValue: get(rowData, 'name'),
+              rules: [
+                {
+                  required: true,
+                  message: '应用名称不能为空',
+                },
+              ],
+            })(<Input autoComplete="off" disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="应用所属组">
+            {getFieldDecorator('groupName', {
+              initialValue: get(rowData, 'groupName'),
+              rules: [
+                {
+                  required: true,
+                  message: '应用所属组不能为空',
+                },
+              ],
+            })(<ComboList {...groupProps} disabled={onlyView} />)}
+          </FormItem>
+          <FormItem label="应用初始版本">
+            {getFieldDecorator('version', {
+              initialValue: get(rowData, 'version'),
+              rules: [
+                {
+                  required: true,
+                  message: '应用初始版本不能为空',
+                },
+                {
+                  validator: this.validateVersion,
+                },
+              ],
+            })(
+              <Input
+                placeholder="最多2位数字且不能以0开始"
+                autoComplete="off"
+                disabled={onlyView}
+              />,
+            )}
+          </FormItem>
+          <FormItem label="应用描述">
+            {getFieldDecorator('remark', {
+              initialValue: get(rowData, 'remark'),
+              rules: [
+                {
+                  required: true,
+                  message: '应用描述不能为空',
+                },
+              ],
+            })(<TextArea style={{ resize: 'none' }} rows={3} disabled={onlyView} />)}
+          </FormItem>
+        </Form>
       </ExtModal>
     );
   }
