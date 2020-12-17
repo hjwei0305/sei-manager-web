@@ -100,12 +100,18 @@ class FlowRedefined extends Component {
     });
   };
 
-  handlerSaveInstanceTask = data => {
+  handlerSaveInstanceTask = (data, callback) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'flowRedefined/saveInstanceTask',
       payload: {
         ...data,
+      },
+      callback: res => {
+        if (res.success) {
+          callback();
+          this.refreshNodeData();
+        }
       },
     });
   };
