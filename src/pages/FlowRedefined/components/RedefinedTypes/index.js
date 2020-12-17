@@ -24,7 +24,7 @@ const RedefinedTypes = ({
       bordered={false}
       title={<BannerTitle title={get(currentModule, 'name')} subTitle="评审活动" />}
     >
-      <Tabs activeKey={currentTabKey} onChange={onTabChange} animated={false}>
+      <Tabs type="card" activeKey={currentTabKey} onChange={onTabChange} animated={false}>
         {redefinedTypeData.map(redefinedType => {
           const typeNodeListProps = {
             currentModule,
