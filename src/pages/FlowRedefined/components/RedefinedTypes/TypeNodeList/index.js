@@ -52,7 +52,7 @@ class TypeNodeList extends Component {
       const { currentModule, save } = this.props;
       if (save) {
         const data = {
-          relation: get(currentModule, 'id'),
+          relation: get(currentModule, 'code'),
           taskList: typeNodeData,
         };
         save(data, this.cancelHandleUser);
