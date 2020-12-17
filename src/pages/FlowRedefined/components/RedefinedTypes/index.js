@@ -28,7 +28,6 @@ const RedefinedTypes = ({
         {redefinedTypeData.map(redefinedType => {
           const typeNodeListProps = {
             currentModule,
-            currentRedefinedType: redefinedType,
             typeNodeData: typeNodeData[redefinedType.code] || [],
             refreshNodeData,
             refreshing,

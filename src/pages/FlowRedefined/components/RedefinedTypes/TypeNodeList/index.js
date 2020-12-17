@@ -12,7 +12,6 @@ const { SERVER_PATH } = constants;
 class TypeNodeList extends Component {
   static propTypes = {
     currentModule: PropTypes.object,
-    currentRedefinedType: PropTypes.object,
     typeNodeData: PropTypes.array,
     refreshNodeData: PropTypes.func,
     refreshing: PropTypes.bool,
@@ -50,10 +49,9 @@ class TypeNodeList extends Component {
       t => t.handleAccount === null || t.handleAccount === '',
     ).length;
     if (vaildErrorCount === 0) {
-      const { currentModule, currentRedefinedType, save } = this.props;
+      const { currentModule, save } = this.props;
       if (save) {
         const data = {
-          instanceId: get(currentRedefinedType, 'id'),
           relation: get(currentModule, 'id'),
           taskList: typeNodeData,
         };

@@ -28,14 +28,13 @@ export async function getFlowInstanceTask(params) {
 }
 
 /**
- * 通过流程类型,版本,关联值获取流程实例任务节点
+ * 保存流程实例任务节点
  * @relation string
- * @instanceId number
  * @taskList array
  */
 export async function saveInstanceTask(data) {
-  const { relation, instanceId, taskList } = data;
-  const url = `${SERVER_PATH}/sei-manager/flow/definition/saveInstanceTask/${relation}/${instanceId}`;
+  const { relation, taskList } = data;
+  const url = `${SERVER_PATH}/sei-manager/flow/definition/saveInstanceTask/${relation}`;
   return request({
     method: 'POST',
     url,

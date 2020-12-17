@@ -96,6 +96,7 @@ export default modelExtend(model, {
       if (re.success && re.data) {
         const res = yield call(approve, {
           requisitionId: re.data.id,
+          bizKey: re.data.code,
         });
         if (res.success) {
           message.success('保存并提交审核成功');
@@ -113,6 +114,7 @@ export default modelExtend(model, {
       const data = { ...payload };
       const re = yield call(approve, {
         requisitionId: data.id,
+        bizKey: data.code,
       });
       message.destroy();
       if (re.success) {
