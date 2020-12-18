@@ -1,7 +1,7 @@
 {
   "name": "sei-manager-web",
   "title": "sei-manager-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
