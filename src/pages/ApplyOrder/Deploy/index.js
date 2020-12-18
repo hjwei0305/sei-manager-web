@@ -499,7 +499,7 @@ class ApplyDeploy extends PureComponent {
       {
         title: '部署主题',
         dataIndex: 'name',
-        width: 260,
+        width: 250,
         required: true,
         ...this.getColumnSearchProps('name'),
       },
@@ -514,16 +514,23 @@ class ApplyDeploy extends PureComponent {
       {
         title: this.renderColumnAppName(),
         dataIndex: 'appName',
-        width: 220,
+        width: 200,
         required: true,
         ...this.getColumnSearchProps('appName'),
       },
       {
         title: '模块名称',
         dataIndex: 'moduleName',
-        width: 260,
+        width: 240,
         required: true,
         ...this.getColumnSearchProps('moduleName'),
+      },
+      {
+        title: '标签',
+        dataIndex: 'tagName',
+        width: 140,
+        required: true,
+        ...this.getColumnSearchProps('tagName'),
       },
       {
         title: '期望完成时间',
