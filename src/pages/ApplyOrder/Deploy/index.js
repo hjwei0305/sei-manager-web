@@ -504,6 +504,14 @@ class ApplyDeploy extends PureComponent {
         ...this.getColumnSearchProps('name'),
       },
       {
+        title: '部署环境',
+        dataIndex: 'envName',
+        width: 140,
+        required: true,
+        ...this.getColumnSearchProps('envName'),
+      },
+
+      {
         title: this.renderColumnAppName(),
         dataIndex: 'appName',
         width: 220,

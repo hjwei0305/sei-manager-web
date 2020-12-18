@@ -15,7 +15,7 @@ const JenkinsState = ({ state }) => {
       </Tag>
     );
   }
-  return <Tag color={status.color}>{status.remark || ''}</Tag>;
+  return <Tag color={status.color}>{status.remark || '未构建'}</Tag>;
 };
 
 export default JenkinsState;
