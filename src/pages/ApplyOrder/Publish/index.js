@@ -499,23 +499,29 @@ class ApplyPublish extends PureComponent {
       {
         title: '发版主题',
         dataIndex: 'name',
-        width: 260,
+        width: 250,
         required: true,
         ...this.getColumnSearchProps('name'),
       },
       {
         title: this.renderColumnAppName(),
         dataIndex: 'appName',
-        width: 220,
+        width: 200,
         required: true,
         ...this.getColumnSearchProps('appName'),
       },
       {
         title: '模块名称',
         dataIndex: 'moduleName',
-        width: 260,
+        width: 240,
         required: true,
         ...this.getColumnSearchProps('moduleName'),
+      },
+      {
+        title: '申请版本',
+        dataIndex: 'version',
+        width: 120,
+        required: true,
       },
     ];
     const formModalProps = {
