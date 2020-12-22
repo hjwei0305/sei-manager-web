@@ -224,14 +224,16 @@ class VersionRecord extends Component {
   renderVersionName = (v, row) => {
     const { available } = row;
     let color = 'red';
+    let title = '不可用';
     if (available) {
       color = 'blue';
+      title = '可用';
     }
     return (
       <>
         {v || '-'}
         <Tag color={color} style={{ marginLeft: 4, marginRight: 0 }}>
-          可用
+          {title}
         </Tag>
       </>
     );
