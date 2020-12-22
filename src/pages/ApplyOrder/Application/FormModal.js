@@ -47,6 +47,14 @@ class FormModal extends PureComponent {
     });
   };
 
+  validateAppCode = (rule, value, callback) => {
+    const reg = /^[a-z][a-z-]*[a-z]$/;
+    if (value && !reg.test(value)) {
+      callback('代码不规范!');
+    }
+    callback();
+  };
+
   validateVersion = (rule, value, callback) => {
     const reg = /^[1-9]\d{0,1}$/;
     if (value && !reg.test(value)) {
@@ -128,8 +136,13 @@ class FormModal extends PureComponent {
                   required: true,
                   message: '应用代码不能为空',
                 },
+                {
+                  validator: this.validateAppCode,
+                },
               ],
-            })(<Input autoComplete="off" disabled={onlyView} />)}
+            })(
+              <Input placeholder="规则：字母小写或中横线" autoComplete="off" disabled={onlyView} />,
+            )}
           </FormItem>
           <FormItem label="应用名称">
             {getFieldDecorator('name', {

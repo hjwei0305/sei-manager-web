@@ -131,6 +131,14 @@ class FormModal extends PureComponent {
     return ' Git地址';
   };
 
+  validateMoudleCode = (rule, value, callback) => {
+    const reg = /^[a-z][a-z-]*[a-z]$/;
+    if (value && !reg.test(value)) {
+      callback('代码不规范!');
+    }
+    callback();
+  };
+
   render() {
     const { moduleType } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
@@ -211,8 +219,11 @@ class FormModal extends PureComponent {
                   required: true,
                   message: '模块代码不能为空',
                 },
+                {
+                  validator: this.validateMoudleCode,
+                },
               ],
-            })(<Input disabled={!!rowData || onlyView} />)}
+            })(<Input placeholder="规则：字母小写或中横线" disabled={!!rowData || onlyView} />)}
           </FormItem>
           <FormItem label="模块名称">
             {getFieldDecorator('name', {
