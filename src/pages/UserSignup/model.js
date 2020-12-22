@@ -2,10 +2,10 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:05
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-10 11:52:33
+ * @Last Modified time: 2020-12-22 10:37:00
  */
 import { utils, message } from 'suid';
-import { getVerifyCode, goSignup, getMailServer } from './service';
+import { getVerifyCode, goSignup, registVerify, getMailServer } from './service';
 
 const { pathMatchRegexp, dvaModel, getUUID } = utils;
 const { modelExtend, model } = dvaModel;
@@ -15,9 +15,11 @@ export default modelExtend(model, {
   state: {
     loginReqId: getUUID(),
     verifyCode: null,
+    verifyTip: '',
     successTip: '',
     suffixHostData: [],
     defaultMailHost: '',
+    sign: '',
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -72,10 +74,30 @@ export default modelExtend(model, {
         message.error(msg);
       }
     },
-    *goSignup({ payload, callback }, { call, select, put }) {
+    *registVerify({ payload, callback }, { call, select, put }) {
       const { loginReqId } = yield select(sel => sel.userSignup);
-      const loginUrl = `${window.location.host}/sei-manager-web`;
-      const re = yield call(goSignup, { loginUrl, reqId: loginReqId, ...payload });
+      const re = yield call(registVerify, { reqId: loginReqId, ...payload });
+      const { success, message: msg, data } = re || {};
+      if (success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            successTip: '',
+            verifyTip: msg,
+            sign: data,
+          },
+        });
+      } else {
+        message.destroy();
+        message.error(msg);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *goSignup({ payload, callback }, { call, select, put }) {
+      const { sign } = yield select(sel => sel.userSignup);
+      const re = yield call(goSignup, { reqId: sign, email: 'test', ...payload });
       const { success, message: msg } = re || {};
       if (success) {
         yield put({

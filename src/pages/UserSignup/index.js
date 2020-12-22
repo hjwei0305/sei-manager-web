@@ -40,6 +40,7 @@ class UserSignup extends PureComponent {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeyDown);
+    this.clearData();
   }
 
   onKeyDown = e => {
@@ -55,14 +56,20 @@ class UserSignup extends PureComponent {
     });
   };
 
-  handlerContinueSignup = () => {
+  clearData = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'userSignup/updateState',
       payload: {
+        verifyTip: '',
         successTip: '',
+        sign: '',
       },
     });
+  };
+
+  handlerContinueSignup = () => {
+    this.clearData();
     this.handleVertify();
   };
 
@@ -84,13 +91,15 @@ class UserSignup extends PureComponent {
       }
       const mailName = get(formData, 'mailName');
       dispatch({
-        type: 'userSignup/goSignup',
+        type: 'userSignup/registVerify',
         payload: {
           verifyCode: get(formData, 'verifyCode'),
           email: `${mailName}${mailHost}`,
         },
         callback: res => {
-          if (!res.success) {
+          if (res.success) {
+            form.resetFields(['verifyCode']);
+          } else {
             this.handleVertify();
           }
         },
@@ -98,15 +107,104 @@ class UserSignup extends PureComponent {
     });
   };
 
+  handlerGoSignup = () => {
+    const { form, dispatch } = this.props;
+    form.validateFields((err, formData) => {
+      if (err) {
+        return;
+      }
+      dispatch({
+        type: 'userSignup/goSignup',
+        payload: {
+          verifyCode: get(formData, 'verifyCode'),
+        },
+      });
+    });
+  };
+
+  renderVerifyTip = () => {
+    const {
+      form,
+      userSignup: { verifyTip },
+      loading,
+    } = this.props;
+    const submiting = loading.effects['userSignup/goSignup'];
+    const { getFieldDecorator } = form;
+    return (
+      <div className="vertical verify-success-form">
+        <Alert message="提交成功" description={verifyTip} type="success" showIcon />
+        <Form>
+          <FormItem className="verifyCode">
+            {getFieldDecorator('verifyCode', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true,
+                  message: '验证码不能为空',
+                },
+              ],
+            })(<Input allowClear size="large" placeholder="验证码" autoComplete="off" />)}
+          </FormItem>
+          <div className="tip-btn-box">
+            <Button
+              type="primary"
+              ghost
+              style={{ width: 140 }}
+              disabled={submiting}
+              onClick={this.handlerGoBack}
+              size="large"
+            >
+              取消
+            </Button>
+            <Button
+              type="primary"
+              onClick={this.handlerGoSignup}
+              disabled={submiting}
+              style={{ width: 140 }}
+              size="large"
+            >
+              注册
+            </Button>
+          </div>
+        </Form>
+      </div>
+    );
+  };
+
+  renderSuccessTip = () => {
+    const {
+      userSignup: { successTip },
+    } = this.props;
+    return (
+      <div className="signup-success-tip-box">
+        <Alert message="注册成功" description={successTip} type="success" showIcon />
+        <div className="tip-btn-box">
+          <Button
+            type="primary"
+            ghost
+            style={{ width: 140 }}
+            onClick={this.handlerContinueSignup}
+            size="large"
+          >
+            继续注册
+          </Button>
+          <Button type="primary" style={{ width: 140 }} onClick={this.handlerGoBack} size="large">
+            去登录
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   renderForm = () => {
     const {
-      userSignup: { verifyCode, successTip, suffixHostData },
+      userSignup: { verifyCode, successTip, verifyTip, suffixHostData, sign },
       form,
       loading,
     } = this.props;
     const { mailHost } = this.state;
     const { getFieldDecorator } = form;
-    const submiting = loading.effects['userSignup/goSignup'];
+    const verifySubmiting = loading.effects['userSignup/registVerify'];
     const suffixProps = {
       dataSource: suffixHostData,
       showSearch: false,
@@ -120,36 +218,10 @@ class UserSignup extends PureComponent {
       },
     };
     if (successTip) {
-      return (
-        <div className="signup-success-tip-box">
-          <Alert
-            message="注册申请提交成功"
-            description={successTip || 'aaa'}
-            type="success"
-            showIcon
-          />
-          <div className="tip-btn-box">
-            <Button
-              type="primary"
-              ghost
-              style={{ width: 140 }}
-              onClick={this.handlerContinueSignup}
-              size="large"
-            >
-              继续注册
-            </Button>
-            <Button
-              type="primary"
-              style={{ width: 140 }}
-              onClick={this.handlerGoBack}
-              disabled={submiting}
-              size="large"
-            >
-              去登录
-            </Button>
-          </div>
-        </div>
-      );
+      return this.renderSuccessTip();
+    }
+    if (verifyTip && sign) {
+      return this.renderVerifyTip();
     }
     return (
       <div className="vertical">
@@ -195,16 +267,16 @@ class UserSignup extends PureComponent {
           <Button
             style={{ width: '100%' }}
             onClick={this.handlerFormSubmit}
-            loading={submiting}
+            loading={verifySubmiting}
             type="primary"
             size="large"
           >
-            注册
+            提交
           </Button>
           <Button
             style={{ width: '100%' }}
             onClick={this.handlerGoBack}
-            disabled={submiting}
+            disabled={verifySubmiting}
             size="large"
           >
             返回
