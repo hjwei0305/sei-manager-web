@@ -208,7 +208,7 @@ class TagList extends Component {
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
       cascadeParams: {
-        moduleCode: get(currentModule, 'code'),
+        moduleId: get(currentModule, 'id'),
       },
     };
     const formModalProps = {

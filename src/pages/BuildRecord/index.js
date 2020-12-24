@@ -292,7 +292,7 @@ class BuildRecord extends Component {
     return (
       <ExtIcon
         type="play-circle"
-        tooltip={{ title: '构建已失效', placement: 'bottom' }}
+        tooltip={{ title: '构建操作已失效', placement: 'bottom' }}
         className="build disabled"
         antd
       />
