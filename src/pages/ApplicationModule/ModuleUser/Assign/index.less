@@ -1,0 +1,27 @@
+@import '../../../../themes/vars.less';
+.user-panel-box {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background-color: @page-background-color;
+  :global {
+    .suid-list-card-tool-box {
+      button {
+        margin-right: 8px;
+      }
+    }
+    .role-group-box {
+      height: 100%;
+      background-color: @white;
+    }
+    .desc-box {
+      .field-item {
+        .label::after {
+          margin: 0 4px;
+          content: ':';
+        }
+      }
+    }
+  }
+}

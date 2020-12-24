@@ -7,12 +7,12 @@ import Assign from './Assign';
 import Assinged from './Assigned';
 import styles from './index.less';
 
-class UserRoleModal extends PureComponent {
+class ModuleUserModal extends PureComponent {
   static propTypes = {
-    currentUser: PropTypes.object,
+    currentModule: PropTypes.object,
     showModal: PropTypes.bool,
-    assignRoles: PropTypes.func,
-    removeAssignedRoles: PropTypes.func,
+    assignUsers: PropTypes.func,
+    removeUsers: PropTypes.func,
     assignLoading: PropTypes.bool,
     removeAssignedLoading: PropTypes.bool,
     closeModal: PropTypes.func,
@@ -25,14 +25,14 @@ class UserRoleModal extends PureComponent {
     };
   }
 
-  assignRoles = (keys, callback) => {
-    const { assignRoles } = this.props;
-    assignRoles(keys, callback);
+  assignUsers = (keys, callback) => {
+    const { assignUsers } = this.props;
+    assignUsers(keys, callback);
   };
 
-  removeAssignedRoles = (keys, callback) => {
-    const { removeAssignedRoles } = this.props;
-    removeAssignedRoles(keys, callback);
+  removeUsers = (keys, callback) => {
+    const { removeUsers } = this.props;
+    removeUsers(keys, callback);
   };
 
   handlerShowAssign = () => {
@@ -51,22 +51,22 @@ class UserRoleModal extends PureComponent {
     setTimeout(this.handlerBackAssigned, 100);
   };
 
-  renderTitle = currentUser => {
+  renderTitle = currentModule => {
     const { showAssign } = this.state;
-    const title = get(currentUser, 'nickname', '');
+    const title = get(currentModule, 'name', '');
     if (showAssign) {
       return (
         <>
           <ExtIcon onClick={this.handlerBackAssigned} type="left" className="trigger-back" antd />
-          <BannerTitle title={title} subTitle="请选择要添加的角色" />
+          <BannerTitle title={title} subTitle="请选择要添加的人员" />
         </>
       );
     }
-    return <BannerTitle title={title} subTitle="已配置的角色" />;
+    return <BannerTitle title={title} subTitle="模块成员" />;
   };
 
   render() {
-    const { currentUser, showModal, assignLoading, removeAssignedLoading } = this.props;
+    const { currentModule, showModal, assignLoading, removeAssignedLoading } = this.props;
     const { showAssign } = this.state;
     const extModalProps = {
       destroyOnClose: true,
@@ -76,21 +76,21 @@ class UserRoleModal extends PureComponent {
       keyboard: !showAssign,
       visible: showModal,
       centered: true,
-      width: 480,
+      width: 520,
       bodyStyle: { padding: 0, height: 560, overflow: 'hidden' },
       footer: null,
-      title: this.renderTitle(currentUser),
+      title: this.renderTitle(currentModule),
     };
     const assignProps = {
-      currentUser,
+      currentModule,
       onBackAssigned: this.handlerBackAssigned,
-      save: this.assignRoles,
+      save: this.assignUsers,
       saving: assignLoading,
     };
     const assignedProps = {
-      currentUser,
+      currentModule,
       onShowAssign: this.handlerShowAssign,
-      save: this.removeAssignedRoles,
+      save: this.removeUsers,
       saving: removeAssignedLoading,
     };
     return (
@@ -101,4 +101,4 @@ class UserRoleModal extends PureComponent {
   }
 }
 
-export default UserRoleModal;
+export default ModuleUserModal;

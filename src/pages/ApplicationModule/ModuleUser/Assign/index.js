@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 15:38:59
+ * @Last Modified time: 2020-12-24 15:38:34
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -20,7 +20,7 @@ class FeatureRoleAssign extends Component {
   static listCardRef;
 
   static propTypes = {
-    currentUser: PropTypes.object,
+    currentModule: PropTypes.object,
     onBackAssigned: PropTypes.func,
     saving: PropTypes.bool,
     save: PropTypes.func,
@@ -106,25 +106,26 @@ class FeatureRoleAssign extends Component {
 
   render() {
     const { selectedKeys } = this.state;
-    const { currentUser } = this.props;
+    const { currentModule } = this.props;
     const listCardProps = {
       className: 'anyone-user-box',
-      title: '可选择的角色',
+      title: '人员列表',
       bordered: false,
       searchPlaceHolder: '输入名称关键字查询',
       checkbox: true,
       selectedKeys,
       itemField: {
         title: item => item.name,
-        description: item => item.description,
+        description: item => item.account,
       },
+      rowKey: 'account',
       showArrow: false,
       showSearch: false,
       cascadeParams: {
-        parentId: get(currentUser, 'id', null),
+        moduleId: get(currentModule, 'id', null),
       },
       store: {
-        url: `${SERVER_PATH}/sei-manager/userRole/getUnassigned`,
+        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
       },
       onListCardRef: ref => (this.listCardRef = ref),
       onSelectChange: this.handerAssignUserSelectChange,

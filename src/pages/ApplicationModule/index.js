@@ -268,6 +268,7 @@ class ApplicationModule extends Component {
       payload: {
         currentModule: null,
         showModal: false,
+        showAssignedModal: false,
       },
     });
   };
@@ -283,6 +284,19 @@ class ApplicationModule extends Component {
         gitUserIds,
         gitId: get(currentModule, 'gitId', ''),
       },
+    });
+  };
+
+  addModuleUser = (keys, callback) => {
+    const {
+      applicationModule: { currentModule },
+      dispatch,
+    } = this.props;
+    const userData = { gitId: get(currentModule, 'gitId', null), accounts: keys };
+    dispatch({
+      type: 'applicationModule/addModuleUser',
+      payload: userData,
+      callback,
     });
   };
 
@@ -399,8 +413,10 @@ class ApplicationModule extends Component {
       currentModule,
       showModal,
       closeModal: this.closeModal,
-      removeUser: this.removeModuleUser,
-      removing: loading.effects['applicationModule/removeModuleUser'],
+      removeAssignedLoading: loading.effects['applicationModule/removeModuleUser'],
+      assignUsers: this.addModuleUser,
+      removeUsers: this.removeModuleUser,
+      assignLoading: loading.effects['applicationModule/addModuleUser'],
     };
     return (
       <div className={cls(styles['container-box'])}>

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Input, Drawer, Button, Popconfirm } from 'antd';
 import { ExtModal, BannerTitle, ListCard } from 'suid';
 import { constants } from '@/utils';
-import styles from './ModuleUser.less';
+import styles from './index.less';
 
 const { Search } = Input;
 const { SERVER_PATH } = constants;
