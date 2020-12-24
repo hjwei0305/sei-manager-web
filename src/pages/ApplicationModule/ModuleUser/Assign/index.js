@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 15:42:04
+ * @Last Modified time: 2020-12-24 17:34:14
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -115,7 +115,7 @@ class FeatureRoleAssign extends Component {
       checkbox: true,
       selectedKeys,
       itemField: {
-        title: item => item.nickname,
+        title: item => item.name,
         description: item => item.account,
       },
       rowKey: 'account',
@@ -123,7 +123,7 @@ class FeatureRoleAssign extends Component {
       showSearch: false,
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/appModule/getUnassignedUsers`,
       },
       cascadeParams: {
         moduleId: get(currentModule, 'id', null),

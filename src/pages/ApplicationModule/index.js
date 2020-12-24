@@ -282,7 +282,7 @@ class ApplicationModule extends Component {
       type: 'applicationModule/removeModuleUser',
       payload: {
         gitUserIds,
-        gitId: get(currentModule, 'gitId', ''),
+        moduleId: get(currentModule, 'id', ''),
       },
       callback,
     });
@@ -293,7 +293,7 @@ class ApplicationModule extends Component {
       applicationModule: { currentModule },
       dispatch,
     } = this.props;
-    const userData = { gitId: get(currentModule, 'gitId', null), accounts: keys };
+    const userData = { moduleId: get(currentModule, 'id', null), accounts: keys };
     dispatch({
       type: 'applicationModule/addModuleUser',
       payload: userData,
