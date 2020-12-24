@@ -120,7 +120,7 @@ class FeatureRoleAssigned extends PureComponent {
         ) : (
           <>
             <span>
-              {`共 ${total} 位成员`}
+              {`${total} 位成员`}
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handlerShowAssign}>
                 添加成员
               </Button>
@@ -146,8 +146,8 @@ class FeatureRoleAssigned extends PureComponent {
       <>
         <div className="tool-action" onClick={e => e.stopPropagation()}>
           <Popconfirm title="确定要移除吗?" onConfirm={e => this.removeAssigned(item, e)}>
-            {saving && removeId === item.id ? (
-              <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
+            {saving && removeId === item.gitUserId ? (
+              <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
             ) : (
               <ExtIcon className={cls('del', 'action-item')} type="minus-circle" antd />
             )}

@@ -163,7 +163,7 @@ class UserGroup extends Component {
             onConfirm={e => this.delUserGroup(item, e)}
           >
             {loading.effects['userGroup/delUserGroup'] && delGroupId === item.id ? (
-              <ExtIcon className={cls('del', 'action-item')} type="loading" antd />
+              <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
             ) : (
               <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
             )}
