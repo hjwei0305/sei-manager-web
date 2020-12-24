@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Row, Col, Radio } from 'antd';
+import { Form, Input, Button, Row, Col } from 'antd';
 import { ExtModal, ComboList, utils, ListLoader } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -35,17 +35,14 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
     saveToApprove: PropTypes.func,
     saveToApproving: PropTypes.bool,
-    versionTypeData: PropTypes.array,
   };
 
   constructor(props) {
     super(props);
-    const { rowData, versionTypeData } = props;
+    const { rowData } = props;
     const { remark = '' } = rowData || {};
-    const currentVersionType = versionTypeData.length > 0 ? versionTypeData[0] : null;
     this.state = {
       remark,
-      currentVersionType,
     };
     this.aceId = getUUID();
   }
@@ -61,7 +58,7 @@ class FormModal extends PureComponent {
   }
 
   handlerFormSubmit = approve => {
-    const { remark, currentVersionType } = this.state;
+    const { remark } = this.state;
     const { form, save, rowData, saveToApprove } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
@@ -72,7 +69,7 @@ class FormModal extends PureComponent {
       Object.assign(params, formData);
       Object.assign(params, {
         remark,
-        version: `${get(params, 'refTag')}-${currentVersionType.name}`,
+        version: get(params, 'refTag'),
       });
       if (approve) {
         saveToApprove(params);
@@ -92,14 +89,6 @@ class FormModal extends PureComponent {
     if (closeFormModal) {
       closeFormModal();
     }
-  };
-
-  handlerVersionTypeChange = e => {
-    const { versionTypeData } = this.props;
-    const versionTypeKey = e.target.value;
-    const ds = versionTypeData.filter(v => v.name === versionTypeKey);
-    const currentVersionType = ds.length === 1 ? ds[0] : null;
-    this.setState({ currentVersionType });
   };
 
   renderFooterBtn = () => {
@@ -136,8 +125,8 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { remark, currentVersionType } = this.state;
-    const { form, rowData, showModal, onlyView, dataLoading, versionTypeData } = this.props;
+    const { remark } = this.state;
+    const { form, rowData, showModal, onlyView, dataLoading } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改发版申请' : '新建发版申请';
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
@@ -275,22 +264,6 @@ class FormModal extends PureComponent {
                           },
                         ],
                       })(<ComboList {...tagProps} disabled={onlyView} />)}
-                    </FormItem>
-                    <FormItem label="版本类型">
-                      <Radio.Group
-                        onChange={this.handlerVersionTypeChange}
-                        disabled={onlyView}
-                        value={currentVersionType.name}
-                        size="small"
-                      >
-                        {versionTypeData.map(vt => {
-                          return (
-                            <Radio.Button key={vt.name} value={vt.name}>
-                              {`${vt.remark}-${vt.name}`}
-                            </Radio.Button>
-                          );
-                        })}
-                      </Radio.Group>
                     </FormItem>
                   </Form>
                 </div>

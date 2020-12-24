@@ -4,10 +4,9 @@ import { constants } from '@/utils';
 import { approve, stopApprove } from '../services/service';
 import { del, editSave, createSave, getPublish } from '../services/applyPublish';
 
-const { FLOW_OPERATION_TYPE, VERSION_TYPE } = constants;
+const { FLOW_OPERATION_TYPE } = constants;
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
-const VERSION_TYPE_DATA = Object.keys(VERSION_TYPE).map(key => VERSION_TYPE[key]);
 
 export default modelExtend(model, {
   namespace: 'applyPublish',
@@ -17,7 +16,6 @@ export default modelExtend(model, {
     showModal: false,
     onlyView: false,
     filter: {},
-    versionTypeData: VERSION_TYPE_DATA,
   },
   subscriptions: {
     setup({ dispatch, history }) {

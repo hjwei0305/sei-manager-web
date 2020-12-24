@@ -274,18 +274,28 @@ class BuildRecord extends Component {
   renderBuildBtn = row => {
     const { loading } = this.props;
     const { buildId } = this.state;
-    if (loading.effects['buildRecord/build'] && buildId === row.id) {
-      return <ExtIcon className="loading" type="loading" antd />;
+    if (row.allowBuild) {
+      if (loading.effects['buildRecord/build'] && buildId === row.id) {
+        return <ExtIcon className="loading" type="loading" antd />;
+      }
+      return (
+        <Popconfirm title="确定要开始构建吗？" onConfirm={() => this.build(row)}>
+          <ExtIcon
+            type="play-circle"
+            tooltip={{ title: '开始构建', placement: 'bottom' }}
+            className="build"
+            antd
+          />
+        </Popconfirm>
+      );
     }
     return (
-      <Popconfirm title="确定要开始构建吗？" onConfirm={() => this.build(row)}>
-        <ExtIcon
-          type="play-circle"
-          tooltip={{ title: '开始构建', placement: 'bottom' }}
-          className="build"
-          antd
-        />
-      </Popconfirm>
+      <ExtIcon
+        type="play-circle"
+        tooltip={{ title: '构建已失效', placement: 'bottom' }}
+        className="build disabled"
+        antd
+      />
     );
   };
 

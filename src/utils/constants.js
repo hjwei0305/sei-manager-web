@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-17 22:25:53
+ * @Last Modified time: 2020-12-24 10:49:49
  */
 import { name } from '../../package.json';
 
@@ -206,11 +206,6 @@ const APPLY_ORDER_TYPE = {
   DEPLOY: { remark: '部署申请', name: 'DEPLOY' },
 };
 
-const VERSION_TYPE = {
-  BETA: { remark: '公测版', name: 'Beta' },
-  RELEASE: { remark: '正式版', name: 'Release' },
-};
-
 const TEMPLATE_TYPE = {
   PUBLISH_WEB: 'PUBLISH_WEB',
   PUBLISH_JAVA: 'PUBLISH_JAVA',
@@ -259,6 +254,5 @@ export default {
   APPLY_ORDER_TYPE,
   FLOW_OPERATION_TYPE,
   JENKINS_STATUS,
-  VERSION_TYPE,
   TEMPLATE_TYPE,
 };
