@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 15:38:34
+ * @Last Modified time: 2020-12-24 15:42:04
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -115,17 +115,18 @@ class FeatureRoleAssign extends Component {
       checkbox: true,
       selectedKeys,
       itemField: {
-        title: item => item.name,
+        title: item => item.nickname,
         description: item => item.account,
       },
       rowKey: 'account',
       showArrow: false,
       showSearch: false,
+      store: {
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
+      },
       cascadeParams: {
         moduleId: get(currentModule, 'id', null),
-      },
-      store: {
-        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
       },
       onListCardRef: ref => (this.listCardRef = ref),
       onSelectChange: this.handerAssignUserSelectChange,

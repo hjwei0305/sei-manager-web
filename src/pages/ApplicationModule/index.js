@@ -273,7 +273,7 @@ class ApplicationModule extends Component {
     });
   };
 
-  removeModuleUser = gitUserIds => {
+  removeModuleUser = (gitUserIds, callback) => {
     const {
       dispatch,
       applicationModule: { currentModule },
@@ -284,6 +284,7 @@ class ApplicationModule extends Component {
         gitUserIds,
         gitId: get(currentModule, 'gitId', ''),
       },
+      callback,
     });
   };
 

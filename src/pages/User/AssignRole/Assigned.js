@@ -15,6 +15,8 @@ class FeatureRoleAssigned extends PureComponent {
   static propTypes = {
     currentUser: PropTypes.object,
     onShowAssign: PropTypes.func,
+    saving: PropTypes.bool,
+    save: PropTypes.func,
   };
 
   static defaultProps = {

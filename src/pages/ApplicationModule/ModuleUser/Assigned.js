@@ -16,6 +16,8 @@ class FeatureRoleAssigned extends PureComponent {
   static propTypes = {
     currentModule: PropTypes.object,
     onShowAssign: PropTypes.func,
+    saving: PropTypes.bool,
+    save: PropTypes.func,
   };
 
   static defaultProps = {
@@ -58,9 +60,9 @@ class FeatureRoleAssigned extends PureComponent {
     e.stopPropagation();
     const { save } = this.props;
     if (save) {
-      const selectedKeys = [item.id];
+      const selectedKeys = [item.gitUserId];
       this.setState({
-        removeId: item.id,
+        removeId: item.gitUserId,
       });
       save(selectedKeys, re => {
         if (re.success) {
@@ -163,7 +165,6 @@ class FeatureRoleAssigned extends PureComponent {
       className: 'station-box',
       bordered: false,
       checkbox: true,
-      pagination: false,
       selectedKeys,
       rowKey: 'gitUserId',
       itemField: {
