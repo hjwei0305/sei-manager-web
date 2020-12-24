@@ -19,7 +19,7 @@ export default modelExtend(model, {
   effects: {
     *gitlabAsync({ callback }, { call, select }) {
       const { currentModule } = yield select(sel => sel.moduleTag);
-      const re = yield call(gitlabAsync, { moduleCode: get(currentModule, 'code') });
+      const re = yield call(gitlabAsync, { moduleId: get(currentModule, 'id') });
       if (re.success) {
         message.success('标签同步成功');
       } else {
@@ -32,7 +32,7 @@ export default modelExtend(model, {
     },
     *getNewTag(_, { call, put, select }) {
       const { currentModule } = yield select(sel => sel.moduleTag);
-      const re = yield call(getNewTag, { moduleCode: get(currentModule, 'code') });
+      const re = yield call(getNewTag, { moduleId: get(currentModule, 'id') });
       if (re.success) {
         const tagData = { ...re.data };
         const { major, minor, revised: originRevised } = tagData;

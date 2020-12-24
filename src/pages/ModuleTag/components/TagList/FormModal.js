@@ -60,7 +60,11 @@ class FormModal extends PureComponent {
         return;
       }
       const { message } = this.state;
-      const params = { message, moduleCode: get(currentModule, 'code') };
+      const params = {
+        message,
+        moduleCode: get(currentModule, 'code'),
+        moduleId: get(currentModule, 'id'),
+      };
       Object.assign(params, formData);
       save(params);
     });

@@ -208,7 +208,7 @@ class FormModal extends PureComponent {
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
       cascadeParams: {
-        moduleCode: form.getFieldValue('moduleCode') || '',
+        gitId: form.getFieldValue('gitId') || '',
       },
       placeholder: '请先选择要部署的模块',
       reader: {
