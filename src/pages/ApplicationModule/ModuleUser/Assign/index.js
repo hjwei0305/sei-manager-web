@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 17:34:14
+ * @Last Modified time: 2020-12-24 19:34:11
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -107,6 +107,7 @@ class FeatureRoleAssign extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { currentModule } = this.props;
+    const moduleId = get(currentModule, 'id', null);
     const listCardProps = {
       className: 'anyone-user-box',
       title: '人员列表',
@@ -115,7 +116,7 @@ class FeatureRoleAssign extends Component {
       checkbox: true,
       selectedKeys,
       itemField: {
-        title: item => item.name,
+        title: item => item.nickname,
         description: item => item.account,
       },
       rowKey: 'account',
@@ -123,11 +124,9 @@ class FeatureRoleAssign extends Component {
       showSearch: false,
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/appModule/getUnassignedUsers`,
+        url: `${SERVER_PATH}/sei-manager/appModule/getUnassignedUsers/${moduleId}`,
       },
-      cascadeParams: {
-        moduleId: get(currentModule, 'id', null),
-      },
+      cascadeParams: {},
       onListCardRef: ref => (this.listCardRef = ref),
       onSelectChange: this.handerAssignUserSelectChange,
       customTool: this.renderCustomTool,
