@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-25 08:43:48
+ * @Last Modified time: 2020-12-25 08:44:46
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -96,7 +96,7 @@ class FeatureRoleAssign extends Component {
               onChange={e => this.handlerSearchChange(e.target.value)}
               onSearch={this.handlerSearch}
               onPressEnter={this.handlerPressEnter}
-              style={{ width: 132 }}
+              style={{ width: 220 }}
             />
           </Tooltip>
         </div>
