@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 19:34:11
+ * @Last Modified time: 2020-12-25 08:43:48
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -115,6 +115,7 @@ class FeatureRoleAssign extends Component {
       searchPlaceHolder: '输入名称关键字查询',
       checkbox: true,
       selectedKeys,
+      searchProperties: ['nickname'],
       itemField: {
         title: item => item.nickname,
         description: item => item.account,
