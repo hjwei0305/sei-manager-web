@@ -1,11 +1,14 @@
+/* eslint-disable no-empty */
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Alert, Row, Col, Button } from 'antd';
 import { ExtModal, ListLoader, utils } from 'suid';
-import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/mode-markdown';
-import 'ace-builds/src-noconflict/theme-textmate';
+import * as MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/a11y-light.css';
+import 'react-markdown-editor-lite/lib/index.css';
 import styles from './FormModal.less';
 
 const { getUUID } = utils;
@@ -19,9 +22,27 @@ const formItemLayout = {
   },
 };
 
+const mdParser = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  langPrefix: 'language-',
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) {}
+    }
+
+    return ''; // 使用额外的默认转义
+  },
+});
+
 @Form.create()
 class FormModal extends PureComponent {
-  static aceId;
+  static editorId;
+
+  static mdEditor;
 
   static propTypes = {
     onlyView: PropTypes.bool,
@@ -41,8 +62,9 @@ class FormModal extends PureComponent {
     const { message = '' } = tagData || {};
     this.state = {
       message,
+      markdownPreview: false,
     };
-    this.aceId = getUUID();
+    this.editorId = getUUID();
   }
 
   componentDidUpdate(prevProps) {
@@ -96,8 +118,8 @@ class FormModal extends PureComponent {
     }
   };
 
-  handlerAceChannge = message => {
-    this.setState({ message });
+  handlerAceChannge = ({ text }) => {
+    this.setState({ message: text });
   };
 
   renderFooterBtn = () => {
@@ -114,15 +136,31 @@ class FormModal extends PureComponent {
         <Button disabled={saving} onClick={closeFormModal}>
           取消
         </Button>
-        <Button loading={saving} onClick={() => this.handlerFormSubmit()}>
+        <Button type="primary" loading={saving} onClick={() => this.handlerFormSubmit()}>
           确定
         </Button>
       </>
     );
   };
 
+  handlerMarkdownView = () => {
+    const { markdownPreview: preview } = this.state;
+    const markdownPreview = !preview;
+    this.setState({ markdownPreview }, () => {
+      this.mdEditor.setView({
+        menu: !markdownPreview,
+        md: !markdownPreview,
+        html: markdownPreview,
+      });
+    });
+  };
+
+  renderHTML = text => {
+    return mdParser.render(text);
+  };
+
   render() {
-    const { message } = this.state;
+    const { message, markdownPreview } = this.state;
     const {
       form,
       closeFormModal,
@@ -139,7 +177,7 @@ class FormModal extends PureComponent {
       onCancel: closeFormModal,
       visible: showTagModal,
       centered: true,
-      width: 780,
+      width: 880,
       wrapClassName: styles['form-box'],
       bodyStyle: { padding: 0 },
       footer: this.renderFooterBtn(),
@@ -151,7 +189,7 @@ class FormModal extends PureComponent {
           <ListLoader />
         ) : (
           <Row gutter={8}>
-            <Col span={10}>
+            <Col span={9}>
               <div className="item-box">
                 <div className="form-body">
                   {onlyView ? null : (
@@ -226,31 +264,35 @@ class FormModal extends PureComponent {
                 </div>
               </div>
             </Col>
-            <Col span={14}>
+            <Col span={15}>
               <div className="item-box">
-                <div className="item-label">标签描述(支持Markdown)</div>
+                <div className="item-label">
+                  <span className="title">标签描述(Markdown)</span>
+                  <div className="tool-box">
+                    {!onlyView ? (
+                      <span onClick={this.handlerMarkdownView} className="tool-item">
+                        {markdownPreview ? '编辑' : '预览'}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
                 <div className="item-body">
-                  <AceEditor
-                    style={{ marginBottom: 24 }}
-                    mode="markdown"
-                    theme="textmate"
+                  <MdEditor
+                    ref={ref => (this.mdEditor = ref || undefined)}
+                    style={{ height: '526px', width: '100%' }}
+                    name={this.editorId}
+                    value={message || ''}
+                    readOnly={onlyView || markdownPreview}
                     placeholder="请输入标签说明(例如：修订的内容)"
-                    name={this.aceId}
-                    fontSize={14}
+                    renderHTML={text => this.renderHTML(text)}
                     onChange={this.handlerAceChannge}
-                    showPrintMargin={false}
-                    showGutter={false}
-                    readOnly={onlyView}
-                    highlightActiveLine
-                    width="100%"
-                    height="526px"
-                    value={message}
-                    setOptions={{
-                      enableBasicAutocompletion: true,
-                      enableLiveAutocompletion: true,
-                      enableSnippets: true,
-                      showLineNumbers: false,
-                      tabSize: 2,
+                    config={{
+                      view: {
+                        menu: !onlyView,
+                        md: !onlyView && !markdownPreview,
+                        html: onlyView || markdownPreview,
+                      },
+                      canView: { fullScreen: true, hideMenu: false },
                     }}
                   />
                 </div>

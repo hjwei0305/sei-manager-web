@@ -13,11 +13,30 @@
         height: 100%;
         background-color: @white;
         .item-label {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           height: 42px;
           padding: 0 16px;
           color: fade(@black, 85%);
           font-weight: 700;
           line-height: 42px;
+          .tool-item {
+            display: inline-block;
+            height: 32px;
+            margin-right: 8px;
+            color: fade(@black, 65%);
+            line-height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all ease-in 0.2s;
+            &:hover {
+              color: fade(@primary-color, 65%);
+            }
+            &:last-child {
+              margin-right: 0;
+            }
+          }
         }
         .form-body {
           height: 100%;
@@ -32,6 +51,12 @@
         .item-body {
           height: 526px;
           overflow: hidden;
+          .rc-md-editor {
+            border-width: 0;
+            .rc-md-navigation {
+              background-color: #fff;
+            }
+          }
         }
       }
     }

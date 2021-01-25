@@ -41,28 +41,33 @@ class FilterDateView extends PureComponent {
 
   getTimeByTimeViewType = currentTimeViewType => {
     const newVal = {};
+    const { startTime, endTime } = this.state;
     switch (currentTimeViewType.name) {
-      case 'THIS_5M':
+      case SEARCH_DATE_PERIOD.THIS_5M.name:
         newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(5, 'minute')
           .format('YYYY-MM-DD HH:mm:ss');
         break;
-      case 'THIS_30M':
+      case SEARCH_DATE_PERIOD.THIS_30M.name:
         newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(30, 'minute')
           .format('YYYY-MM-DD HH:mm:ss');
         break;
-      case 'THIS_60M':
+      case SEARCH_DATE_PERIOD.THIS_60M.name:
         newVal.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         newVal.startTime = moment(newVal.endTime)
           .subtract(1, 'hour')
           .format('YYYY-MM-DD HH:mm:ss');
         break;
-      case 'TODAY':
+      case SEARCH_DATE_PERIOD.TODAY.name:
         newVal.startTime = moment().format('YYYY-MM-DD 00:00:00');
         newVal.endTime = moment().format('YYYY-MM-DD 23:59:59');
+        break;
+      case SEARCH_DATE_PERIOD.PERIOD.name:
+        newVal.startTime = startTime;
+        newVal.endTime = endTime;
         break;
       default:
     }
@@ -98,14 +103,18 @@ class FilterDateView extends PureComponent {
     const currentTimeViewType = SEARCH_DATE_PERIOD_DATA.filter(
       i => i.name === SEARCH_DATE_PERIOD.PERIOD.name,
     )[0];
-    this.setState({
-      startTime,
-      endTime,
-    });
-    this.dataHandle(currentTimeViewType, {
-      startTime,
-      endTime,
-    });
+    this.setState(
+      {
+        startTime,
+        endTime,
+      },
+      () => {
+        this.dataHandle(currentTimeViewType, {
+          startTime,
+          endTime,
+        });
+      },
+    );
   };
 
   onActionOperation = e => {
