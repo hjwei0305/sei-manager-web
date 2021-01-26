@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
-import ReactDOM from 'react-dom';
 import { Dropdown } from 'antd';
 import cls from 'classnames';
-import * as focus from 'focus-outside';
 import styles from './index.less';
 
 export default class HeaderDropdown extends PureComponent {
@@ -16,23 +14,23 @@ export default class HeaderDropdown extends PureComponent {
     };
   }
 
-  componentDidMount() {
-    if (this.dropdownElm) {
-      focus.bind(ReactDOM.findDOMNode(this.dropdownElm), this.handleOutside);
-    }
-  }
+  // componentDidMount() {
+  //   if (this.dropdownElm) {
+  //     focus.bind(ReactDOM.findDOMNode(this.dropdownElm), this.handleOutside);
+  //   }
+  // }
 
-  componentWillUnmount() {
-    if (this.dropdownElm) {
-      focus.unbind(ReactDOM.findDOMNode(this.dropdownElm), this.handleOutside);
-    }
-  }
+  // componentWillUnmount() {
+  //   if (this.dropdownElm) {
+  //     focus.unbind(ReactDOM.findDOMNode(this.dropdownElm), this.handleOutside);
+  //   }
+  // }
 
-  handleOutside = () => {
-    setTimeout(() => {
-      this.setState({ visible: false });
-    }, 80);
-  };
+  // handleOutside = () => {
+  //   setTimeout(() => {
+  //     this.setState({ visible: false });
+  //   }, 80);
+  // };
 
   handleVisibleChange = visible => {
     this.setState({ visible });
