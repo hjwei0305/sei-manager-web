@@ -1,6 +1,13 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { saveConfig, saveConfigItem, delConfigItem, getCompareConfig } from './service';
+import {
+  saveConfig,
+  saveConfigItem,
+  delConfigItem,
+  disableConfig,
+  enableConfig,
+  syncConfigs,
+} from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -37,11 +44,17 @@ export default modelExtend(model, {
         },
       });
     },
-    *saveConfig({ payload, callback }, { call }) {
+    *saveConfig({ payload, callback }, { call, put }) {
       const re = yield call(saveConfig, payload);
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
+        yield put({
+          type: 'updateState',
+          payload: {
+            showFormModal: false,
+          },
+        });
       } else {
         message.error(re.message);
       }
@@ -79,17 +92,35 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *getCompareConfig({ payload, callback }, { call, put }) {
-      const re = yield call(getCompareConfig, payload);
+    *enableConfig({ payload, callback }, { call }) {
+      const re = yield call(enableConfig, payload);
       message.destroy();
       if (re.success) {
-        message.success(formatMessage({ id: 'global.assign-success', defaultMessage: '分配成功' }));
-        yield put({
-          type: 'updateState',
-          payload: {
-            compareData: re.data,
-          },
-        });
+        message.success('批量启用成功');
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *disableConfig({ payload, callback }, { call }) {
+      const re = yield call(disableConfig, payload);
+      message.destroy();
+      if (re.success) {
+        message.success('批量禁用成功');
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *syncConfigs({ payload, callback }, { call }) {
+      const re = yield call(syncConfigs, payload);
+      message.destroy();
+      if (re.success) {
+        message.success('同步成功');
       } else {
         message.error(re.message);
       }

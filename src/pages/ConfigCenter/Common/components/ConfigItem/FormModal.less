@@ -1,0 +1,29 @@
+@import '../../../../../themes/vars.less';
+.form-modal-box {
+  :global {
+    .sync-title {
+      display: flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 24px;
+      color: @black;
+      font-weight: 700;
+      line-height: 24px;
+    }
+    .btn-evn {
+      cursor: pointer;
+      &:hover {
+        color: fade(@primary-color, 65%);
+      }
+    }
+  }
+}
+
+.form-popover-box {
+  :global {
+    .ant-popover-inner-content {
+      height: 380px;
+      padding: 0;
+    }
+  }
+}

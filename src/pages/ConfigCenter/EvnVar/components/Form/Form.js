@@ -36,7 +36,7 @@ class FeatureGroupForm extends PureComponent {
           Object.assign(formData, { useStatus: USER_STATUS.DISABLE.key });
         }
       }
-      Object.assign(params, getFieldsValue());
+      Object.assign(params, formData);
       save(omit(params, 'enable'), handlerPopoverHide);
     });
   };
@@ -45,6 +45,7 @@ class FeatureGroupForm extends PureComponent {
     const { form, data, saving } = this.props;
     const { getFieldDecorator } = form;
     const title = data ? '编辑' : '新建';
+    const disabledCode = data && get(data, 'useStatus') !== USER_STATUS.NONE.key;
     return (
       <div key="form-box" className={cls(styles['form-box'])}>
         <div className="base-view-body">
@@ -61,7 +62,7 @@ class FeatureGroupForm extends PureComponent {
                     message: '键名不能为空',
                   },
                 ],
-              })(<Input disabled={!!data} autoComplete="off" />)}
+              })(<Input disabled={disabledCode} autoComplete="off" />)}
             </FormItem>
             <FormItem label="描述">
               {getFieldDecorator('remark', {

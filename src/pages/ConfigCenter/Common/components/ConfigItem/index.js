@@ -3,23 +3,33 @@ import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card, Tag, Drawer, Popconfirm } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon } from 'suid';
+import { Button, Card, Drawer, Popconfirm, Popover } from 'antd';
+import { ExtTable, BannerTitle, ExtIcon, ListCard } from 'suid';
+import { UseStatus } from '@/components';
 import { constants } from '@/utils';
+import FormModal from './FormModal';
 import styles from './index.less';
 
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, USER_STATUS } = constants;
 
 @connect(({ configCommon, loading }) => ({ configCommon, loading }))
 class ConfigItem extends Component {
   static tableRef;
 
+  static syncEvnData;
+
   constructor(props) {
     super(props);
+    this.syncEvnData = [];
     this.state = {
       selectedRowKeys: [],
       delRowId: null,
+      showEvnSync: false,
     };
+  }
+
+  componentWillUnmount() {
+    this.syncEvnData = [];
   }
 
   reloadData = () => {
@@ -34,9 +44,20 @@ class ConfigItem extends Component {
     });
   };
 
-  onCancelBatchSync = () => {
+  handlerClearSelect = () => {
     this.setState({
       selectedRowKeys: [],
+    });
+  };
+
+  add = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configCommon/updateState',
+      payload: {
+        showFormModal: true,
+        currentConfigItem: null,
+      },
     });
   };
 
@@ -51,16 +72,22 @@ class ConfigItem extends Component {
     });
   };
 
-  save = data => {
-    const { dispatch } = this.props;
+  save = (data, callback) => {
+    const { dispatch, configCommon } = this.props;
+    const { currentConfigItem } = configCommon;
+    let action = 'saveConfig';
+    if (currentConfigItem) {
+      action = 'saveConfigItem';
+    }
     dispatch({
-      type: 'configCommon/saveConfigItem',
-      payload: {
-        ...data,
-      },
+      type: `configCommon/${action}`,
+      payload: data,
       callback: res => {
         if (res.success) {
           this.reloadData();
+          if (callback && callback instanceof Function) {
+            callback();
+          }
         }
       },
     });
@@ -91,6 +118,61 @@ class ConfigItem extends Component {
     );
   };
 
+  enableConfig = () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configCommon/enableConfig',
+      payload: selectedRowKeys,
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+          this.handlerClearSelect();
+        }
+      },
+    });
+  };
+
+  disableConfig = () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configCommon/disableConfig',
+      payload: selectedRowKeys,
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+          this.handlerClearSelect();
+        }
+      },
+    });
+  };
+
+  handlerSync = () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+    const data = [];
+    this.syncEvnData.forEach(evn => {
+      selectedRowKeys.forEach(id => {
+        data.push({
+          envCode: evn.code,
+          envName: evn.name,
+          id,
+        });
+      });
+    });
+    dispatch({
+      type: 'configCommon/syncConfigs',
+      payload: data,
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+          this.handlerClearSelect();
+        }
+      },
+    });
+  };
+
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -102,32 +184,81 @@ class ConfigItem extends Component {
     });
   };
 
+  handlerEvnSync = showEvnSync => {
+    this.setState({ showEvnSync });
+  };
+
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
-    if (loading.effects['configCommon/delConfigItem'] && delRowId === row.id) {
-      return <ExtIcon className="del-loading" type="loading" antd />;
+    if (row.useStatus === USER_STATUS.NONE.key) {
+      if (loading.effects['configCommon/delConfigItem'] && delRowId === row.id) {
+        return <ExtIcon className="del-loading" type="loading" antd />;
+      }
+      return (
+        <Popconfirm
+          placement="topLeft"
+          title={formatMessage({
+            id: 'global.delete.confirm',
+            defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+          })}
+          onConfirm={() => this.del(row)}
+        >
+          <ExtIcon className="del" type="delete" antd />
+        </Popconfirm>
+      );
     }
-    return <ExtIcon className="del" type="delete" antd />;
+    return <ExtIcon className="del disabled" type="delete" antd />;
   };
 
-  renderItemName = (t, row) => {
+  renderEvnVarList = () => {
+    const {
+      configCommon: { envData, selectedEnv },
+    } = this.props;
+    const dataSource = envData.filter(env => env.code !== selectedEnv.code);
+    const listProps = {
+      searchProperties: ['code', 'remark'],
+      showArrow: false,
+      checkbox: true,
+      pagination: false,
+      showSearch: false,
+      customTool: () => null,
+      dataSource,
+      itemField: {
+        title: item => item.code,
+        description: item => item.name,
+      },
+      onSelectChange: (_keys, items) => {
+        this.syncEvnData = items;
+        this.forceUpdate();
+      },
+    };
     return (
       <>
-        {t}
-        {row.status === false ? (
-          <Tag color="red" style={{ marginLeft: 8 }}>
-            已禁用
-          </Tag>
-        ) : null}
+        <div className="tool-box">
+          <Button
+            disabled={this.syncEvnData.length === 0}
+            type="primary"
+            onClick={this.handlerSync}
+          >
+            开始同步
+          </Button>
+        </div>
+        <div className="evn-box">
+          <ListCard {...listProps} />
+        </div>
       </>
     );
   };
 
+  renderItemName = st => {
+    return <UseStatus status={st} />;
+  };
+
   render() {
-    const { selectedRowKeys } = this.state;
+    const { selectedRowKeys, showEvnSync } = this.state;
     const { loading, configCommon } = this.props;
-    const { selectedEnv } = configCommon;
+    const { selectedEnv, currentConfigItem, showFormModal, envData } = configCommon;
     const hasSelected = selectedRowKeys.length > 0;
     const columns = [
       {
@@ -147,25 +278,23 @@ class ConfigItem extends Component {
               ignore="true"
               antd
             />
-            <Popconfirm
-              placement="topLeft"
-              title={formatMessage({
-                id: 'global.delete.confirm',
-                defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-              })}
-              onConfirm={() => this.del(record)}
-            >
-              {this.renderDelBtn(record)}
-            </Popconfirm>
+            {this.renderDelBtn(record)}
           </span>
         ),
+      },
+      {
+        title: '状态',
+        dataIndex: 'useStatus',
+        width: 100,
+        required: true,
+        align: 'center',
+        render: this.renderItemName,
       },
       {
         title: '键名',
         dataIndex: 'key',
         width: 220,
         required: true,
-        render: this.renderItemName,
       },
       {
         title: '键值',
@@ -180,11 +309,15 @@ class ConfigItem extends Component {
         render: t => t || '-',
       },
     ];
-    const removeLoading = loading.effects['configCommon/removeAssignedUsers'];
+    const enableConfigLoading = loading.effects['configCommon/enableConfig'];
+    const disableConfigLoading = loading.effects['configCommon/disableConfig'];
+    const syncConfigLoading = loading.effects['configCommon/syncConfigs'];
+    const saving =
+      loading.effects['configCommon/saveConfig'] || loading.effects['configCommon/saveConfigItem'];
     const toolBarProps = {
       left: (
         <>
-          <Button type="primary" onClick={this.showAssignUser}>
+          <Button type="primary" onClick={this.add}>
             新建配置键
           </Button>
           <Button onClick={this.reloadData}>
@@ -199,12 +332,40 @@ class ConfigItem extends Component {
             style={{ position: 'absolute' }}
             visible={hasSelected}
           >
-            <Button onClick={this.onCancelBatchSync} disabled={removeLoading}>
+            <Button
+              onClick={this.handlerClearSelect}
+              disabled={enableConfigLoading || disableConfigLoading || syncConfigLoading}
+            >
               取消
             </Button>
-            <Button type="danger" loading={removeLoading}>
-              {`同步到( ${selectedRowKeys.length} )`}
+            <Button
+              type="danger"
+              onClick={this.disableConfig}
+              disabled={enableConfigLoading || syncConfigLoading}
+              loading={disableConfigLoading}
+            >
+              禁用
             </Button>
+            <Button
+              onClick={this.enableConfig}
+              disabled={disableConfigLoading || syncConfigLoading}
+              loading={enableConfigLoading}
+            >
+              启用
+            </Button>
+            <Popover
+              overlayClassName={styles['sync-popover-box']}
+              onVisibleChange={this.handlerEvnSync}
+              visible={showEvnSync}
+              trigger="click"
+              placement="rightTop"
+              content={this.renderEvnVarList()}
+              title="同步到环境"
+            >
+              <Button type="primary" ghost disabled={enableConfigLoading || disableConfigLoading}>
+                同步到环境
+              </Button>
+            </Popover>
           </Drawer>
         </>
       ),
@@ -230,14 +391,24 @@ class ConfigItem extends Component {
         envCode: get(selectedEnv, 'code'),
       },
     };
+    const formModalProps = {
+      selectedEnv,
+      rowData: currentConfigItem,
+      closeFormModal: this.closeFormModal,
+      showModal: showFormModal,
+      saving,
+      save: this.save,
+      envData,
+    };
     return (
-      <div className={cls(styles['user-box'])}>
+      <div className={cls(styles['common-config-box'])}>
         <Card
           title={<BannerTitle title={get(selectedEnv, 'name')} subTitle="配置键清单" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />
         </Card>
+        <FormModal {...formModalProps} />
       </div>
     );
   }

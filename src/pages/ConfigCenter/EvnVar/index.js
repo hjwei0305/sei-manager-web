@@ -6,6 +6,7 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { Input, Empty, Popconfirm, Layout } from 'antd';
 import { ExtIcon, ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
+import { UseStatus } from '@/components';
 import { constants } from '@/utils';
 import Add from './components/Form/Add';
 import Edit from './components/Form/Edit';
@@ -171,7 +172,12 @@ class ConfigEvnVar extends Component {
       selectedKeys,
       extra: <Add saving={saving} save={this.save} />,
       itemField: {
-        title: item => item.code,
+        title: item => (
+          <>
+            {item.code}
+            <UseStatus status={item.useStatus} />
+          </>
+        ),
         description: item => item.remark,
       },
       store: {
