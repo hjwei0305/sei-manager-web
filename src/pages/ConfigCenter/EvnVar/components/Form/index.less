@@ -1,0 +1,30 @@
+.form-popover-box {
+  width: 460px;
+  max-height: 300px;
+}
+
+.gitlab-popover-box {
+  width: 460px;
+  max-height: 300px;
+  :global {
+    .ant-popover-inner-content {
+      height: 480px;
+    }
+  }
+}
+
+.action-menu-box {
+  :global {
+    .ant-dropdown-menu-item {
+      padding: 0;
+      span > i {
+        margin-right: 8px;
+      }
+      .view-popover-box-trigger {
+        display: inline-block;
+        width: 100%;
+        padding: 8px;
+      }
+    }
+  }
+}

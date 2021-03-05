@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2021-01-25 11:24:25
+ * @Last Modified time: 2021-03-02 16:14:29
  */
 import { name } from '../../package.json';
 
@@ -228,6 +228,13 @@ const FLOW_OPERATION_TYPE = {
   REJECT: 'REJECT',
   PASSED: 'PASSED',
 };
+
+const USER_STATUS = {
+  NONE: { key: 'NONE', title: '可用', color: '' },
+  ENABLE: { key: 'ENABLE', title: '使用中', color: 'green' },
+  DISABLE: { key: 'DISABLE', title: '禁用', color: 'red' },
+};
+
 export default {
   NoMenuPage,
   NoMenuPages,
@@ -255,4 +262,5 @@ export default {
   FLOW_OPERATION_TYPE,
   JENKINS_STATUS,
   TEMPLATE_TYPE,
+  USER_STATUS,
 };

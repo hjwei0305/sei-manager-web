@@ -215,13 +215,18 @@ const routes = [
         ],
       },
       {
-        path: '/service',
-        namd: '服务',
+        path: '/configCenter',
+        namd: '配置中心',
         routes: [
           {
-            path: '/service/view',
-            name: '可用服务',
-            component: './AvailableService',
+            path: '/configCenter/evnVar',
+            name: '环境变量',
+            component: './ConfigCenter/EvnVar',
+          },
+          {
+            path: '/configCenter/common',
+            name: '通用配置',
+            component: './ConfigCenter/Common',
           },
         ],
       },

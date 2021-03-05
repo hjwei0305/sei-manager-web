@@ -7,7 +7,7 @@
     "analyze": "cross-env ANALYZE=1 umi build",
     "start": "cross-env MOCK=none umi dev",
     "start:mock": "cross-env MOCK=yes umi dev",
-    "build": "umi build",
+    "build": "cross-env ESLINT=none umi build",
     "test": "umi test",
     "lint": "npm run lint:script && npm run lint:style",
     "lint-fix": "npm run lint-fix:script && npm run lint-fix:style",
@@ -51,7 +51,7 @@
     "react-markdown-editor-lite": "^1.2.2",
     "react-transition-group": "^4.4.1",
     "screenfull": "^5.0.0",
-    "suid": "^1.3.85",
+    "suid": "^1.3.102",
     "umi": "^2.8.7",
     "umi-plugin-react": "^1.9.5"
   },
