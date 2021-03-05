@@ -133,7 +133,7 @@ class ValueItem extends Component {
         render: this.renderHandleValue,
       },
     ];
-    const saving = loading.effects['configEvnVar/saveKeyValue'];
+    const saving = loading.effects['configEvnVar/saveVariableValue'];
     const toolBarProps = {
       left: (
         <>
