@@ -166,6 +166,7 @@ class ConfigItem extends Component {
       payload: data,
       callback: res => {
         if (res.success) {
+          this.setState({ showEvnSync: false });
           this.reloadData();
           this.handlerClearSelect();
         }
