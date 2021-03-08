@@ -3,8 +3,8 @@ import { connect } from 'dva';
 import cls from 'classnames';
 import { get } from 'lodash';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card, Drawer, Popconfirm, Popover } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon, ListCard } from 'suid';
+import { Button, Drawer, Popconfirm, Popover } from 'antd';
+import { ExtTable, ExtIcon, ListCard } from 'suid';
 import { UseStatus } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
@@ -12,7 +12,7 @@ import styles from './index.less';
 
 const { SERVER_PATH, USER_STATUS } = constants;
 
-@connect(({ configCommon, loading }) => ({ configCommon, loading }))
+@connect(({ configApp, loading }) => ({ configApp, loading }))
 class ConfigItem extends Component {
   static tableRef;
 
@@ -53,7 +53,7 @@ class ConfigItem extends Component {
   add = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configCommon/updateState',
+      type: 'configApp/updateState',
       payload: {
         showFormModal: true,
         currentConfigItem: null,
@@ -64,7 +64,7 @@ class ConfigItem extends Component {
   edit = currentConfigItem => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configCommon/updateState',
+      type: 'configApp/updateState',
       payload: {
         showFormModal: true,
         currentConfigItem,
@@ -73,14 +73,14 @@ class ConfigItem extends Component {
   };
 
   save = (data, callback) => {
-    const { dispatch, configCommon } = this.props;
-    const { currentConfigItem } = configCommon;
+    const { dispatch, configApp } = this.props;
+    const { currentConfigItem } = configApp;
     let action = 'saveConfig';
     if (currentConfigItem) {
       action = 'saveConfigItem';
     }
     dispatch({
-      type: `configCommon/${action}`,
+      type: `configApp/${action}`,
       payload: data,
       callback: res => {
         if (res.success) {
@@ -101,7 +101,7 @@ class ConfigItem extends Component {
       },
       () => {
         dispatch({
-          type: 'configCommon/delConfigItem',
+          type: 'configApp/delConfigItem',
           payload: {
             id: record.id,
           },
@@ -122,7 +122,7 @@ class ConfigItem extends Component {
     const { selectedRowKeys } = this.state;
     const { dispatch } = this.props;
     dispatch({
-      type: 'configCommon/enableConfig',
+      type: 'configApp/enableConfig',
       payload: selectedRowKeys,
       callback: res => {
         if (res.success) {
@@ -137,7 +137,7 @@ class ConfigItem extends Component {
     const { selectedRowKeys } = this.state;
     const { dispatch } = this.props;
     dispatch({
-      type: 'configCommon/disableConfig',
+      type: 'configApp/disableConfig',
       payload: selectedRowKeys,
       callback: res => {
         if (res.success) {
@@ -162,11 +162,11 @@ class ConfigItem extends Component {
       });
     });
     dispatch({
-      type: 'configCommon/syncConfigs',
+      type: 'configApp/syncConfigs',
       payload: data,
       callback: res => {
         if (res.success) {
-          this.setState({ selectedRowKeys: [], showEvnSync: false });
+          this.setState({ showEvnSync: false });
           this.reloadData();
           this.handlerClearSelect();
         }
@@ -177,7 +177,7 @@ class ConfigItem extends Component {
   closeFormModal = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configCommon/updateState',
+      type: 'configApp/updateState',
       payload: {
         showFormModal: false,
         currentConfigItem: null,
@@ -193,7 +193,7 @@ class ConfigItem extends Component {
     const { loading } = this.props;
     const { delRowId } = this.state;
     if (row.useStatus === USER_STATUS.NONE.key) {
-      if (loading.effects['configCommon/delConfigItem'] && delRowId === row.id) {
+      if (loading.effects['configApp/delConfigItem'] && delRowId === row.id) {
         return <ExtIcon className="del-loading" type="loading" antd />;
       }
       return (
@@ -214,9 +214,9 @@ class ConfigItem extends Component {
 
   renderEvnVarList = () => {
     const {
-      configCommon: { envData, selectedEnv },
+      configApp: { envData, selectedEnv },
     } = this.props;
-    const dataSource = envData.filter(env => env.code !== selectedEnv.code);
+    const dataSource = envData.filter(env => selectedEnv && env.code !== selectedEnv.code);
     const listProps = {
       searchProperties: ['code', 'remark'],
       showArrow: false,
@@ -258,8 +258,8 @@ class ConfigItem extends Component {
 
   render() {
     const { selectedRowKeys, showEvnSync } = this.state;
-    const { loading, configCommon } = this.props;
-    const { selectedEnv, currentConfigItem, showFormModal, envData } = configCommon;
+    const { loading, configApp } = this.props;
+    const { selectedEnv, currentConfigItem, showFormModal, envData, selectedApp } = configApp;
     const hasSelected = selectedRowKeys.length > 0;
     const columns = [
       {
@@ -310,11 +310,11 @@ class ConfigItem extends Component {
         render: t => t || '-',
       },
     ];
-    const enableConfigLoading = loading.effects['configCommon/enableConfig'];
-    const disableConfigLoading = loading.effects['configCommon/disableConfig'];
-    const syncConfigLoading = loading.effects['configCommon/syncConfigs'];
+    const enableConfigLoading = loading.effects['configApp/enableConfig'];
+    const disableConfigLoading = loading.effects['configApp/disableConfig'];
+    const syncConfigLoading = loading.effects['configApp/syncConfigs'];
     const saving =
-      loading.effects['configCommon/saveConfig'] || loading.effects['configCommon/saveConfigItem'];
+      loading.effects['configApp/saveConfig'] || loading.effects['configApp/saveConfigItem'];
     const toolBarProps = {
       left: (
         <>
@@ -358,7 +358,6 @@ class ConfigItem extends Component {
               overlayClassName={styles['sync-popover-box']}
               onVisibleChange={this.handlerEvnSync}
               visible={showEvnSync}
-              destroyTooltipOnHide
               trigger="click"
               placement="rightTop"
               content={this.renderEvnVarList()}
@@ -387,13 +386,11 @@ class ConfigItem extends Component {
       searchProperties: ['key', 'value', 'remark'],
       searchWidth: 260,
       store: {
-        url: `${SERVER_PATH}/sei-manager/generalConfig/findByEnv`,
-        loaded: () => {
-          this.setState({ selectedRowKeys: [] });
-        },
+        url: `${SERVER_PATH}/sei-manager/appConfig/findByAppEnv`,
       },
       cascadeParams: {
         envCode: get(selectedEnv, 'code'),
+        appCode: get(selectedApp, 'code'),
       },
     };
     const formModalProps = {
@@ -407,12 +404,7 @@ class ConfigItem extends Component {
     };
     return (
       <div className={cls(styles['common-config-box'])}>
-        <Card
-          title={<BannerTitle title={get(selectedEnv, 'name')} subTitle="配置键清单" />}
-          bordered={false}
-        >
-          <ExtTable {...extTableProps} />
-        </Card>
+        <ExtTable {...extTableProps} />
         <FormModal {...formModalProps} />
       </div>
     );

@@ -26,6 +26,8 @@ export default modelExtend(model, {
     showCompare: false,
     showFormModal: false,
     compareData: null,
+    yamlText: '',
+    currentTabKey: 'appParam',
   },
   subscriptions: {
     setup({ dispatch, history }) {

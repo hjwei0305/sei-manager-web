@@ -219,3 +219,14 @@ li {
 .ant-input[disabled] {
   color: rgba(0, 0, 0, 0.65) !important;
 }
+
+.ant-dropdown-trigger {
+  i.anticon-down {
+    transition: transform ease 0.3s;
+  }
+  &.ant-dropdown-open {
+    i.anticon-down {
+      transform: rotate(-180deg);
+    }
+  }
+}

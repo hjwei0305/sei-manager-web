@@ -4,8 +4,12 @@ import cls from 'classnames';
 import { Empty, Layout, Input } from 'antd';
 import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
+import { constants } from '@/utils';
+import DropdownGroup from './components/DropdownGroup';
+import Config from './Config';
 import styles from './index.less';
 
+const { SERVER_PATH } = constants;
 const { Sider, Content } = Layout;
 const { Search } = Input;
 
@@ -25,6 +29,16 @@ class ConfigCommon extends Component {
     this.listCardRef.handlerSearch(v);
   };
 
+  handlerGroupChange = groupCode => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'moduleTag/updateState',
+      payload: {
+        moduleFilter: { groupCode },
+      },
+    });
+  };
+
   renderCustomTool = () => (
     <>
       <Search
@@ -40,23 +54,35 @@ class ConfigCommon extends Component {
 
   handlerAppSelect = (keys, items) => {
     const { dispatch } = this.props;
-    const selectedEnv = keys.length === 1 ? items[0] : null;
+    const selectedApp = keys.length === 1 ? items[0] : null;
     dispatch({
       type: 'configApp/updateState',
       payload: {
-        selectedEnv,
+        selectedApp,
+      },
+    });
+  };
+
+  handlerTabChange = currentTabKey => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        currentTabKey,
       },
     });
   };
 
   render() {
     const { configApp } = this.props;
-    const { selectedApp } = configApp;
+    const { selectedApp, currentTabKey, yamlText } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const userGroupProps = {
       className: 'left-content',
       title: '应用列表',
+      extra: <DropdownGroup onAction={this.handlerGroupChange} />,
       showSearch: false,
+      remotePaging: true,
       onSelectChange: this.handlerAppSelect,
       selectedKeys,
       onListCardRef: ref => (this.listCardRef = ref),
@@ -66,6 +92,16 @@ class ConfigCommon extends Component {
         title: item => item.name,
         description: item => item.code,
       },
+      store: {
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+      },
+    };
+    const configProps = {
+      selectedApp,
+      currentTabKey,
+      onTabChange: this.handlerTabChange,
+      yamlText,
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -75,7 +111,7 @@ class ConfigCommon extends Component {
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {selectedApp ? (
-              'aa'
+              <Config {...configProps} />
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="选择左边项目进行的相关配置" />
