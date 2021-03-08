@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { get } from 'lodash';
+import { get, omit } from 'lodash';
 import { Form, Input, Popover, Switch } from 'antd';
 import { ExtModal, ExtIcon, ListCard, BannerTitle } from 'suid';
 import { constants } from '@/utils';
@@ -40,13 +40,20 @@ class FormModal extends PureComponent {
       }
       const params = {};
       Object.assign(params, rowData || {});
+      if (formData.hasOwnProperty('enable')) {
+        if (formData.enable === true) {
+          Object.assign(formData, { useStatus: USER_STATUS.ENABLE.key });
+        } else {
+          Object.assign(formData, { useStatus: USER_STATUS.DISABLE.key });
+        }
+      }
       Object.assign(params, formData);
       Object.assign(params, {
         appCode: get(selectedApp, 'code'),
         appName: get(selectedApp, 'name'),
       });
       if (rowData) {
-        save(params, () => {
+        save(omit(params, 'enable'), () => {
           this.syncData = [];
         });
       } else {
