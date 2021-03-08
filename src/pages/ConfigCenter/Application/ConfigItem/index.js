@@ -368,10 +368,9 @@ class ConfigItem extends Component {
             <Popconfirm
               disabled={disableConfigLoading || syncConfigLoading}
               title="确定要启用选择的项吗?"
-              onConfirm={() => this.disableConfig()}
+              onConfirm={() => this.enableConfig()}
             >
               <Button
-                onClick={this.enableConfig}
                 disabled={disableConfigLoading || syncConfigLoading}
                 loading={enableConfigLoading}
               >
