@@ -1,21 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import cls from 'classnames';
-import { Empty, Layout } from 'antd';
+import { Empty, Layout, Input } from 'antd';
 import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
-import ConfigItem from './components/ConfigItem';
 import styles from './index.less';
 
 const { Sider, Content } = Layout;
+const { Search } = Input;
 
-@connect(({ configCommon, loading }) => ({ configCommon, loading }))
+@connect(({ configApp, loading }) => ({ configApp, loading }))
 class ConfigCommon extends Component {
-  handlerEnvSelect = (keys, items) => {
+  static listCardRef = null;
+
+  handlerSearchChange = v => {
+    this.listCardRef.handlerSearchChange(v);
+  };
+
+  handlerPressEnter = () => {
+    this.listCardRef.handlerPressEnter();
+  };
+
+  handlerSearch = v => {
+    this.listCardRef.handlerSearch(v);
+  };
+
+  renderCustomTool = () => (
+    <>
+      <Search
+        allowClear
+        placeholder="输入代码、名称关键字查询"
+        onChange={e => this.handlerSearchChange(e.target.value)}
+        onSearch={this.handlerSearch}
+        onPressEnter={this.handlerPressEnter}
+        style={{ width: '100%' }}
+      />
+    </>
+  );
+
+  handlerAppSelect = (keys, items) => {
     const { dispatch } = this.props;
     const selectedEnv = keys.length === 1 ? items[0] : null;
     dispatch({
-      type: 'configCommon/updateState',
+      type: 'configApp/updateState',
       payload: {
         selectedEnv,
       },
@@ -23,21 +50,22 @@ class ConfigCommon extends Component {
   };
 
   render() {
-    const { configCommon } = this.props;
-    const { selectedEnv, envData } = configCommon;
-    const selectedKeys = selectedEnv ? [selectedEnv.id] : [];
+    const { configApp } = this.props;
+    const { selectedApp } = configApp;
+    const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const userGroupProps = {
       className: 'left-content',
-      title: '环境列表',
+      title: '应用列表',
       showSearch: false,
-      onSelectChange: this.handlerEnvSelect,
+      onSelectChange: this.handlerAppSelect,
       selectedKeys,
-      customTool: () => null,
+      onListCardRef: ref => (this.listCardRef = ref),
+      searchProperties: ['code', 'name'],
+      customTool: this.renderCustomTool,
       itemField: {
         title: item => item.name,
-        description: item => item.remark,
+        description: item => item.code,
       },
-      dataSource: envData,
     };
     return (
       <div className={cls(styles['container-box'])}>
@@ -46,8 +74,8 @@ class ConfigCommon extends Component {
             <ListCard {...userGroupProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
-            {selectedEnv ? (
-              <ConfigItem />
+            {selectedApp ? (
+              'aa'
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="选择左边项目进行的相关配置" />

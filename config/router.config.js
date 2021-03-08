@@ -228,6 +228,11 @@ const routes = [
             name: '通用配置',
             component: './ConfigCenter/Common',
           },
+          {
+            path: '/configCenter/application',
+            name: '应用配置',
+            component: './ConfigCenter/Application',
+          },
         ],
       },
       {

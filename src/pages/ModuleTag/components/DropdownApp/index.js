@@ -21,6 +21,7 @@ class DropdownApp extends PureComponent {
     this.state = {
       appName: '全部应用',
       appId: '',
+      showApp: false,
     };
   }
 
@@ -32,7 +33,7 @@ class DropdownApp extends PureComponent {
       appId = item.id;
       appName = item.name;
     }
-    this.setState({ appName, appId });
+    this.setState({ appName, appId, showApp: false });
     if (onAction) {
       onAction(appId);
     }
@@ -48,6 +49,10 @@ class DropdownApp extends PureComponent {
 
   handlerSearch = v => {
     this.listCardRef.handlerSearch(v);
+  };
+
+  handlerVisibleChange = showApp => {
+    this.setState({ showApp });
   };
 
   renderCustomTool = () => (
@@ -73,6 +78,7 @@ class DropdownApp extends PureComponent {
       selectedKeys: [appId],
       onSelectChange: (_keys, items) => {
         this.handlerFilter(items[0]);
+        this.setState({ showApp: false });
       },
       store: {
         type: 'POST',
@@ -121,9 +127,14 @@ class DropdownApp extends PureComponent {
   };
 
   render() {
-    const { appName } = this.state;
+    const { appName, showApp } = this.state;
     return (
-      <Dropdown overlay={this.renderDropdownApp()} trigger={['click']}>
+      <Dropdown
+        onVisibleChange={this.handlerVisibleChange}
+        visible={showApp}
+        overlay={this.renderDropdownApp()}
+        trigger={['click']}
+      >
         <span className={cls(styles['view-box'], 'filter-box')}>
           <span className="view-content">{appName}</span>
           <ExtIcon type="down" antd />

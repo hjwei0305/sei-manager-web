@@ -7,24 +7,30 @@ import {
   disableConfig,
   enableConfig,
   syncConfigs,
+  compareBeforeRelease,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 
 export default modelExtend(model, {
-  namespace: 'configCommon',
+  namespace: 'configApp',
 
   state: {
+    selectedApp: null,
     envData: [],
     selectedEnv: null,
     currentConfigItem: null,
+    showRelease: false,
+    compareBeforeReleaseData: null,
+    showCompare: false,
     showFormModal: false,
+    compareData: null,
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (pathMatchRegexp('/configCenter/common', location.pathname)) {
+        if (pathMatchRegexp('/configCenter/application', location.pathname)) {
           dispatch({
             type: 'initEnv',
           });
@@ -119,6 +125,23 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success('同步成功');
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *compareBeforeRelease({ payload, callback }, { call, put }) {
+      const re = yield call(compareBeforeRelease, payload);
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            compareBeforeReleaseData: re.data,
+          },
+        });
       } else {
         message.error(re.message);
       }
