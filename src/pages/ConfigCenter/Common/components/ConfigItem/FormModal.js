@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import { Form, Input, Popover } from 'antd';
-import { ExtModal, ExtIcon, ListCard } from 'suid';
+import { ExtModal, ExtIcon, ListCard, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import styles from './FormModal.less';
 
@@ -130,7 +130,7 @@ class FormModal extends PureComponent {
         wrapClassName={styles['form-modal-box']}
         bodyStyle={{ padding: 0 }}
         confirmLoading={saving}
-        title={title}
+        title={<BannerTitle title={get(selectedEnv, 'name')} subTitle={title} />}
         onOk={this.handlerFormSubmit}
       >
         <Form {...formItemLayout} layout="horizontal" style={{ margin: 24 }}>
