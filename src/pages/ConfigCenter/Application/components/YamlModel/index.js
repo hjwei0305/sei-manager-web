@@ -7,7 +7,7 @@ import 'ace-builds/src-noconflict/theme-tomorrow';
 
 const { getUUID } = utils;
 
-class YamlPreview extends PureComponent {
+class YamlModel extends PureComponent {
   static aceId;
 
   static propTypes = {
@@ -65,4 +65,4 @@ class YamlPreview extends PureComponent {
   }
 }
 
-export default YamlPreview;
+export default YamlModel;

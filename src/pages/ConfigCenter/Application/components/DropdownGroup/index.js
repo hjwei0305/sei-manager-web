@@ -19,23 +19,23 @@ class DropdownGroup extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      appName: '全部应用组',
-      appId: '',
+      appGroupName: '全部应用组',
+      appGroupCode: '',
       showApp: false,
     };
   }
 
   handlerFilter = item => {
     const { onAction } = this.props;
-    let appId = '';
-    let appName = '全部应用组';
+    let appGroupCode = '';
+    let appGroupName = '全部应用组';
     if (item) {
-      appId = item.id;
-      appName = item.name;
+      appGroupCode = item.code;
+      appGroupName = item.name;
     }
-    this.setState({ appName, appId, showApp: false });
+    this.setState({ appGroupName, appGroupCode, showApp: false });
     if (onAction) {
-      onAction(appId);
+      onAction(appGroupCode);
     }
   };
 
@@ -69,16 +69,17 @@ class DropdownGroup extends PureComponent {
   );
 
   renderDropdownGroup = () => {
-    const { appName, appId } = this.state;
+    const { appGroupName, appGroupCode } = this.state;
     const appListProps = {
       className: 'search-content',
       showArrow: false,
       showSearch: false,
-      selectedKeys: [appId],
+      selectedKeys: [appGroupCode],
       onSelectChange: (_keys, items) => {
         this.handlerFilter(items[0]);
         this.setState({ showApp: false });
       },
+      rowKey: 'code',
       store: {
         url: `${SERVER_PATH}/sei-manager/userGroup/findAll`,
       },
@@ -109,7 +110,7 @@ class DropdownGroup extends PureComponent {
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: 16 }}>{appName}</div>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>{appGroupName}</div>
           <Button onClick={() => this.handlerFilter()} style={{ marginLeft: 8 }}>
             重置
           </Button>
@@ -122,7 +123,7 @@ class DropdownGroup extends PureComponent {
   };
 
   render() {
-    const { appName, showApp } = this.state;
+    const { appGroupName, showApp } = this.state;
     return (
       <Dropdown
         onVisibleChange={this.handlerVisibleChange}
@@ -131,7 +132,7 @@ class DropdownGroup extends PureComponent {
         trigger={['click']}
       >
         <span className={cls(styles['view-box'], 'filter-box')}>
-          <span className="view-content">{appName}</span>
+          <span className="view-content">{appGroupName}</span>
           <ExtIcon type="down" antd />
         </span>
       </Dropdown>

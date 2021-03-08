@@ -214,6 +214,7 @@ class ConfigItem extends Component {
 
   renderEvnVarList = () => {
     const {
+      loading,
       configCommon: { envData, selectedEnv },
     } = this.props;
     const dataSource = envData.filter(env => env.code !== selectedEnv.code);
@@ -234,16 +235,19 @@ class ConfigItem extends Component {
         this.forceUpdate();
       },
     };
+    const syncLoading = loading.effects['configCommon/syncConfigs'];
     return (
       <>
         <div className="tool-box">
-          <Button
-            disabled={this.syncEvnData.length === 0}
-            type="primary"
-            onClick={this.handlerSync}
+          <Popconfirm
+            disabled={syncLoading || this.syncEvnData.length === 0}
+            title="确定要同步吗?"
+            onConfirm={() => this.handlerSync()}
           >
-            开始同步
-          </Button>
+            <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
+              开始同步
+            </Button>
+          </Popconfirm>
         </div>
         <div className="evn-box">
           <ListCard {...listProps} />
@@ -265,7 +269,7 @@ class ConfigItem extends Component {
       {
         title: '操作',
         key: 'operation',
-        width: 140,
+        width: 100,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -300,7 +304,7 @@ class ConfigItem extends Component {
       {
         title: '键值',
         dataIndex: 'value',
-        width: 180,
+        width: 260,
         render: t => t || '-',
       },
       {
@@ -339,21 +343,32 @@ class ConfigItem extends Component {
             >
               取消
             </Button>
-            <Button
-              type="danger"
-              onClick={this.disableConfig}
+            <Popconfirm
               disabled={enableConfigLoading || syncConfigLoading}
-              loading={disableConfigLoading}
+              title="确定要禁用选择的项吗?"
+              onConfirm={() => this.disableConfig()}
             >
-              禁用
-            </Button>
-            <Button
-              onClick={this.enableConfig}
+              <Button
+                type="danger"
+                disabled={enableConfigLoading || syncConfigLoading}
+                loading={disableConfigLoading}
+              >
+                禁用
+              </Button>
+            </Popconfirm>
+            <Popconfirm
               disabled={disableConfigLoading || syncConfigLoading}
-              loading={enableConfigLoading}
+              title="确定要启用选择的项吗?"
+              onConfirm={() => this.disableConfig()}
             >
-              启用
-            </Button>
+              <Button
+                onClick={this.enableConfig}
+                disabled={disableConfigLoading || syncConfigLoading}
+                loading={enableConfigLoading}
+              >
+                启用
+              </Button>
+            </Popconfirm>
             <Popover
               overlayClassName={styles['sync-popover-box']}
               onVisibleChange={this.handlerEvnSync}

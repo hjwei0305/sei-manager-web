@@ -17,6 +17,13 @@ const { Search } = Input;
 class ConfigCommon extends Component {
   static listCardRef = null;
 
+  constructor() {
+    super();
+    this.state = {
+      groupCode: null,
+    };
+  }
+
   handlerSearchChange = v => {
     this.listCardRef.handlerSearchChange(v);
   };
@@ -30,13 +37,7 @@ class ConfigCommon extends Component {
   };
 
   handlerGroupChange = groupCode => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'moduleTag/updateState',
-      payload: {
-        moduleFilter: { groupCode },
-      },
-    });
+    this.setState({ groupCode });
   };
 
   renderCustomTool = () => (
@@ -73,18 +74,29 @@ class ConfigCommon extends Component {
     });
   };
 
+  handlerEnvChange = selectedEnv => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        selectedEnv,
+      },
+    });
+  };
+
   render() {
+    const { groupCode } = this.state;
     const { configApp } = this.props;
-    const { selectedApp, currentTabKey, yamlText } = configApp;
+    const { envData, selectedApp, currentTabKey, yamlText, selectedEnv } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const userGroupProps = {
       className: 'left-content',
       title: '应用列表',
       extra: <DropdownGroup onAction={this.handlerGroupChange} />,
       showSearch: false,
-      remotePaging: true,
       onSelectChange: this.handlerAppSelect,
       selectedKeys,
+      rowKey: 'code',
       onListCardRef: ref => (this.listCardRef = ref),
       searchProperties: ['code', 'name'],
       customTool: this.renderCustomTool,
@@ -93,8 +105,10 @@ class ConfigCommon extends Component {
         description: item => item.code,
       },
       store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/appConfig/getAppList`,
+      },
+      cascadeParams: {
+        groupCode,
       },
     };
     const configProps = {
@@ -102,6 +116,9 @@ class ConfigCommon extends Component {
       currentTabKey,
       onTabChange: this.handlerTabChange,
       yamlText,
+      envData,
+      selectedEnv,
+      handlerEnvChange: this.handlerEnvChange,
     };
     return (
       <div className={cls(styles['container-box'])}>

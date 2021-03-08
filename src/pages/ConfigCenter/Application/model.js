@@ -17,9 +17,9 @@ export default modelExtend(model, {
   namespace: 'configApp',
 
   state: {
+    selectedEnv: null,
     selectedApp: null,
     envData: [],
-    selectedEnv: null,
     currentConfigItem: null,
     showRelease: false,
     compareBeforeReleaseData: null,
@@ -43,9 +43,14 @@ export default modelExtend(model, {
   effects: {
     *initEnv(_, { select, put }) {
       const { envData } = yield select(sel => sel.menu);
+      let selectedEnv = null;
+      if (!selectedEnv && envData && envData.length > 0) {
+        [selectedEnv] = envData;
+      }
       yield put({
         type: 'updateState',
         payload: {
+          selectedEnv,
           envData,
         },
       });

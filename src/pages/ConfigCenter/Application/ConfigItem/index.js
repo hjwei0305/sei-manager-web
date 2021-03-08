@@ -150,13 +150,16 @@ class ConfigItem extends Component {
 
   handlerSync = () => {
     const { selectedRowKeys } = this.state;
-    const { dispatch } = this.props;
+    const { dispatch, configApp } = this.props;
+    const { selectedApp } = configApp;
     const data = [];
     this.syncEvnData.forEach(evn => {
       selectedRowKeys.forEach(id => {
         data.push({
           envCode: evn.code,
           envName: evn.name,
+          appCode: get(selectedApp, 'code'),
+          appName: get(selectedApp, 'name'),
           id,
         });
       });
@@ -189,6 +192,10 @@ class ConfigItem extends Component {
     this.setState({ showEvnSync });
   };
 
+  handlerRelease = () => {};
+
+  handlerCompare = () => {};
+
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
@@ -214,6 +221,7 @@ class ConfigItem extends Component {
 
   renderEvnVarList = () => {
     const {
+      loading,
       configApp: { envData, selectedEnv },
     } = this.props;
     const dataSource = envData.filter(env => selectedEnv && env.code !== selectedEnv.code);
@@ -234,16 +242,19 @@ class ConfigItem extends Component {
         this.forceUpdate();
       },
     };
+    const syncLoading = loading.effects['configCommon/syncConfigs'];
     return (
       <>
         <div className="tool-box">
-          <Button
-            disabled={this.syncEvnData.length === 0}
-            type="primary"
-            onClick={this.handlerSync}
+          <Popconfirm
+            disabled={syncLoading || this.syncEvnData.length === 0}
+            title="确定要同步吗?"
+            onConfirm={() => this.handlerSync()}
           >
-            开始同步
-          </Button>
+            <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
+              开始同步
+            </Button>
+          </Popconfirm>
         </div>
         <div className="evn-box">
           <ListCard {...listProps} />
@@ -265,7 +276,7 @@ class ConfigItem extends Component {
       {
         title: '操作',
         key: 'operation',
-        width: 140,
+        width: 100,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -300,7 +311,7 @@ class ConfigItem extends Component {
       {
         title: '键值',
         dataIndex: 'value',
-        width: 180,
+        width: 260,
         render: t => t || '-',
       },
       {
@@ -321,6 +332,8 @@ class ConfigItem extends Component {
           <Button type="primary" onClick={this.add}>
             新建配置键
           </Button>
+          <Button onClick={this.handlerRelease}>发布</Button>
+          <Button onClick={this.handlerCompare}>比较</Button>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
@@ -339,21 +352,32 @@ class ConfigItem extends Component {
             >
               取消
             </Button>
-            <Button
-              type="danger"
-              onClick={this.disableConfig}
+            <Popconfirm
               disabled={enableConfigLoading || syncConfigLoading}
-              loading={disableConfigLoading}
+              title="确定要禁用选择的项吗?"
+              onConfirm={() => this.disableConfig()}
             >
-              禁用
-            </Button>
-            <Button
-              onClick={this.enableConfig}
+              <Button
+                type="danger"
+                disabled={enableConfigLoading || syncConfigLoading}
+                loading={disableConfigLoading}
+              >
+                禁用
+              </Button>
+            </Popconfirm>
+            <Popconfirm
               disabled={disableConfigLoading || syncConfigLoading}
-              loading={enableConfigLoading}
+              title="确定要启用选择的项吗?"
+              onConfirm={() => this.disableConfig()}
             >
-              启用
-            </Button>
+              <Button
+                onClick={this.enableConfig}
+                disabled={disableConfigLoading || syncConfigLoading}
+                loading={enableConfigLoading}
+              >
+                启用
+              </Button>
+            </Popconfirm>
             <Popover
               overlayClassName={styles['sync-popover-box']}
               onVisibleChange={this.handlerEvnSync}
@@ -387,6 +411,9 @@ class ConfigItem extends Component {
       searchWidth: 260,
       store: {
         url: `${SERVER_PATH}/sei-manager/appConfig/findByAppEnv`,
+        loaded: () => {
+          this.setState({ selectedRowKeys: [] });
+        },
       },
       cascadeParams: {
         envCode: get(selectedEnv, 'code'),
@@ -395,6 +422,7 @@ class ConfigItem extends Component {
     };
     const formModalProps = {
       selectedEnv,
+      selectedApp,
       rowData: currentConfigItem,
       closeFormModal: this.closeFormModal,
       showModal: showFormModal,

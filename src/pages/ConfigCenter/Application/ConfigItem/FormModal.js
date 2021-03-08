@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { get } from 'lodash';
-import { Form, Input, Popover } from 'antd';
+import { Form, Input, Popover, Switch } from 'antd';
 import { ExtModal, ExtIcon, ListCard, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import styles from './FormModal.less';
 
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, USER_STATUS } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -33,7 +33,7 @@ class FormModal extends PureComponent {
   };
 
   handlerFormSubmit = () => {
-    const { form, save, rowData, selectedEnv } = this.props;
+    const { form, save, rowData, selectedEnv, selectedApp } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -41,6 +41,10 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
+      Object.assign(params, {
+        appCode: get(selectedApp, 'code'),
+        appName: get(selectedApp, 'name'),
+      });
       if (rowData) {
         save(params, () => {
           this.syncData = [];
@@ -105,6 +109,7 @@ class FormModal extends PureComponent {
     const dataSource = envData.filter(env => selectedEnv && env.code !== selectedEnv.code);
     const { getFieldDecorator } = form;
     const title = rowData ? '修改配置键' : '新建配置键';
+    const disabledCode = rowData && get(rowData, 'useStatus') !== USER_STATUS.NONE.key;
     const listProps = {
       pagination: false,
       dataSource,
@@ -143,7 +148,7 @@ class FormModal extends PureComponent {
                   message: '键名不能为空',
                 },
               ],
-            })(<Input autoComplete="off" disabled={!!rowData} />)}
+            })(<Input autoComplete="off" disabled={disabledCode} />)}
           </FormItem>
           <FormItem label="键值">
             {getFieldDecorator('value', {
@@ -178,6 +183,14 @@ class FormModal extends PureComponent {
               initialValue: get(rowData, 'remark'),
             })(<Input autoComplete="off" />)}
           </FormItem>
+          {rowData ? (
+            <FormItem label="启用">
+              {getFieldDecorator('enable', {
+                valuePropName: 'checked',
+                initialValue: USER_STATUS.ENABLE.key === get(rowData, 'useStatus'),
+              })(<Switch size="small" />)}
+            </FormItem>
+          ) : null}
         </Form>
         {!rowData ? (
           <>

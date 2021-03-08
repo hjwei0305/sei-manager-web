@@ -11,6 +11,7 @@ const { Item } = Menu;
 
 class FilterView extends PureComponent {
   static propTypes = {
+    style: PropTypes.object,
     title: PropTypes.string,
     viewTypeData: PropTypes.array,
     currentViewType: PropTypes.object,
@@ -114,7 +115,7 @@ class FilterView extends PureComponent {
   };
 
   render() {
-    const { currentViewType, reader, title, iconType, extraTitle } = this.props;
+    const { currentViewType, reader, title, iconType, extraTitle, style } = this.props;
     const { menuShow, menusData } = this.state;
     let currentViewTitle = `${get(currentViewType, get(reader, 'title')) || '无可用视图'}`;
     if (extraTitle) {
@@ -147,7 +148,7 @@ class FilterView extends PureComponent {
             overlayClassName={styles['filter-box']}
             onVisibleChange={this.onVisibleChange}
           >
-            <span className={cls(styles['view-box'])}>
+            <span className={cls(styles['view-box'])} style={style}>
               <span className="view-label">
                 {iconType ? <ExtIcon type={iconType} antd /> : null}
                 <em>{title}</em>
