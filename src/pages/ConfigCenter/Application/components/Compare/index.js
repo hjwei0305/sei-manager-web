@@ -113,10 +113,8 @@ class AppCompare extends Component {
               value={[currentConfig, targetConfig]}
               height="100%"
               width="100%"
+              fontSize={14}
               name={this.aceId}
-              setOptions={{
-                useWorker: 16,
-              }}
               onLoad={this.handlerComplete}
               mode="toml"
               theme="kuroir"
