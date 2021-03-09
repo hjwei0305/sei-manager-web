@@ -11,6 +11,7 @@ import {
   compareBeforeRelease,
   appRelease,
   getYamlData,
+  saveYamlData,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
@@ -201,6 +202,18 @@ export default modelExtend(model, {
             yamlText: re.data,
           },
         });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *saveYamlData({ payload, callback }, { call }) {
+      const re = yield call(saveYamlData, payload);
+      message.destroy();
+      if (re.success) {
+        message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
       } else {
         message.error(re.message);
       }

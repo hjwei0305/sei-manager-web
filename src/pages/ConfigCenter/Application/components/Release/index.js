@@ -1,6 +1,6 @@
 import React from 'react';
 import cls from 'classnames';
-import { get, groupBy } from 'lodash';
+import { get, groupBy, sortBy } from 'lodash';
 import { Drawer, Layout, Button, Popconfirm, Collapse, Tag } from 'antd';
 import { BannerTitle, ExtIcon, ExtTable, ScrollBar } from 'suid';
 import { constants } from '@/utils';
@@ -41,7 +41,7 @@ const AppRelease = ({
     if (changeItems.length >= 0) {
       return (
         <Collapse onChange={updateScroll} bordered={false} defaultActiveKey={changeItems}>
-          {changeItems.map(itemKey => {
+          {sortBy(changeItems, itemKey => itemKey).map(itemKey => {
             const items = changeObj[itemKey];
             const tbProps = {
               fixedHeader: false,

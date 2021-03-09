@@ -111,6 +111,14 @@ class ConfigCommon extends Component {
     });
   };
 
+  handlerSaveYmal = data => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/saveYamlData',
+      payload: data,
+    });
+  };
+
   render() {
     const { groupCode } = this.state;
     const { configApp, loading } = this.props;
@@ -156,6 +164,8 @@ class ConfigCommon extends Component {
       onTabChange: this.handlerTabChange,
       yamlText,
       yamlTextLoading: loading.effects['configApp/getYamlData'],
+      saveYaml: this.handlerSaveYmal,
+      savingYaml: loading.effects['configApp/getYamlData'],
       envData,
       selectedEnv,
       handlerEnvChange: this.handlerEnvChange,
