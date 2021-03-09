@@ -18,6 +18,7 @@ const Config = ({
   selectedApp,
   currentTabKey,
   onTabChange,
+  onItemRef,
   yamlText,
   yamlTextLoading,
   showRelease,
@@ -75,7 +76,7 @@ const Config = ({
     <Card className={styles['view-box']} bordered={false} title={renderTitle()}>
       <Tabs type="card" activeKey={currentTabKey} onChange={onTabChange} animated={false}>
         <TabPane tab="配置参数" key="appParam" forceRender>
-          <ConfigItem />
+          <ConfigItem onItemRef={onItemRef} />
         </TabPane>
         <TabPane tab="Yaml模式" key="yamlPreview">
           <YamlModel

@@ -17,6 +17,8 @@ const { Search } = Input;
 class ConfigCommon extends Component {
   static listCardRef = null;
 
+  static itemRef = null;
+
   constructor() {
     super();
     this.state = {
@@ -54,7 +56,10 @@ class ConfigCommon extends Component {
   );
 
   handlerAppSelect = (keys, items) => {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      configApp: { currentTabKey },
+    } = this.props;
     const selectedApp = keys.length === 1 ? items[0] : null;
     dispatch({
       type: 'configApp/updateState',
@@ -64,6 +69,9 @@ class ConfigCommon extends Component {
         compareBeforeReleaseData: null,
       },
     });
+    if (currentTabKey === 'yamlPreview') {
+      this.getYamlData();
+    }
   };
 
   handlerTabChange = currentTabKey => {
@@ -75,10 +83,18 @@ class ConfigCommon extends Component {
       },
     });
     if (currentTabKey === 'yamlPreview') {
-      dispatch({
-        type: 'configApp/getYamlData',
-      });
+      this.getYamlData();
     }
+    if (currentTabKey === 'appParam') {
+      this.itemRef.reloadData();
+    }
+  };
+
+  getYamlData = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/getYamlData',
+    });
   };
 
   handlerEnvChange = selectedEnv => {
@@ -160,6 +176,7 @@ class ConfigCommon extends Component {
     };
     const configProps = {
       selectedApp,
+      onItemRef: ref => (this.itemRef = ref),
       currentTabKey,
       onTabChange: this.handlerTabChange,
       yamlText,
@@ -174,7 +191,7 @@ class ConfigCommon extends Component {
       compareBeforeReleaseData,
       handlerRelease: this.handlerRelease,
       releasing,
-      compareLoading: loading.effects['configApp/appRelease'],
+      compareLoading: loading.effects['configApp/getCompareData'],
       compareData,
       showCompare,
       targetCompareEvn,

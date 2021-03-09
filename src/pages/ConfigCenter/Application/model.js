@@ -12,6 +12,7 @@ import {
   appRelease,
   getYamlData,
   saveYamlData,
+  getCompareData,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
@@ -214,6 +215,28 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.save-success', defaultMessage: '保存成功' }));
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *getCompareData({ callback }, { call, put, select }) {
+      const { selectedEnv, targetCompareEvn, selectedApp } = yield select(sel => sel.configApp);
+      const re = yield call(getCompareData, {
+        appCode: get(selectedApp, 'code'),
+        currentEnv: get(selectedEnv, 'code'),
+        targetEnv: get(targetCompareEvn, 'code'),
+      });
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            compareData: re.data,
+          },
+        });
       } else {
         message.error(re.message);
       }

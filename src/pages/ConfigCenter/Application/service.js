@@ -107,3 +107,14 @@ export async function saveYamlData(data) {
     },
   });
 }
+
+/** 跨环境比较 */
+export async function getCompareData(data) {
+  const { appCode, currentEnv, targetEnv } = data;
+  const url = `${SERVER_PATH}/sei-manager/releaseHistory/crossEnvCompare/${appCode}/${currentEnv}/${targetEnv}`;
+  return request({
+    url,
+    method: 'POST',
+    data: {},
+  });
+}

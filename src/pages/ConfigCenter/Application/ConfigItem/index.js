@@ -29,6 +29,13 @@ class ConfigItem extends Component {
     };
   }
 
+  componentDidMount() {
+    const { onItemRef } = this.props;
+    if (onItemRef) {
+      onItemRef(this);
+    }
+  }
+
   componentWillUnmount() {
     this.syncEvnData = [];
   }
@@ -208,17 +215,16 @@ class ConfigItem extends Component {
   };
 
   handlerShowCompare = targetCompareEvn => {
-    const {
-      dispatch,
-      configApp: { selectedEnv },
-    } = this.props;
-    console.log(selectedEnv, targetCompareEvn);
+    const { dispatch } = this.props;
     dispatch({
       type: 'configApp/updateState',
       payload: {
         showCompare: true,
         targetCompareEvn,
       },
+    });
+    dispatch({
+      type: 'configApp/getCompareData',
     });
     this.setState({ showCompareEvn: false });
   };
@@ -337,6 +343,7 @@ class ConfigItem extends Component {
         dataIndex: 'id',
         className: 'action',
         required: true,
+        fixed: 'left',
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
             <ExtIcon
@@ -367,7 +374,7 @@ class ConfigItem extends Component {
       {
         title: '键值',
         dataIndex: 'value',
-        width: 260,
+        width: 360,
         render: t => t || '-',
       },
       {
@@ -467,8 +474,9 @@ class ConfigItem extends Component {
     };
     const extTableProps = {
       bordered: false,
-      lineNumber: false,
+      lineNumber: true,
       toolBar: toolBarProps,
+      pagination: false,
       columns,
       checkbox: {
         rowCheck: false,
