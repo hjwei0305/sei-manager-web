@@ -106,7 +106,7 @@ class YamlModel extends PureComponent {
           )}
         </div>
         <div className="tool-box">
-          <Button loading={saving} onClick={this.handlerSave} type="primary">
+          <Button loading={saving} disabled={loading} onClick={this.handlerSave} type="primary">
             保存
           </Button>
         </div>

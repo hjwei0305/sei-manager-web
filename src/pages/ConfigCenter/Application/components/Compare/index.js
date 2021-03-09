@@ -63,9 +63,13 @@ const AppCompare = ({
       <Layout className="auto-height">
         <Content className={cls('main-content', 'auto-height')}>
           {compareLoading ? <ListLoader /> : null}
-          <Row>
-            <Col span={12}>{renderChangeContent()}</Col>
-            <Col span={12}>bb</Col>
+          <Row className={cls('body-content', 'auto-height')}>
+            <Col span={12} className="auto-height">
+              {renderChangeContent()}
+            </Col>
+            <Col span={12} className="auto-height">
+              bb
+            </Col>
           </Row>
         </Content>
       </Layout>

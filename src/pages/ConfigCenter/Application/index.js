@@ -165,7 +165,7 @@ class ConfigCommon extends Component {
       yamlText,
       yamlTextLoading: loading.effects['configApp/getYamlData'],
       saveYaml: this.handlerSaveYmal,
-      savingYaml: loading.effects['configApp/getYamlData'],
+      savingYaml: loading.effects['configApp/saveYamlData'],
       envData,
       selectedEnv,
       handlerEnvChange: this.handlerEnvChange,
