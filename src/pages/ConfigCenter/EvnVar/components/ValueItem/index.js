@@ -14,13 +14,13 @@ const { SERVER_PATH } = constants;
 class ValueItem extends Component {
   static tableRef;
 
-  static evnVarData;
+  static envVarData;
 
   constructor(props) {
     super(props);
-    this.evnVarData = [];
+    this.envVarData = [];
     this.state = {
-      evnVarData: [],
+      envVarData: [],
     };
   }
 
@@ -56,10 +56,10 @@ class ValueItem extends Component {
       configEvnVar: { editHanlderValue },
     } = this.props;
     if (editHanlderValue) {
-      const { evnVarData } = this.state;
+      const { envVarData } = this.state;
       dispatch({
         type: 'configEvnVar/saveVariableValue',
-        payload: evnVarData,
+        payload: envVarData,
         callback: res => {
           if (res.success) {
             this.reloadData();
@@ -77,25 +77,25 @@ class ValueItem extends Component {
         editHanlderValue: false,
       },
     });
-    this.setState({ evnVarData: this.evnVarData });
+    this.setState({ envVarData: this.envVarData });
   };
 
-  initEvnVarData = evnVarData => {
-    this.evnVarData = [...evnVarData];
-    this.setState({ evnVarData });
+  initEvnVarData = envVarData => {
+    this.envVarData = [...envVarData];
+    this.setState({ envVarData });
   };
 
   setValue = (e, row) => {
-    const { evnVarData: originEvnVarData } = this.state;
-    const evnVarData = [...originEvnVarData];
-    for (let i = 0; i < evnVarData.length; i += 1) {
-      const item = evnVarData[i];
+    const { envVarData: originEvnVarData } = this.state;
+    const envVarData = [...originEvnVarData];
+    for (let i = 0; i < envVarData.length; i += 1) {
+      const item = envVarData[i];
       if (item.envCode === row.envCode) {
         Object.assign(item, { value: e.target.value });
         break;
       }
     }
-    this.setState({ evnVarData });
+    this.setState({ envVarData });
   };
 
   renderHandleValue = (t, row) => {

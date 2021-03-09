@@ -6,9 +6,9 @@ const { LEVEL_CATEGORY } = constants;
 
 const LogLevel = ({ item }) => {
   const level = item ? item.level : '-' || '-';
-  const evnData = LEVEL_CATEGORY[level];
-  if (evnData) {
-    return <Tag color={evnData.color}>{evnData.title}</Tag>;
+  const envData = LEVEL_CATEGORY[level];
+  if (envData) {
+    return <Tag color={envData.color}>{envData.title}</Tag>;
   }
   return level;
 };

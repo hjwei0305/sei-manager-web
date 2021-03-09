@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { get, omit } from 'lodash';
-import { Form, Input, Popover, Switch } from 'antd';
+import { Form, Input, Popover } from 'antd';
 import { ExtModal, ExtIcon, ListCard, BannerTitle } from 'suid';
 import { constants } from '@/utils';
 import styles from './FormModal.less';
@@ -40,13 +40,6 @@ class FormModal extends PureComponent {
       }
       const params = {};
       Object.assign(params, rowData || {});
-      if (formData.hasOwnProperty('enable')) {
-        if (formData.enable === true) {
-          Object.assign(formData, { useStatus: USER_STATUS.ENABLE.key });
-        } else {
-          Object.assign(formData, { useStatus: USER_STATUS.DISABLE.key });
-        }
-      }
       Object.assign(params, formData);
       Object.assign(params, {
         appCode: get(selectedApp, 'code'),
@@ -59,11 +52,11 @@ class FormModal extends PureComponent {
       } else {
         const envData = [].concat(selectedEnv, this.syncData);
         const items = [];
-        envData.forEach(evn => {
+        envData.forEach(env => {
           items.push({
             ...params,
-            envCode: get(evn, 'code'),
-            envName: get(evn, 'name'),
+            envCode: get(env, 'code'),
+            envName: get(env, 'name'),
           });
         });
         save(items, () => {
@@ -179,7 +172,7 @@ class FormModal extends PureComponent {
                     content={this.renderEvnVarList()}
                     title="环境变量列表"
                   >
-                    <span className="btn-evn">引用环境变量</span>
+                    <span className="btn-env">引用环境变量</span>
                   </Popover>
                 }
               />,
@@ -190,14 +183,6 @@ class FormModal extends PureComponent {
               initialValue: get(rowData, 'remark'),
             })(<Input autoComplete="off" />)}
           </FormItem>
-          {rowData ? (
-            <FormItem label="启用">
-              {getFieldDecorator('enable', {
-                valuePropName: 'checked',
-                initialValue: USER_STATUS.ENABLE.key === get(rowData, 'useStatus'),
-              })(<Switch size="small" />)}
-            </FormItem>
-          ) : null}
         </Form>
         {!rowData ? (
           <>

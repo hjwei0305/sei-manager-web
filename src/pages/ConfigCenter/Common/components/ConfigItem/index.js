@@ -152,11 +152,11 @@ class ConfigItem extends Component {
     const { selectedRowKeys } = this.state;
     const { dispatch } = this.props;
     const data = [];
-    this.syncEvnData.forEach(evn => {
+    this.syncEvnData.forEach(env => {
       selectedRowKeys.forEach(id => {
         data.push({
-          envCode: evn.code,
-          envName: evn.name,
+          envCode: env.code,
+          envName: env.name,
           id,
         });
       });
@@ -249,7 +249,7 @@ class ConfigItem extends Component {
             </Button>
           </Popconfirm>
         </div>
-        <div className="evn-box">
+        <div className="env-box">
           <ListCard {...listProps} />
         </div>
       </>

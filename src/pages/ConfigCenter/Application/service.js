@@ -74,3 +74,36 @@ export async function compareBeforeRelease(data) {
     data: {},
   });
 }
+
+/** 发布前比较 */
+export async function appRelease(data) {
+  const { appCode, envCode } = data;
+  const url = `${SERVER_PATH}/sei-manager/appConfig/release/${appCode}/${envCode}`;
+  return request({
+    url,
+    method: 'POST',
+    data: {},
+  });
+}
+
+/** 获取应用yaml格式配置 */
+export async function getYamlData(data) {
+  const { appCode, envCode } = data;
+  const url = `${SERVER_PATH}/sei-manager/appConfig/getYamlData/${appCode}/${envCode}`;
+  return request({
+    url,
+  });
+}
+
+/** 保存应用yaml格式配置 */
+export async function saveYamlData(data) {
+  const { yamlText, appCode, envCode } = data;
+  const url = `${SERVER_PATH}/sei-manager/appConfig/saveYamlData/${appCode}/${envCode}`;
+  return request({
+    url,
+    method: 'POST',
+    data: {
+      yaml: yamlText,
+    },
+  });
+}

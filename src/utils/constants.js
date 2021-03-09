@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-05 15:06:11
+ * @Last Modified time: 2021-03-08 15:33:57
  */
 import { name } from '../../package.json';
 
@@ -235,6 +235,12 @@ const USER_STATUS = {
   DISABLE: { key: 'DISABLE', title: '禁用', color: 'red' },
 };
 
+const CHANGE_TYPE = {
+  CREATE: { key: 'CREATE', title: '新增', color: 'green' },
+  MODIFY: { key: 'MODIFY', title: '修改', color: 'blue' },
+  DELETE: { key: 'DELETE', title: '删除', color: 'red' },
+};
+
 export default {
   NoMenuPage,
   NoMenuPages,
@@ -263,4 +269,5 @@ export default {
   JENKINS_STATUS,
   TEMPLATE_TYPE,
   USER_STATUS,
+  CHANGE_TYPE,
 };

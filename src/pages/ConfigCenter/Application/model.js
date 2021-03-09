@@ -1,4 +1,5 @@
 import { formatMessage } from 'umi-plugin-react/locale';
+import { get } from 'lodash';
 import { utils, message } from 'suid';
 import {
   saveConfig,
@@ -8,6 +9,8 @@ import {
   enableConfig,
   syncConfigs,
   compareBeforeRelease,
+  appRelease,
+  getYamlData,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
@@ -18,6 +21,7 @@ export default modelExtend(model, {
 
   state: {
     selectedEnv: null,
+    targetCompareEvn: null,
     selectedApp: null,
     envData: [],
     currentConfigItem: null,
@@ -139,14 +143,62 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *compareBeforeRelease({ payload, callback }, { call, put }) {
-      const re = yield call(compareBeforeRelease, payload);
+    *compareBeforeRelease({ callback }, { call, put, select }) {
+      const { selectedEnv, selectedApp } = yield select(sel => sel.configApp);
+      const re = yield call(compareBeforeRelease, {
+        appCode: get(selectedApp, 'code'),
+        envCode: get(selectedEnv, 'code'),
+      });
       message.destroy();
       if (re.success) {
         yield put({
           type: 'updateState',
           payload: {
+            showRelease: true,
             compareBeforeReleaseData: re.data,
+          },
+        });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *appRelease({ callback }, { call, put, select }) {
+      const { selectedEnv, selectedApp } = yield select(sel => sel.configApp);
+      const re = yield call(appRelease, {
+        appCode: get(selectedApp, 'code'),
+        envCode: get(selectedEnv, 'code'),
+      });
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            showRelease: false,
+            compareBeforeReleaseData: null,
+          },
+        });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *getYamlData({ callback }, { call, put, select }) {
+      const { selectedEnv, selectedApp } = yield select(sel => sel.configApp);
+      const re = yield call(getYamlData, {
+        appCode: get(selectedApp, 'code'),
+        envCode: get(selectedEnv, 'code'),
+      });
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            yamlText: re.data,
           },
         });
       } else {

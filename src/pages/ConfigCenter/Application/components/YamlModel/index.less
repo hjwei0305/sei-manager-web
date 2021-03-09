@@ -1,50 +1,24 @@
 @import '../../../../../themes/vars.less';
-.stage-box {
+.yaml-model-box {
   height: 100%;
   padding: 0;
   overflow: hidden;
   :global {
-    .trigger-back {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: inline-block;
-      width: 56px;
-      height: 56px;
-      font-weight: normal;
-      line-height: 58px;
-      cursor: pointer;
-      transition: all ease-in 0.2s;
-      &:hover {
-        color: @primary-color;
-        background-color: fade(@black, 2%);
-      }
+    .yaml-content {
+      height: calc(100% - 48px);
+      padding: 8px;
     }
-    .ant-modal-title {
-      padding-left: 36px;
-    }
-    .ant-modal {
-      padding: 0;
-    }
-    .ant-modal,
-    .ant-modal-content {
-      width: 100% !important;
-      height: 100% !important;
-      overflow: hidden;
-      border-radius: 0;
-    }
-    .ant-modal-body {
-      height: calc(100% - 108px);
-      padding: 0;
-      background-color: @page-background-color;
-    }
-    .ant-input-number-handler-wrap {
-      display: none;
-    }
-    .ant-modal-footer {
+    .tool-box {
+      z-index: 1;
       display: flex;
-      align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      height: 48px;
+      padding: 8px 24px;
+      background-color: @white;
+      box-shadow: 0 3px 16px rgba(0, 0, 0, 0.2);
+      button {
+        margin-left: 8px;
+      }
     }
   }
 }

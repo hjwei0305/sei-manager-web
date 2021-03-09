@@ -1,0 +1,74 @@
+@import '../../../../../themes/vars.less';
+.app-release-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  :global {
+    .trigger-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      font-weight: normal;
+      line-height: 58px;
+      cursor: pointer;
+      transition: all ease-in 0.2s;
+      &:hover {
+        color: @primary-color;
+        background-color: fade(@black, 2%);
+      }
+    }
+    .ant-drawer-title {
+      padding-left: 36px;
+    }
+    .ant-drawer-header {
+      border-width: 1px;
+    }
+    .ant-drawer-wrapper-body,
+    .ant-drawer .ant-drawer-content {
+      overflow: hidden;
+    }
+    .ant-drawer-body {
+      height: calc(100% - 56px);
+      padding: 0;
+    }
+    .main-content {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      background-color: @white;
+      .ant-collapse {
+        width: 100%;
+        background-color: @white;
+        .ant-collapse-content-box {
+          padding: 0;
+        }
+        .ant-collapse-item {
+          border-bottom-color: #f0f2f5;
+          border-bottom-width: 4px;
+          .ant-collapse-header {
+            padding: 6px 16px 6px 40px;
+            .ant-tag {
+              padding: 4px 12px;
+              border-radius: 14px;
+            }
+          }
+        }
+      }
+    }
+    .tool-box {
+      z-index: 1;
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px 24px;
+      background-color: @white;
+      box-shadow: 0 3px 16px rgba(0, 0, 0, 0.2);
+      button {
+        margin-left: 8px;
+      }
+    }
+  }
+}

@@ -25,6 +25,7 @@ class ConfigItem extends Component {
       selectedRowKeys: [],
       delRowId: null,
       showEvnSync: false,
+      showCompareEvn: false,
     };
   }
 
@@ -153,11 +154,11 @@ class ConfigItem extends Component {
     const { dispatch, configApp } = this.props;
     const { selectedApp } = configApp;
     const data = [];
-    this.syncEvnData.forEach(evn => {
+    this.syncEvnData.forEach(env => {
       selectedRowKeys.forEach(id => {
         data.push({
-          envCode: evn.code,
-          envName: evn.name,
+          envCode: env.code,
+          envName: env.name,
           appCode: get(selectedApp, 'code'),
           appName: get(selectedApp, 'name'),
           id,
@@ -192,7 +193,35 @@ class ConfigItem extends Component {
     this.setState({ showEvnSync });
   };
 
-  handlerRelease = () => {};
+  handlerCompareEvn = showCompareEvn => {
+    this.setState({ showCompareEvn });
+  };
+
+  handlerShowRelease = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/compareBeforeRelease',
+      payload: {
+        showRelease: true,
+      },
+    });
+  };
+
+  handlerShowCompare = targetCompareEvn => {
+    const {
+      dispatch,
+      configApp: { selectedEnv },
+    } = this.props;
+    console.log(selectedEnv, targetCompareEvn);
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        showCompare: true,
+        targetCompareEvn,
+      },
+    });
+    this.setState({ showCompareEvn: false });
+  };
 
   handlerCompare = () => {};
 
@@ -256,10 +285,37 @@ class ConfigItem extends Component {
             </Button>
           </Popconfirm>
         </div>
-        <div className="evn-box">
+        <div className="env-box">
           <ListCard {...listProps} />
         </div>
       </>
+    );
+  };
+
+  renderComparetargetEnvList = () => {
+    const {
+      configApp: { envData, selectedEnv },
+    } = this.props;
+    const dataSource = envData.filter(env => selectedEnv && env.code !== selectedEnv.code);
+    const listProps = {
+      searchProperties: ['code', 'remark'],
+      showArrow: false,
+      pagination: false,
+      showSearch: false,
+      customTool: () => null,
+      dataSource,
+      itemField: {
+        title: item => item.code,
+        description: item => item.name,
+      },
+      onSelectChange: (_keys, items) => {
+        this.handlerShowCompare(items[0]);
+      },
+    };
+    return (
+      <div className="env-box">
+        <ListCard {...listProps} />
+      </div>
     );
   };
 
@@ -268,7 +324,7 @@ class ConfigItem extends Component {
   };
 
   render() {
-    const { selectedRowKeys, showEvnSync } = this.state;
+    const { selectedRowKeys, showEvnSync, showCompareEvn } = this.state;
     const { loading, configApp } = this.props;
     const { selectedEnv, currentConfigItem, showFormModal, envData, selectedApp } = configApp;
     const hasSelected = selectedRowKeys.length > 0;
@@ -324,6 +380,7 @@ class ConfigItem extends Component {
     const enableConfigLoading = loading.effects['configApp/enableConfig'];
     const disableConfigLoading = loading.effects['configApp/disableConfig'];
     const syncConfigLoading = loading.effects['configApp/syncConfigs'];
+    const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const saving =
       loading.effects['configApp/saveConfig'] || loading.effects['configApp/saveConfigItem'];
     const toolBarProps = {
@@ -332,8 +389,21 @@ class ConfigItem extends Component {
           <Button type="primary" onClick={this.add}>
             新建配置键
           </Button>
-          <Button onClick={this.handlerRelease}>发布</Button>
-          <Button onClick={this.handlerCompare}>比较</Button>
+          <Button loading={releaseLoading} onClick={this.handlerShowRelease}>
+            发布
+          </Button>
+          <Popover
+            overlayClassName={styles['compare-popover-box']}
+            destroyTooltipOnHide
+            trigger="click"
+            placement="rightTop"
+            onVisibleChange={this.handlerCompareEvn}
+            visible={showCompareEvn}
+            content={this.renderComparetargetEnvList()}
+            title="目标环境"
+          >
+            <Button>比较</Button>
+          </Popover>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
@@ -381,6 +451,7 @@ class ConfigItem extends Component {
               overlayClassName={styles['sync-popover-box']}
               onVisibleChange={this.handlerEvnSync}
               visible={showEvnSync}
+              destroyTooltipOnHide
               trigger="click"
               placement="rightTop"
               content={this.renderEvnVarList()}

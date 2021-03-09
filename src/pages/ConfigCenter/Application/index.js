@@ -60,6 +60,8 @@ class ConfigCommon extends Component {
       type: 'configApp/updateState',
       payload: {
         selectedApp,
+        showRelease: false,
+        compareBeforeReleaseData: null,
       },
     });
   };
@@ -72,6 +74,11 @@ class ConfigCommon extends Component {
         currentTabKey,
       },
     });
+    if (currentTabKey === 'yamlPreview') {
+      dispatch({
+        type: 'configApp/getYamlData',
+      });
+    }
   };
 
   handlerEnvChange = selectedEnv => {
@@ -84,11 +91,43 @@ class ConfigCommon extends Component {
     });
   };
 
+  closeCompareModal = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        showRelease: false,
+        compareBeforeReleaseData: null,
+        showCompare: false,
+        compareData: null,
+      },
+    });
+  };
+
+  handlerRelease = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/appRelease',
+    });
+  };
+
   render() {
     const { groupCode } = this.state;
-    const { configApp } = this.props;
-    const { envData, selectedApp, currentTabKey, yamlText, selectedEnv } = configApp;
+    const { configApp, loading } = this.props;
+    const {
+      envData,
+      selectedApp,
+      currentTabKey,
+      yamlText,
+      selectedEnv,
+      showRelease,
+      compareBeforeReleaseData,
+      showCompare,
+      compareData,
+      targetCompareEvn,
+    } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.id] : [];
+    const releasing = loading.effects['configApp/appRelease'];
     const userGroupProps = {
       className: 'left-content',
       title: '应用列表',
@@ -116,9 +155,19 @@ class ConfigCommon extends Component {
       currentTabKey,
       onTabChange: this.handlerTabChange,
       yamlText,
+      yamlTextLoading: loading.effects['configApp/getYamlData'],
       envData,
       selectedEnv,
       handlerEnvChange: this.handlerEnvChange,
+      showRelease,
+      handlerClose: this.closeCompareModal,
+      compareBeforeReleaseData,
+      handlerRelease: this.handlerRelease,
+      releasing,
+      compareLoading: loading.effects['configApp/appRelease'],
+      compareData,
+      showCompare,
+      targetCompareEvn,
     };
     return (
       <div className={cls(styles['container-box'])}>
