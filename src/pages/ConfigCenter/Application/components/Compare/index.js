@@ -1,22 +1,54 @@
-import React from 'react';
+import React, { Component } from 'react';
 import cls from 'classnames';
-import { get } from 'lodash';
-import { Drawer, Layout, Row, Col } from 'antd';
-import { BannerTitle, ExtIcon, ListLoader } from 'suid';
+import PropTypes from 'prop-types';
+import { get, isEqual } from 'lodash';
+import { Drawer } from 'antd';
+import { BannerTitle, ExtIcon, ListLoader, utils } from 'suid';
+import { diff as DiffEditor } from 'react-ace';
+import 'ace-builds/src-noconflict/mode-toml';
+import 'ace-builds/src-noconflict/theme-kuroir';
 import styles from './index.less';
 
-const { Content } = Layout;
+const { getUUID } = utils;
 
-const AppCompare = ({
-  selectedApp,
-  selectedEnv,
-  targetCompareEvn,
-  showCompare,
-  handlerClose,
-  compareData,
-  compareLoading,
-}) => {
-  const renderMasterTitle = (title, currentEnvName, targetEnvName) => {
+class AppCompare extends Component {
+  static aceId;
+
+  static propTypes = {
+    selectedApp: PropTypes.object,
+    selectedEnv: PropTypes.object,
+    targetCompareEvn: PropTypes.object,
+    showCompare: PropTypes.bool,
+    handlerClose: PropTypes.func,
+    compareData: PropTypes.object,
+    compareLoading: PropTypes.bool,
+  };
+
+  constructor(props) {
+    super(props);
+    const { compareData } = props;
+    this.aceId = getUUID();
+    this.state = {
+      currentConfig: get(compareData, 'currentConfig') || '',
+      targetConfig: get(compareData, 'targetConfig') || '',
+    };
+  }
+
+  componentDidMount() {
+    this.resize();
+  }
+
+  componentDidUpdate(preProps) {
+    const { compareData } = this.props;
+    if (!isEqual(preProps.compareData, compareData)) {
+      this.setState({
+        currentConfig: get(compareData, 'currentConfig') || '',
+        targetConfig: get(compareData, 'targetConfig') || '',
+      });
+    }
+  }
+
+  renderMasterTitle = (title, currentEnvName, targetEnvName) => {
     return (
       <>
         {title}
@@ -29,7 +61,8 @@ const AppCompare = ({
     );
   };
 
-  const renderTitle = () => {
+  renderTitle = () => {
+    const { selectedApp, selectedEnv, targetCompareEvn, handlerClose } = this.props;
     const title = get(selectedApp, 'name');
     const currentEnvName = get(selectedEnv, 'name');
     const targetEnvName = get(targetCompareEvn, 'name');
@@ -37,44 +70,62 @@ const AppCompare = ({
       <>
         <ExtIcon onClick={handlerClose} type="left" className="trigger-back" antd />
         <BannerTitle
-          title={renderMasterTitle(title, currentEnvName, targetEnvName)}
+          title={this.renderMasterTitle(title, currentEnvName, targetEnvName)}
           subTitle="比较结果"
         />
       </>
     );
   };
 
-  const renderChangeContent = () => {
-    console.log(compareData);
+  resize = () => {
+    setTimeout(() => {
+      const winResize = new Event('resize');
+      window.dispatchEvent(winResize);
+    }, 300);
   };
 
-  return (
-    <Drawer
-      width="100%"
-      destroyOnClose
-      getContainer={false}
-      placement="right"
-      visible={showCompare}
-      title={renderTitle()}
-      className={cls(styles['app-compare-box'])}
-      onClose={handlerClose}
-      style={{ position: 'absolute' }}
-    >
-      <Layout className="auto-height">
-        <Content className={cls('main-content', 'auto-height')}>
-          {compareLoading ? <ListLoader /> : null}
-          <Row className={cls('body-content', 'auto-height')}>
-            <Col span={12} className="auto-height">
-              {renderChangeContent()}
-            </Col>
-            <Col span={12} className="auto-height">
-              bb
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
-    </Drawer>
-  );
-};
+  handlerComplete = ace => {
+    if (ace) {
+      this.resize();
+    }
+  };
+
+  render() {
+    const { compareLoading, showCompare, handlerClose } = this.props;
+    const { currentConfig, targetConfig } = this.state;
+    return (
+      <Drawer
+        width="100%"
+        destroyOnClose
+        getContainer={false}
+        placement="right"
+        visible={showCompare}
+        title={this.renderTitle()}
+        className={cls(styles['app-compare-box'])}
+        onClose={handlerClose}
+        style={{ position: 'absolute' }}
+      >
+        <div className={cls('body-content', 'auto-height')}>
+          {compareLoading ? (
+            <ListLoader />
+          ) : (
+            <DiffEditor
+              value={[currentConfig, targetConfig]}
+              height="100%"
+              width="100%"
+              name={this.aceId}
+              setOptions={{
+                useWorker: 16,
+              }}
+              onLoad={this.handlerComplete}
+              mode="toml"
+              theme="kuroir"
+            />
+          )}
+        </div>
+      </Drawer>
+    );
+  }
+}
 
 export default AppCompare;

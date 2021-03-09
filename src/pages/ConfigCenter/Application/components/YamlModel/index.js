@@ -49,8 +49,8 @@ class YamlModel extends PureComponent {
 
   resize = () => {
     setTimeout(() => {
-      const resize = new Event('resize');
-      window.dispatchEvent(resize);
+      const winResize = new Event('resize');
+      window.dispatchEvent(winResize);
     }, 300);
   };
 

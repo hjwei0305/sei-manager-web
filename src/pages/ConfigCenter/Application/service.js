@@ -102,9 +102,10 @@ export async function saveYamlData(data) {
   return request({
     url,
     method: 'POST',
-    data: {
-      yaml: yamlText,
+    headers: {
+      'Content-Type': 'application/json;',
     },
+    data: yamlText,
   });
 }
 

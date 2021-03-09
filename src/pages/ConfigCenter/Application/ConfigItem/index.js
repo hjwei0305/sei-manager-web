@@ -223,13 +223,12 @@ class ConfigItem extends Component {
         targetCompareEvn,
       },
     });
-    dispatch({
-      type: 'configApp/getCompareData',
+    this.setState({ showCompareEvn: false }, () => {
+      dispatch({
+        type: 'configApp/getCompareData',
+      });
     });
-    this.setState({ showCompareEvn: false });
   };
-
-  handlerCompare = () => {};
 
   renderDelBtn = row => {
     const { loading } = this.props;
@@ -277,7 +276,7 @@ class ConfigItem extends Component {
         this.forceUpdate();
       },
     };
-    const syncLoading = loading.effects['configCommon/syncConfigs'];
+    const syncLoading = loading.effects['configApp/syncConfigs'];
     return (
       <>
         <div className="tool-box">
