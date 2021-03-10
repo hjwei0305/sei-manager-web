@@ -3,7 +3,6 @@
   position: relative;
   height: 100%;
   padding: 16px;
-  overflow: hidden;
   :global {
     .hljs {
       display: inline-block;
@@ -18,6 +17,11 @@
     svg.d2h-changed,
     .d2h-file-list-header {
       display: none;
+    }
+    .d2h-file-side-diff,
+    .d2h-code-wrapper,
+    .d2h-diff-table {
+      height: 100%;
     }
     .d2h-file-stats {
       margin-left: 0;
