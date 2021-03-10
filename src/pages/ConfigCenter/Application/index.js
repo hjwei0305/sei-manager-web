@@ -137,6 +137,30 @@ class ConfigCommon extends Component {
     });
   };
 
+  handlerShowRelease = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/compareBeforeRelease',
+      payload: {
+        showRelease: true,
+      },
+    });
+  };
+
+  handlerShowCompare = targetCompareEvn => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        showCompare: true,
+        targetCompareEvn,
+      },
+    });
+    dispatch({
+      type: 'configApp/getCompareData',
+    });
+  };
+
   render() {
     const { groupCode } = this.state;
     const { configApp, loading } = this.props;
@@ -154,6 +178,7 @@ class ConfigCommon extends Component {
     } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const releasing = loading.effects['configApp/appRelease'];
+    const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const userGroupProps = {
       className: 'left-content',
       title: '应用列表',
@@ -189,7 +214,10 @@ class ConfigCommon extends Component {
       selectedEnv,
       handlerEnvChange: this.handlerEnvChange,
       showRelease,
+      releaseLoading,
+      handlerShowRelease: this.handlerShowRelease,
       handlerClose: this.closeCompareModal,
+      handlerShowCompare: this.handlerShowCompare,
       compareBeforeReleaseData,
       handlerRelease: this.handlerRelease,
       releasing,

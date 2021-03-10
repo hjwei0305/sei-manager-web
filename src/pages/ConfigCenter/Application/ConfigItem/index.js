@@ -25,7 +25,6 @@ class ConfigItem extends Component {
       selectedRowKeys: [],
       delRowId: null,
       showEvnSync: false,
-      showCompareEvn: false,
     };
   }
 
@@ -200,36 +199,6 @@ class ConfigItem extends Component {
     this.setState({ showEvnSync });
   };
 
-  handlerCompareEvn = showCompareEvn => {
-    this.setState({ showCompareEvn });
-  };
-
-  handlerShowRelease = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'configApp/compareBeforeRelease',
-      payload: {
-        showRelease: true,
-      },
-    });
-  };
-
-  handlerShowCompare = targetCompareEvn => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'configApp/updateState',
-      payload: {
-        showCompare: true,
-        targetCompareEvn,
-      },
-    });
-    this.setState({ showCompareEvn: false }, () => {
-      dispatch({
-        type: 'configApp/getCompareData',
-      });
-    });
-  };
-
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
@@ -329,7 +298,7 @@ class ConfigItem extends Component {
   };
 
   render() {
-    const { selectedRowKeys, showEvnSync, showCompareEvn } = this.state;
+    const { selectedRowKeys, showEvnSync } = this.state;
     const { loading, configApp } = this.props;
     const { selectedEnv, currentConfigItem, showFormModal, envData, selectedApp } = configApp;
     const hasSelected = selectedRowKeys.length > 0;
@@ -386,7 +355,6 @@ class ConfigItem extends Component {
     const enableConfigLoading = loading.effects['configApp/enableConfig'];
     const disableConfigLoading = loading.effects['configApp/disableConfig'];
     const syncConfigLoading = loading.effects['configApp/syncConfigs'];
-    const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const saving =
       loading.effects['configApp/saveConfig'] || loading.effects['configApp/saveConfigItem'];
     const toolBarProps = {
@@ -395,21 +363,6 @@ class ConfigItem extends Component {
           <Button type="primary" onClick={this.add}>
             新建配置键
           </Button>
-          <Button loading={releaseLoading} onClick={this.handlerShowRelease}>
-            发布
-          </Button>
-          <Popover
-            overlayClassName={styles['compare-popover-box']}
-            destroyTooltipOnHide
-            trigger="click"
-            placement="rightTop"
-            onVisibleChange={this.handlerCompareEvn}
-            visible={showCompareEvn}
-            content={this.renderComparetargetEnvList()}
-            title="目标环境"
-          >
-            <Button>比较</Button>
-          </Popover>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
