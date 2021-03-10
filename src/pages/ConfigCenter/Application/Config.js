@@ -102,7 +102,7 @@ const Config = ({
             value: 'code',
           }}
         />
-        <Button loading={releaseLoading} onClick={handlerShowRelease}>
+        <Button type="primary" ghost loading={releaseLoading} onClick={handlerShowRelease}>
           发布
         </Button>
         <Popover
