@@ -66,6 +66,8 @@ class ConfigCommon extends Component {
       payload: {
         selectedApp,
         showRelease: false,
+        showCompare: false,
+        compareData: null,
         compareBeforeReleaseData: null,
       },
     });

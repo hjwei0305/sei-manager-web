@@ -1,19 +1,14 @@
+/* eslint-disable no-new */
 import React, { Component } from 'react';
 import cls from 'classnames';
 import PropTypes from 'prop-types';
 import { get, isEqual } from 'lodash';
 import { Drawer } from 'antd';
-import { BannerTitle, ExtIcon, ListLoader, utils } from 'suid';
-import { diff as DiffEditor } from 'react-ace';
-import 'ace-builds/src-noconflict/mode-toml';
-import 'ace-builds/src-noconflict/theme-kuroir';
+import { BannerTitle, ExtIcon, ListLoader, ScrollBar } from 'suid';
+import { CodeDiff } from '@/components';
 import styles from './index.less';
 
-const { getUUID } = utils;
-
 class AppCompare extends Component {
-  static aceId;
-
   static propTypes = {
     selectedApp: PropTypes.object,
     selectedEnv: PropTypes.object,
@@ -27,7 +22,6 @@ class AppCompare extends Component {
   constructor(props) {
     super(props);
     const { compareData } = props;
-    this.aceId = getUUID();
     this.state = {
       currentConfig: get(compareData, 'currentConfig') || '',
       targetConfig: get(compareData, 'targetConfig') || '',
@@ -91,8 +85,8 @@ class AppCompare extends Component {
   };
 
   render() {
-    const { compareLoading, showCompare, handlerClose } = this.props;
     const { currentConfig, targetConfig } = this.state;
+    const { compareLoading, showCompare, handlerClose } = this.props;
     return (
       <Drawer
         width="100%"
@@ -109,16 +103,9 @@ class AppCompare extends Component {
           {compareLoading ? (
             <ListLoader />
           ) : (
-            <DiffEditor
-              value={[currentConfig, targetConfig]}
-              height="100%"
-              width="100%"
-              fontSize={14}
-              name={this.aceId}
-              onLoad={this.handlerComplete}
-              mode="toml"
-              theme="kuroir"
-            />
+            <ScrollBar>
+              <CodeDiff context={100000} oldText={currentConfig} newText={targetConfig} />
+            </ScrollBar>
           )}
         </div>
       </Drawer>

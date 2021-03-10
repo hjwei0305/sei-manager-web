@@ -1,0 +1,56 @@
+@import '../../themes/vars.less';
+.code-diff-box {
+  position: relative;
+  height: 100%;
+  padding: 16px;
+  overflow: hidden;
+  :global {
+    .hljs {
+      display: inline-block;
+      height: 17px;
+      padding: 0;
+      vertical-align: middle;
+      background: transparent;
+    }
+    .d2h-file-wrapper {
+      border-color: transparent;
+    }
+    svg.d2h-changed,
+    .d2h-file-list-header {
+      display: none;
+    }
+    .d2h-file-stats {
+      margin-left: 0;
+    }
+    .d2h-wrapper {
+      position: relative;
+    }
+    .d2h-wrapper .d2h-file-header {
+      display: none;
+    }
+    .d2h-wrapper .d2h-files-diff {
+      position: relative;
+    }
+    .d2h-wrapper .d2h-file-side-diff {
+      margin-bottom: -5px;
+    }
+    .d2h-wrapper .d2h-files-diff > .d2h-file-side-diff ~ .d2h-file-side-diff {
+      position: absolute;
+    }
+    .d2h-wrapper .d2h-code-side-emptyplaceholder {
+      max-height: 17px;
+    }
+    .d2h-wrapper .d2h-code-side-line,
+    .d2h-wrapper .d2h-code-line {
+      display: block;
+      width: auto;
+    }
+    .d2h-wrapper .d2h-code-side-line.d2h-info {
+      height: 18px;
+    }
+    .d2h-wrapper .d2h-code-linenumber,
+    .d2h-code-side-linenumber {
+      height: 19px;
+    }
+  }
+}

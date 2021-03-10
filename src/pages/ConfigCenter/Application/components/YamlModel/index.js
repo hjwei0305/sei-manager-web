@@ -86,7 +86,7 @@ class YamlModel extends PureComponent {
               mode="yaml"
               theme="kuroir"
               name={this.aceId}
-              fontSize={14}
+              fontSize={16}
               onChange={this.handlerAceChannge}
               showPrintMargin={false}
               showGutter
