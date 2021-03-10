@@ -88,13 +88,25 @@ const AppRelease = ({
                   {
                     title: '键值变更前',
                     dataIndex: 'currentValue',
-                    width: 260,
+                    width: 220,
                     render: t => t || '-',
                   },
                   {
                     title: '键值变更后',
                     dataIndex: 'targetValue',
-                    width: 260,
+                    width: 220,
+                    render: t => t || '-',
+                  },
+                  {
+                    title: '发布人',
+                    dataIndex: 'publisherName',
+                    width: 100,
+                    render: t => t || '-',
+                  },
+                  {
+                    title: '发布时间',
+                    dataIndex: 'publishDate',
+                    width: 180,
                     render: t => t || '-',
                   },
                 ];

@@ -176,7 +176,7 @@ class ConfigCommon extends Component {
       compareData,
       targetCompareEvn,
     } = configApp;
-    const selectedKeys = selectedApp ? [selectedApp.id] : [];
+    const selectedKeys = selectedApp ? [selectedApp.code] : [];
     const releasing = loading.effects['configApp/appRelease'];
     const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const userGroupProps = {
@@ -229,7 +229,7 @@ class ConfigCommon extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
-          <Sider width={320} className="auto-height" theme="light">
+          <Sider width={280} className="auto-height" theme="light">
             <ListCard {...userGroupProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
