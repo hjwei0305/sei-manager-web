@@ -48,9 +48,10 @@ export default modelExtend(model, {
   },
   effects: {
     *initEnv(_, { select, put }) {
+      const { selectedEnv: originSelectedEnv } = yield select(sel => sel.configApp);
       const { envData } = yield select(sel => sel.menu);
-      let selectedEnv = null;
-      if (!selectedEnv && envData && envData.length > 0) {
+      let selectedEnv = { ...originSelectedEnv };
+      if (!originSelectedEnv && envData && envData.length > 0) {
         [selectedEnv] = envData;
       }
       yield put({

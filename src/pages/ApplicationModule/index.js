@@ -13,12 +13,12 @@ import styles from './index.less';
 const { SERVER_PATH } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
-  { fieldName: 'code', operator: 'EQ', value: null },
-  { fieldName: 'name', operator: 'EQ', value: null },
+  { fieldName: 'code', operator: 'LK', value: null },
+  { fieldName: 'name', operator: 'LK', value: null },
   { fieldName: 'appId', operator: 'EQ', value: null },
-  { fieldName: 'version', operator: 'EQ', value: null },
-  { fieldName: 'remark', operator: 'EQ', value: null },
-  { fieldName: 'gitUrl', operator: 'EQ', value: null },
+  { fieldName: 'version', operator: 'LK', value: null },
+  { fieldName: 'remark', operator: 'LK', value: null },
+  { fieldName: 'gitHttpUrl', operator: 'EQ', value: null },
   { fieldName: 'nameSpace', operator: 'EQ', value: null },
 ];
 
@@ -391,8 +391,8 @@ class ApplicationModule extends Component {
       columns,
       onTableRef: ref => (this.tableRef = ref),
       showSearchTooltip: true,
-      searchPlaceHolder: '模块代码、模块名称、描述说明、Git地址、命名空间(包路径)',
-      searchProperties: ['code', 'name', 'remark', 'gitUrl', 'nameSpace'],
+      searchPlaceHolder: '模块代码、模块名称、描述说明',
+      searchProperties: ['code', 'name', 'remark'],
       searchWidth: 260,
       remotePaging: true,
       store: {

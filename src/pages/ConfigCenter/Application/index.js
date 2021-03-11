@@ -26,6 +26,24 @@ class ConfigCommon extends Component {
     };
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/updateState',
+      payload: {
+        targetCompareEvn: null,
+        currentConfigItem: null,
+        showRelease: false,
+        compareBeforeReleaseData: null,
+        showCompare: false,
+        showFormModal: false,
+        compareData: null,
+        yamlText: '',
+        currentTabKey: 'appParam',
+      },
+    });
+  }
+
   handlerSearchChange = v => {
     this.listCardRef.handlerSearchChange(v);
   };
