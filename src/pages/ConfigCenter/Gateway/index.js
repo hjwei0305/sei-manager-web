@@ -6,6 +6,7 @@ import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
 import DropdownGroup from './components/DropdownGroup';
+import ApiList from './ApiList';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
@@ -213,7 +214,7 @@ class AppGateway extends Component {
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {selectedApp ? (
-              'aa'
+              <ApiList />
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="选择左边项目进行的相关配置" />

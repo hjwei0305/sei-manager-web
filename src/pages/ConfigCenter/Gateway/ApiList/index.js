@@ -209,7 +209,7 @@ class ApiList extends Component {
       save: this.save,
     };
     return (
-      <div className={cls(styles['user-box'])}>
+      <div className={cls(styles['app-list-box'])}>
         <Card
           title={<BannerTitle title={get(selectedApp, 'name')} subTitle="网关白名单" />}
           bordered={false}

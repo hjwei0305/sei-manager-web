@@ -2,12 +2,10 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
-import { ExtModal, ComboList, MoneyInput } from 'suid';
-import { constants } from '@/utils';
+import { ExtModal, BannerTitle } from 'suid';
 import styles from './FormModal.less';
 
 const FormItem = Form.Item;
-const { SERVER_PATH } = constants;
 const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
@@ -55,24 +53,7 @@ class FormModal extends PureComponent {
   render() {
     const { form, saving, showModal, rowData } = this.props;
     const { getFieldDecorator } = form;
-    getFieldDecorator('handleAccount', { initialValue: get(rowData, 'handleAccount') });
-    const title = rowData ? '修改审核节点' : '新建审核节点';
-    const nodeUserListProps = {
-      form,
-      name: 'handleUserName',
-      store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
-      },
-      placeholder: '请先选择审核人',
-      remotePaging: true,
-      field: ['handleAccount'],
-      reader: {
-        name: 'nickname',
-        description: 'account',
-        field: ['account'],
-      },
-    };
+    const title = rowData ? '修改' : '新建';
     return (
       <ExtModal
         destroyOnClose
@@ -85,52 +66,41 @@ class FormModal extends PureComponent {
         bodyStyle={{ padding: 0 }}
         confirmLoading={saving}
         onOk={this.handlerFormSubmit}
-        title={title}
+        title={<BannerTitle title={title} subTitle="网关白名单" />}
       >
         <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
-          <FormItem label="序号">
-            {getFieldDecorator('code', {
-              initialValue: get(rowData, 'code'),
+          <FormItem label="接口地址">
+            {getFieldDecorator('interfaceURI', {
+              initialValue: get(rowData, 'interfaceURI'),
               rules: [
                 {
                   required: true,
-                  message: '序号不能为空',
-                },
-              ],
-            })(<MoneyInput max={9999} min={0} textAlign="left" thousand={false} precision={0} />)}
-          </FormItem>
-          <FormItem label="审核节点名称">
-            {getFieldDecorator('name', {
-              initialValue: get(rowData, 'name'),
-              rules: [
-                {
-                  required: true,
-                  message: '审核节点名称不能为空',
+                  message: '接口地址不能为空',
                 },
               ],
             })(<Input autoComplete="off" />)}
           </FormItem>
-          <FormItem label="审核节点描述">
-            {getFieldDecorator('remark', {
-              initialValue: get(rowData, 'remark'),
+          <FormItem label="接口名称">
+            {getFieldDecorator('interfaceName', {
+              initialValue: get(rowData, 'interfaceName'),
               rules: [
                 {
                   required: true,
-                  message: '审核节点描述不能为空',
+                  message: '接口名称不能为空',
+                },
+              ],
+            })(<Input autoComplete="off" />)}
+          </FormItem>
+          <FormItem label="接口描述">
+            {getFieldDecorator('interfaceRemark', {
+              initialValue: get(rowData, 'interfaceRemark'),
+              rules: [
+                {
+                  required: true,
+                  message: '接口描述不能为空',
                 },
               ],
             })(<TextArea style={{ resize: 'none' }} rows={3} />)}
-          </FormItem>
-          <FormItem label="审核人">
-            {getFieldDecorator('handleUserName', {
-              initialValue: get(rowData, 'handleUserName'),
-              rules: [
-                {
-                  required: true,
-                  message: '审核人不能为空',
-                },
-              ],
-            })(<ComboList {...nodeUserListProps} />)}
           </FormItem>
         </Form>
       </ExtModal>
