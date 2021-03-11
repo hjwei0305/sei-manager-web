@@ -86,13 +86,13 @@ const AppRelease = ({
                     required: true,
                   },
                   {
-                    title: '发布后',
+                    title: '上次发布',
                     dataIndex: 'currentValue',
                     width: 220,
                     render: t => t || '-',
                   },
                   {
-                    title: '上次发布',
+                    title: '发布后',
                     dataIndex: 'targetValue',
                     width: 220,
                     render: t => t || '-',
