@@ -48,7 +48,7 @@ class FormModal extends PureComponent {
   };
 
   validateAppCode = (rule, value, callback) => {
-    const reg = /^[a-z][a-z-]*[a-z]$/;
+    const reg = /^[a-z][a-z-]*[a-z]*[0-9]*$/;
     if (value && !reg.test(value)) {
       callback('代码不规范!');
     }
