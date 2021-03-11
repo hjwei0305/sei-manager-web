@@ -6,15 +6,14 @@ import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
 import DropdownGroup from './components/DropdownGroup';
-import Config from './Config';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
 const { Sider, Content } = Layout;
 const { Search } = Input;
 
-@connect(({ configApp, loading }) => ({ configApp, loading }))
-class ConfigCommon extends Component {
+@connect(({ appGateway, loading }) => ({ appGateway, loading }))
+class AppGateway extends Component {
   static listCardRef = null;
 
   static itemRef = null;
@@ -29,7 +28,7 @@ class ConfigCommon extends Component {
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         targetCompareEvn: null,
         currentConfigItem: null,
@@ -76,11 +75,11 @@ class ConfigCommon extends Component {
   handlerAppSelect = (keys, items) => {
     const {
       dispatch,
-      configApp: { currentTabKey },
+      appGateway: { currentTabKey },
     } = this.props;
     const selectedApp = keys.length === 1 ? items[0] : null;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         selectedApp,
         showRelease: false,
@@ -97,7 +96,7 @@ class ConfigCommon extends Component {
   handlerTabChange = currentTabKey => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         currentTabKey,
       },
@@ -113,14 +112,14 @@ class ConfigCommon extends Component {
   getYamlData = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/getYamlData',
+      type: 'appGateway/getYamlData',
     });
   };
 
   handlerEnvChange = selectedEnv => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         selectedEnv,
       },
@@ -130,7 +129,7 @@ class ConfigCommon extends Component {
   closeCompareModal = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         showRelease: false,
         compareBeforeReleaseData: null,
@@ -143,14 +142,14 @@ class ConfigCommon extends Component {
   handlerRelease = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/appRelease',
+      type: 'appGateway/appRelease',
     });
   };
 
   handlerSaveYmal = data => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/saveYamlData',
+      type: 'appGateway/saveYamlData',
       payload: data,
     });
   };
@@ -158,7 +157,7 @@ class ConfigCommon extends Component {
   handlerShowRelease = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/compareBeforeRelease',
+      type: 'appGateway/compareBeforeRelease',
       payload: {
         showRelease: true,
       },
@@ -168,35 +167,22 @@ class ConfigCommon extends Component {
   handlerShowCompare = targetCompareEvn => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'configApp/updateState',
+      type: 'appGateway/updateState',
       payload: {
         showCompare: true,
         targetCompareEvn,
       },
     });
     dispatch({
-      type: 'configApp/getCompareData',
+      type: 'appGateway/getCompareData',
     });
   };
 
   render() {
     const { groupCode } = this.state;
-    const { configApp, loading } = this.props;
-    const {
-      envData,
-      selectedApp,
-      currentTabKey,
-      yamlText,
-      selectedEnv,
-      showRelease,
-      compareBeforeReleaseData,
-      showCompare,
-      compareData,
-      targetCompareEvn,
-    } = configApp;
+    const { appGateway } = this.props;
+    const { selectedApp } = appGateway;
     const selectedKeys = selectedApp ? [selectedApp.code] : [];
-    const releasing = loading.effects['configApp/appRelease'];
-    const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const appListProps = {
       className: 'left-content',
       title: '应用列表',
@@ -219,31 +205,6 @@ class ConfigCommon extends Component {
         groupCode,
       },
     };
-    const configProps = {
-      selectedApp,
-      onItemRef: ref => (this.itemRef = ref),
-      currentTabKey,
-      onTabChange: this.handlerTabChange,
-      yamlText,
-      yamlTextLoading: loading.effects['configApp/getYamlData'],
-      saveYaml: this.handlerSaveYmal,
-      savingYaml: loading.effects['configApp/saveYamlData'],
-      envData,
-      selectedEnv,
-      handlerEnvChange: this.handlerEnvChange,
-      showRelease,
-      releaseLoading,
-      handlerShowRelease: this.handlerShowRelease,
-      handlerClose: this.closeCompareModal,
-      handlerShowCompare: this.handlerShowCompare,
-      compareBeforeReleaseData,
-      handlerRelease: this.handlerRelease,
-      releasing,
-      compareLoading: loading.effects['configApp/getCompareData'],
-      compareData,
-      showCompare,
-      targetCompareEvn,
-    };
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
@@ -252,7 +213,7 @@ class ConfigCommon extends Component {
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>
             {selectedApp ? (
-              <Config {...configProps} />
+              'aa'
             ) : (
               <div className="blank-empty">
                 <Empty image={empty} description="选择左边项目进行的相关配置" />
@@ -264,4 +225,4 @@ class ConfigCommon extends Component {
     );
   }
 }
-export default ConfigCommon;
+export default AppGateway;

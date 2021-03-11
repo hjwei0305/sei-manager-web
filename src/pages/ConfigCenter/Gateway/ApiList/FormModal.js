@@ -22,7 +22,7 @@ const formItemLayout = {
 class FormModal extends PureComponent {
   static propTypes = {
     rowData: PropTypes.object,
-    currentFlowType: PropTypes.object,
+    selectedApp: PropTypes.object,
     showModal: PropTypes.bool,
     save: PropTypes.func,
     closeFormModal: PropTypes.func,
@@ -30,13 +30,14 @@ class FormModal extends PureComponent {
   };
 
   handlerFormSubmit = () => {
-    const { form, save, currentFlowType, rowData } = this.props;
+    const { form, save, selectedApp, rowData } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
       }
       const params = {
-        typeId: get(currentFlowType, 'id'),
+        appCode: get(selectedApp, 'code'),
+        appName: get(selectedApp, 'name'),
       };
       Object.assign(params, rowData);
       Object.assign(params, formData);

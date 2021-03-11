@@ -233,6 +233,11 @@ const routes = [
             name: '应用配置',
             component: './ConfigCenter/Application',
           },
+          {
+            path: '/configCenter/gateway',
+            name: '应用网关白名单',
+            component: './ConfigCenter/Gateway',
+          },
         ],
       },
       {
