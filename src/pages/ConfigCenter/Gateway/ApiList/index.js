@@ -134,12 +134,12 @@ class ApiList extends Component {
       {
         title: '接口地址',
         dataIndex: 'interfaceURI',
-        width: 220,
+        width: 320,
       },
       {
         title: '接口名称',
         dataIndex: 'interfaceName',
-        width: 100,
+        width: 180,
         render: t => t || '-',
       },
       {
