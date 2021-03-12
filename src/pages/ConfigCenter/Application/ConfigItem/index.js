@@ -383,7 +383,7 @@ class ConfigItem extends Component {
             </Button>
             <Popconfirm
               disabled={enableConfigLoading || syncConfigLoading}
-              title="确定要禁用选择的项吗?"
+              title="确定要停用选择的项吗?"
               onConfirm={() => this.disableConfig()}
             >
               <Button
@@ -391,7 +391,7 @@ class ConfigItem extends Component {
                 disabled={enableConfigLoading || syncConfigLoading}
                 loading={disableConfigLoading}
               >
-                禁用
+                停用
               </Button>
             </Popconfirm>
             <Popconfirm

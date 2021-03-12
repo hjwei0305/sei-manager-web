@@ -119,7 +119,7 @@ class FormModal extends PureComponent {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="禁用">
+          <FormItem label="停用">
             {getFieldDecorator('status', {
               initialValue: !get(rowData, 'status', false),
               valuePropName: 'checked',

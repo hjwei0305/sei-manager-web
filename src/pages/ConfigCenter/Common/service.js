@@ -34,7 +34,7 @@ export async function delConfigItem(params) {
   });
 }
 
-/** 批量禁用配置 */
+/** 批量停用配置 */
 export async function disableConfig(data) {
   const url = `${SERVER_PATH}/sei-manager/generalConfig/disableConfig`;
   return request({

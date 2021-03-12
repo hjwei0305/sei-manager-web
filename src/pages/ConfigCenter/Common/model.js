@@ -106,7 +106,7 @@ export default modelExtend(model, {
       const re = yield call(disableConfig, payload);
       message.destroy();
       if (re.success) {
-        message.success('批量禁用成功');
+        message.success('批量停用成功');
       } else {
         message.error(re.message);
       }

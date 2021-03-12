@@ -149,7 +149,7 @@ class UserList extends Component {
         ) : null}
         {row.status === false ? (
           <Tag color="red" style={{ marginLeft: 8 }}>
-            已禁用
+            已停用
           </Tag>
         ) : null}
       </>
