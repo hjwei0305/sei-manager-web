@@ -2,7 +2,7 @@
  * @Author: zp
  * @Date: 2020-04-13 15:01:55
  * @Last Modified by: Eason
- * @Last Modified time: 2020-10-27 16:29:32
+ * @Last Modified time: 2021-03-12 09:12:40
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -116,7 +116,7 @@ class ConfirmLoginModal extends Component {
     const { loading, user, visible } = this.props;
     const { verifyCode } = user;
     const { showTenant, showVertifCode } = this.state;
-    const isLoading = loading.effects['user/quickLogin'];
+    const isLoading = loading.effects['user/userLogin'];
     const userInfo = getCurrentUser();
     const { account, tenantCode } = userInfo || {};
 
@@ -146,11 +146,17 @@ class ConfirmLoginModal extends Component {
               size="large"
               loading={isLoading}
               onClick={this.handleReLogin}
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 8, width: 136 }}
             >
               新账号登录
             </Button>
-            <Button size="large" loading={isLoading} type="primary" onClick={this.handleQuickLogin}>
+            <Button
+              size="large"
+              style={{ width: 136 }}
+              loading={isLoading}
+              type="primary"
+              onClick={this.handleQuickLogin}
+            >
               登录
             </Button>
           </div>
