@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-09 16:39:32
+ * @Last Modified time: 2021-03-15 08:53:33
  */
 import { name } from '../../package.json';
 
@@ -232,7 +232,7 @@ const FLOW_OPERATION_TYPE = {
 const USER_STATUS = {
   NONE: { key: 'NONE', title: '未启用', color: '' },
   ENABLE: { key: 'ENABLE', title: '启用', color: 'green' },
-  DISABLE: { key: 'DISABLE', title: '禁用', color: 'red' },
+  DISABLE: { key: 'DISABLE', title: '停用', color: 'red' },
 };
 
 const CHANGE_TYPE = {
