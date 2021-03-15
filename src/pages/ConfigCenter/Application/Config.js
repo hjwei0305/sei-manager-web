@@ -36,7 +36,7 @@ const Config = ({
   saveYaml,
   savingYaml,
 }) => {
-  const [showCompareEvn, setShowCompareEvn] = useState(0);
+  const [showCompareEvn, setShowCompareEvn] = useState(false);
   const renderTitle = () => {
     return (
       <>
@@ -48,7 +48,6 @@ const Config = ({
   const renderComparetargetEnvList = () => {
     const dataSource = envData.filter(env => selectedEnv && env.code !== selectedEnv.code);
     const listProps = {
-      searchProperties: ['code', 'remark'],
       showArrow: false,
       pagination: false,
       showSearch: false,
