@@ -118,13 +118,19 @@ class ConfigCommon extends Component {
   };
 
   handlerEnvChange = selectedEnv => {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      configApp: { currentTabKey },
+    } = this.props;
     dispatch({
       type: 'configApp/updateState',
       payload: {
         selectedEnv,
       },
     });
+    if (currentTabKey === 'yamlPreview') {
+      this.getYamlData();
+    }
   };
 
   closeCompareModal = () => {
