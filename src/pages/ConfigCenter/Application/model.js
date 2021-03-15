@@ -162,7 +162,7 @@ export default modelExtend(model, {
           },
         });
       } else {
-        message.error(re.message);
+        message.warning(re.message);
       }
       if (callback && callback instanceof Function) {
         callback(re);
