@@ -249,8 +249,7 @@ class ApiList extends Component {
       {
         title: '请求方法',
         dataIndex: 'method',
-        width: 80,
-        align: 'center',
+        width: 90,
         render: this.renderRequestMethod,
       },
       {
