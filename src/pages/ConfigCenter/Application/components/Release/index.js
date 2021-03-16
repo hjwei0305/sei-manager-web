@@ -40,7 +40,7 @@ const AppRelease = ({
     const changeItems = Object.keys(changeObj);
     if (changeItems.length >= 0) {
       return (
-        <Collapse onChange={updateScroll} bordered={false} defaultActiveKey={changeItems}>
+        <Collapse onChange={updateScroll} bordered={false} defaultActiveKey={[]}>
           {sortBy(changeItems, itemKey => itemKey).map(itemKey => {
             const items = changeObj[itemKey];
             const tbProps = {

@@ -109,6 +109,15 @@ export async function saveYamlData(data) {
   });
 }
 
+/** 获取应用运行时的配置 */
+export async function getAppRuntimeConfig(data) {
+  const { appCode, envCode } = data;
+  const url = `${SERVER_PATH}/sei-manager/configserver/${appCode}/${envCode}`;
+  return request({
+    url,
+  });
+}
+
 /** 跨环境比较 */
 export async function getCompareData(data) {
   const { appCode, currentEnv, targetEnv } = data;

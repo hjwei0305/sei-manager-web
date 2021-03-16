@@ -49,8 +49,14 @@
         .ant-collapse-item {
           border-bottom-color: #f0f2f5;
           border-bottom-width: 4px;
+          &:last-child {
+            border-bottom-color: transparent;
+          }
           .ant-collapse-header {
             padding: 6px 16px 6px 40px;
+            i.anticon {
+              color: fade(@black, 35%);
+            }
             .ant-tag {
               padding: 4px 12px;
               border-radius: 14px;

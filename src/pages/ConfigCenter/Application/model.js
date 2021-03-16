@@ -13,6 +13,7 @@ import {
   getYamlData,
   saveYamlData,
   getCompareData,
+  getAppRuntimeConfig,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
@@ -33,6 +34,7 @@ export default modelExtend(model, {
     showFormModal: false,
     compareData: null,
     yamlText: '',
+    runtimeConfig: null,
     currentTabKey: 'appParam',
   },
   subscriptions: {
@@ -202,6 +204,27 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             yamlText: re.data,
+          },
+        });
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *getAppRuntimeConfig({ callback }, { call, put, select }) {
+      const { selectedEnv, selectedApp } = yield select(sel => sel.configApp);
+      const re = yield call(getAppRuntimeConfig, {
+        appCode: get(selectedApp, 'code'),
+        envCode: get(selectedEnv, 'code'),
+      });
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            runtimeConfig: re,
           },
         });
       } else {

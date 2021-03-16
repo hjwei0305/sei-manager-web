@@ -92,6 +92,9 @@ class ConfigCommon extends Component {
     if (currentTabKey === 'yamlPreview') {
       this.getYamlData();
     }
+    if (currentTabKey === 'runtime') {
+      this.getRuntimeData();
+    }
   };
 
   handlerTabChange = currentTabKey => {
@@ -108,12 +111,22 @@ class ConfigCommon extends Component {
     if (currentTabKey === 'appParam') {
       this.itemRef.reloadData();
     }
+    if (currentTabKey === 'runtime') {
+      this.getRuntimeData();
+    }
   };
 
   getYamlData = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'configApp/getYamlData',
+    });
+  };
+
+  getRuntimeData = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'configApp/getAppRuntimeConfig',
     });
   };
 
@@ -199,6 +212,7 @@ class ConfigCommon extends Component {
       showCompare,
       compareData,
       targetCompareEvn,
+      runtimeConfig,
     } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.code] : [];
     const releasing = loading.effects['configApp/appRelease'];
@@ -249,6 +263,8 @@ class ConfigCommon extends Component {
       compareData,
       showCompare,
       targetCompareEvn,
+      runtimeLoading: loading.effects['configApp/getAppRuntimeConfig'],
+      runtimeConfig,
     };
     return (
       <div className={cls(styles['container-box'])}>

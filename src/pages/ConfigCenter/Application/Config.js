@@ -4,6 +4,7 @@ import { Tabs, Card, Button, Popover } from 'antd';
 import { BannerTitle, PageLoader, ListCard } from 'suid';
 import { FilterView } from '@/components';
 import YamlModel from './components/YamlModel';
+import RuntimeModel from './components/RuntimeModel';
 import ConfigItem from './ConfigItem';
 import styles from './Config.less';
 
@@ -35,6 +36,8 @@ const Config = ({
   compareData,
   saveYaml,
   savingYaml,
+  runtimeLoading,
+  runtimeConfig,
 }) => {
   const [showCompareEvn, setShowCompareEvn] = useState(false);
   const renderTitle = () => {
@@ -140,6 +143,9 @@ const Config = ({
             selectedApp={selectedApp}
             yamlText={yamlText}
           />
+        </TabPane>
+        <TabPane tab="运行时" key="runtime">
+          <RuntimeModel loading={runtimeLoading} runtimeConfig={runtimeConfig} />
         </TabPane>
       </Tabs>
       {showRelease ? (
