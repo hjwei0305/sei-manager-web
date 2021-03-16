@@ -54,7 +54,7 @@ class Dashboard extends React.Component {
             <div className="shape-left">
               <TweenOne
                 animation={[
-                  { x: 225, type: 'from', ease: 'easeInOutQuint', duration: 600 },
+                  { x: 217, type: 'from', ease: 'easeInOutQuint', duration: 600 },
                   { x: -226, ease: 'easeInOutQuart', duration: 450, delay: -150 },
                 ]}
               />
@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
             <div className="shape-right">
               <TweenOne
                 animation={[
-                  { x: -225, type: 'from', ease: 'easeInOutQuint', duration: 600 },
+                  { x: -217, type: 'from', ease: 'easeInOutQuint', duration: 600 },
                   { x: 226, ease: 'easeInOutQuart', duration: 450, delay: -150 },
                 ]}
               />
