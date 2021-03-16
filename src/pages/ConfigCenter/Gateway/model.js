@@ -1,6 +1,7 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { save, del, syncConfigs } from './service';
+import get from 'lodash.get';
+import { save, del, syncConfigs, releaseConfigs } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -82,6 +83,21 @@ export default modelExtend(model, {
       }
       if (callback && callback instanceof Function) {
         callback(re);
+      }
+    },
+    *releaseConfigs(_, { call, select }) {
+      const { selectedEnv } = yield select(sel => sel.appGateway);
+      const basePath = get(selectedEnv, 'gatewayServer');
+      message.destroy();
+      if (basePath) {
+        const re = yield call(releaseConfigs, { basePath: get(selectedEnv, 'gatewayServer') });
+        if (re.success) {
+          message.success('发布成功');
+        } else {
+          message.error(re.message);
+        }
+      } else {
+        message.error(`环境[${get(selectedEnv, 'name')}]未配置网关基地址`);
       }
     },
   },

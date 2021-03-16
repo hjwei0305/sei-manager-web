@@ -224,7 +224,7 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            runtimeConfig: re,
+            runtimeConfig: re.data,
           },
         });
       } else {

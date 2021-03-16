@@ -146,6 +146,13 @@ class ApiList extends Component {
     });
   };
 
+  release = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'appGateway/releaseConfigs',
+    });
+  };
+
   renderEvnVarList = () => {
     const {
       loading,
@@ -281,6 +288,14 @@ class ApiList extends Component {
           <Button type="primary" onClick={this.add}>
             新建
           </Button>
+          <Button
+            type="primary"
+            loading={loading.effects['appGateway/releaseConfigs']}
+            ghost
+            onClick={this.release}
+          >
+            发布
+          </Button>
           <Popover
             overlayClassName={styles['sync-popover-box']}
             onVisibleChange={this.handlerEvnSync}
@@ -291,9 +306,7 @@ class ApiList extends Component {
             content={this.renderEvnVarList()}
             title="同步到环境"
           >
-            <Button type="primary" ghost>
-              同步到环境
-            </Button>
+            <Button>同步到环境</Button>
           </Popover>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />

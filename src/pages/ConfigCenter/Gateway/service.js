@@ -33,3 +33,14 @@ export async function syncConfigs(data) {
     data,
   });
 }
+
+/** 发布 */
+export async function releaseConfigs(data) {
+  const { basePath } = data;
+  const url = `${basePath}/routes/reloadCache`;
+  return request({
+    url,
+    method: 'POST',
+    data,
+  });
+}

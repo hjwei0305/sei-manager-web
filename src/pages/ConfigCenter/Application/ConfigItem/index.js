@@ -336,13 +336,13 @@ class ConfigItem extends Component {
       {
         title: '键名',
         dataIndex: 'key',
-        width: 220,
+        width: 320,
         required: true,
       },
       {
         title: '键值',
         dataIndex: 'value',
-        width: 360,
+        width: 480,
         render: t => t || '-',
       },
       {
