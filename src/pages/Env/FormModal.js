@@ -45,7 +45,7 @@ class FormModal extends PureComponent {
         title={title}
         onOk={this.handlerFormSubmit}
       >
-        <Alert message="提示:环境代码一旦创建后不能修改" banner />
+        {!rowData ? <Alert message="提示:环境代码一旦创建后不能修改" banner /> : null}
         <Form {...formItemLayout} layout="horizontal" style={{ margin: 24 }}>
           <FormItem label="环境代码">
             {getFieldDecorator('code', {
