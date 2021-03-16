@@ -85,6 +85,17 @@ class FormModal extends PureComponent {
               ],
             })(<Input />)}
           </FormItem>
+          <FormItem label="网关基地址">
+            {getFieldDecorator('gatewayServer', {
+              initialValue: get(rowData, 'gatewayServer'),
+              rules: [
+                {
+                  required: false,
+                  message: '网关基地址不能为空',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
           <FormItem label="序号">
             {getFieldDecorator('rank', {
               initialValue: get(rowData, 'rank'),

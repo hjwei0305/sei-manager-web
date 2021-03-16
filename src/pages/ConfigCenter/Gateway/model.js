@@ -1,19 +1,47 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
-import { save, del } from './service';
+import { save, del, syncConfigs } from './service';
 
-const { dvaModel } = utils;
+const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
 
 export default modelExtend(model, {
   namespace: 'appGateway',
 
   state: {
+    envData: [],
+    selectedEnv: null,
     selectedApp: null,
     showModal: false,
     rowData: null,
   },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (pathMatchRegexp('/configCenter/gateway', location.pathname)) {
+          dispatch({
+            type: 'initEnv',
+          });
+        }
+      });
+    },
+  },
   effects: {
+    *initEnv(_, { select, put }) {
+      const { selectedEnv: originSelectedEnv } = yield select(sel => sel.appGateway);
+      const { envData } = yield select(sel => sel.menu);
+      let selectedEnv = { ...originSelectedEnv };
+      if (!originSelectedEnv && envData && envData.length > 0) {
+        [selectedEnv] = envData;
+      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          selectedEnv,
+          envData,
+        },
+      });
+    },
     *save({ payload, callback }, { call, put }) {
       const re = yield call(save, payload);
       message.destroy();
@@ -22,7 +50,7 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            showFormModal: false,
+            showModal: false,
           },
         });
       } else {
@@ -37,6 +65,18 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success(formatMessage({ id: 'global.delete-success', defaultMessage: '删除成功' }));
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *syncConfigs({ payload, callback }, { call }) {
+      const re = yield call(syncConfigs, payload);
+      message.destroy();
+      if (re.success) {
+        message.success('同步成功');
       } else {
         message.error(re.message);
       }

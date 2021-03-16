@@ -4,7 +4,7 @@ import cls from 'classnames';
 import { utils, ListLoader } from 'suid';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-kuroir';
+import 'ace-builds/src-noconflict/theme-tomorrow';
 import styles from './index.less';
 
 const { getUUID } = utils;
@@ -49,7 +49,7 @@ class RuntimeModel extends PureComponent {
           ) : (
             <AceEditor
               mode="json"
-              theme="kuroir"
+              theme="tomorrow"
               name={this.aceId}
               fontSize={16}
               showPrintMargin={false}

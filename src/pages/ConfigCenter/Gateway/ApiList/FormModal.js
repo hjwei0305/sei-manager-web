@@ -2,9 +2,12 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
-import { ExtModal, BannerTitle } from 'suid';
+import { ExtModal, BannerTitle, ComboList } from 'suid';
+import { constants } from '@/utils';
 import styles from './FormModal.less';
 
+const { REQUEST_TYPE } = constants;
+const REQUEST_TYPE_DATA = Object.keys(REQUEST_TYPE).map(key => REQUEST_TYPE[key]);
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const formItemLayout = {
@@ -20,6 +23,7 @@ const formItemLayout = {
 class FormModal extends PureComponent {
   static propTypes = {
     rowData: PropTypes.object,
+    selectedEnv: PropTypes.object,
     selectedApp: PropTypes.object,
     showModal: PropTypes.bool,
     save: PropTypes.func,
@@ -28,7 +32,7 @@ class FormModal extends PureComponent {
   };
 
   handlerFormSubmit = () => {
-    const { form, save, selectedApp, rowData } = this.props;
+    const { form, save, selectedApp, selectedEnv, rowData } = this.props;
     form.validateFields((err, formData) => {
       if (err) {
         return;
@@ -36,6 +40,8 @@ class FormModal extends PureComponent {
       const params = {
         appCode: get(selectedApp, 'code'),
         appName: get(selectedApp, 'name'),
+        envCode: get(selectedEnv, 'code'),
+        envName: get(selectedEnv, 'name'),
       };
       Object.assign(params, rowData);
       Object.assign(params, formData);
@@ -54,6 +60,17 @@ class FormModal extends PureComponent {
     const { form, saving, showModal, rowData } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改' : '新建';
+    const methodProps = {
+      form,
+      name: 'method',
+      showSearch: false,
+      dataSource: REQUEST_TYPE_DATA,
+      rowKey: 'key',
+      pagination: false,
+      reader: {
+        name: 'key',
+      },
+    };
     return (
       <ExtModal
         destroyOnClose
@@ -70,8 +87,8 @@ class FormModal extends PureComponent {
       >
         <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
           <FormItem label="接口地址">
-            {getFieldDecorator('interfaceURI', {
-              initialValue: get(rowData, 'interfaceURI'),
+            {getFieldDecorator('uri', {
+              initialValue: get(rowData, 'uri'),
               rules: [
                 {
                   required: true,
@@ -80,20 +97,17 @@ class FormModal extends PureComponent {
               ],
             })(<Input autoComplete="off" />)}
           </FormItem>
-          <FormItem label="接口名称">
-            {getFieldDecorator('interfaceName', {
-              initialValue: get(rowData, 'interfaceName'),
-              rules: [
-                {
-                  required: true,
-                  message: '接口名称不能为空',
-                },
-              ],
-            })(<Input autoComplete="off" />)}
+          <FormItem label="请求方法">
+            {getFieldDecorator('method', {
+              initialValue:
+                get(rowData, 'method') || REQUEST_TYPE_DATA.length > 0
+                  ? REQUEST_TYPE_DATA[0].key
+                  : '',
+            })(<ComboList {...methodProps} />)}
           </FormItem>
           <FormItem label="接口描述">
-            {getFieldDecorator('interfaceRemark', {
-              initialValue: get(rowData, 'interfaceRemark'),
+            {getFieldDecorator('remark', {
+              initialValue: get(rowData, 'remark'),
               rules: [
                 {
                   required: true,

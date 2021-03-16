@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-15 08:53:33
+ * @Last Modified time: 2021-03-16 16:16:57
  */
 import { name } from '../../package.json';
 
@@ -149,8 +149,8 @@ const LOG_ACTION = {
 };
 
 const REQUEST_TYPE = {
-  POST: { key: 'POST', color: '#49cc90' },
   GET: { key: 'GET', color: '#61affe' },
+  POST: { key: 'POST', color: '#49cc90' },
   DELETE: { key: 'DELETE', color: '#f93e3e' },
 };
 

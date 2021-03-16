@@ -194,6 +194,12 @@ class DeployStage extends Component {
         width: 380,
         render: t => t || '-',
       },
+      {
+        title: '网关基地址',
+        dataIndex: 'gatewayServer',
+        width: 380,
+        render: t => t || '-',
+      },
     ];
     const formModalProps = {
       save: this.save,
