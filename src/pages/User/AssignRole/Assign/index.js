@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-24 15:38:59
+ * @Last Modified time: 2021-03-17 10:04:14
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -109,7 +109,7 @@ class FeatureRoleAssign extends Component {
     const { currentUser } = this.props;
     const listCardProps = {
       className: 'anyone-user-box',
-      title: '可选择的角色',
+      title: '角色列表',
       bordered: false,
       searchPlaceHolder: '输入名称关键字查询',
       checkbox: true,

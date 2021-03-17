@@ -170,7 +170,7 @@ class AssignedStage extends Component {
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 60,
+        width: 80,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -234,6 +234,7 @@ class AssignedStage extends Component {
     const extTableProps = {
       bordered: false,
       toolBar: toolBarProps,
+      lineNumber: false,
       columns,
       checkbox: {
         rowCheck: false,

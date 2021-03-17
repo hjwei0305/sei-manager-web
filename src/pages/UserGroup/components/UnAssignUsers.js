@@ -127,7 +127,7 @@ class UnAssignUsers extends Component {
         getContainer={false}
         placement="right"
         visible={showAssign}
-        title="未分配的成员"
+        title="可分配的成员"
         className={cls(styles['user-item-box'])}
         onClose={this.handlerClose}
         style={{ position: 'absolute' }}

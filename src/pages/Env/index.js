@@ -185,19 +185,19 @@ class DeployStage extends Component {
       {
         title: '环境描述',
         dataIndex: 'remark',
-        width: 280,
+        width: 260,
         render: t => t || '-',
       },
       {
         title: '代理服务基地址',
         dataIndex: 'agentServer',
-        width: 380,
+        width: 320,
         render: t => t || '-',
       },
       {
         title: '网关基地址',
         dataIndex: 'gatewayServer',
-        width: 380,
+        width: 320,
         render: t => t || '-',
       },
     ];
@@ -224,6 +224,7 @@ class DeployStage extends Component {
       toolBar: toolBarProps,
       columns,
       searchWidth: 260,
+      lineNumber: false,
       searchPlaceHolder: '环境代码、环境名称、环境描述、代理服务基地址',
       searchProperties: ['name', 'code', 'remark', 'agentServer'],
       showSearchTooltip: true,
