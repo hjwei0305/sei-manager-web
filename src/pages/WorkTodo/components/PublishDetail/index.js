@@ -39,7 +39,6 @@ class PublishDetail extends PureComponent {
     const { getFieldDecorator } = form;
     return (
       <ExtModal
-        maskClosable={false}
         centered
         destroyOnClose
         width={860}

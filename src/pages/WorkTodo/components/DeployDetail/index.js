@@ -41,7 +41,6 @@ class DeployDetail extends PureComponent {
     const expCompleteTime = get(rowData, 'expCompleteTime');
     return (
       <ExtModal
-        maskClosable={false}
         centered
         destroyOnClose
         width={860}
