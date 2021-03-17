@@ -1,6 +1,14 @@
 import { utils, message } from 'suid';
 import { constants } from '../../utils';
-import { getTypeTodoList, submitHanlder, getTodoList } from './service';
+import {
+  getTypeTodoList,
+  submitHanlder,
+  getTodoList,
+  getApplicationDetail,
+  getAppModuleDetail,
+  getReleaseDetail,
+  getDeployDetail,
+} from './service';
 
 const { APPLY_ORDER_TYPE } = constants;
 const APPLY_ORDER_TYPE_DATA = Object.keys(APPLY_ORDER_TYPE).map(key => APPLY_ORDER_TYPE[key]);
@@ -14,6 +22,12 @@ export default modelExtend(model, {
     viewTypeData: APPLY_ORDER_TYPE_DATA,
     currentViewType: APPLY_ORDER_TYPE_DATA[0],
     todoData: [],
+    showApplicationDetail: false,
+    showAppModuleDetail: false,
+    showReleaseDetail: false,
+    showDeployDetail: false,
+    detailId: '',
+    detailData: null,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -90,6 +104,55 @@ export default modelExtend(model, {
       }
       if (callback && callback instanceof Function) {
         callback(re);
+      }
+    },
+    *getDetail({ payload }, { call, put }) {
+      const { orderType, detailId: id } = payload;
+      let re = {};
+      yield put({
+        type: 'updateState',
+        payload: {
+          detailId: id,
+          detailData: null,
+        },
+      });
+      let showApplicationDetail = false;
+      let showAppModuleDetail = false;
+      let showReleaseDetail = false;
+      let showDeployDetail = false;
+      switch (orderType.name) {
+        case APPLY_ORDER_TYPE.APPLICATION.name:
+          showApplicationDetail = true;
+          re = yield call(getApplicationDetail, { id });
+          break;
+        case APPLY_ORDER_TYPE.MODULE.name:
+          showAppModuleDetail = true;
+          re = yield call(getAppModuleDetail, { id });
+          break;
+        case APPLY_ORDER_TYPE.PUBLISH.name:
+          showReleaseDetail = true;
+          re = yield call(getReleaseDetail, { id });
+          break;
+        case APPLY_ORDER_TYPE.DEPLOY.name:
+          showDeployDetail = true;
+          re = yield call(getDeployDetail, { id });
+          break;
+        default:
+      }
+      message.destroy();
+      if (re.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            detailData: re.data,
+            showApplicationDetail,
+            showAppModuleDetail,
+            showReleaseDetail,
+            showDeployDetail,
+          },
+        });
+      } else {
+        message.error(re.message);
       }
     },
   },

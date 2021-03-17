@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Suspense } from 'react';
 import cls from 'classnames';
 import { connect } from 'dva';
 import { get, trim } from 'lodash';
@@ -6,11 +6,15 @@ import moment from 'moment';
 import withRouter from 'umi/withRouter';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Tag, Modal, Input } from 'antd';
-import { ExtTable, message, ExtIcon } from 'suid';
+import { ExtTable, message, ExtIcon, PageLoader } from 'suid';
 import { FilterView } from '@/components';
 import { constants } from '../../utils';
 import styles from './index.less';
 
+const ApplicationDetail = React.lazy(() => import('./components/ApplicationDetail'));
+const ModuleDetail = React.lazy(() => import('./components/ModuleDetail'));
+const PublishDetail = React.lazy(() => import('./components/PublishDetail'));
+const DeployDetail = React.lazy(() => import('./components/DeployDetail'));
 const { FLOW_OPERATION_TYPE, APPLY_ORDER_TYPE } = constants;
 const { TextArea } = Input;
 const taskColor = d => {
@@ -183,13 +187,70 @@ class WorkTodo extends PureComponent {
     return t || '-';
   };
 
+  showDetail = (orderType, detailId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'taskWorkTodo/getDetail',
+      payload: {
+        orderType,
+        detailId,
+      },
+    });
+  };
+
+  closeDetail = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'taskWorkTodo/updateState',
+      payload: {
+        showApplicationDetail: false,
+        showAppModuleDetail: false,
+        showReleaseDetail: false,
+        showDeployDetail: false,
+        detailData: null,
+        detailId: '',
+      },
+    });
+  };
+
+  renderDetailBtn = row => {
+    const {
+      loading,
+      taskWorkTodo: { detailId },
+    } = this.props;
+    const orderType = APPLY_ORDER_TYPE[row.applyType];
+    if (orderType) {
+      if (loading.effects['taskWorkTodo/getDetail'] && detailId === row.orderId) {
+        return <ExtIcon className="detail loading" type="loading" antd />;
+      }
+      return (
+        <ExtIcon
+          className="detail"
+          tooltip={{ title: '详情' }}
+          type="read"
+          antd
+          onClick={() => this.showDetail(orderType, row.orderId)}
+        />
+      );
+    }
+  };
+
   render() {
     const { taskWorkTodo, loading } = this.props;
-    const { currentViewType, viewTypeData, todoData } = taskWorkTodo;
+    const {
+      currentViewType,
+      viewTypeData,
+      todoData,
+      showApplicationDetail,
+      showAppModuleDetail,
+      showReleaseDetail,
+      showDeployDetail,
+      detailData,
+    } = taskWorkTodo;
     const columns = [
       {
         key: 'operation',
-        width: 90,
+        width: 120,
         align: 'center',
         dataIndex: 'id',
         title: '操作',
@@ -213,6 +274,7 @@ class WorkTodo extends PureComponent {
                 antd
                 onClick={() => this.approveReject(record)}
               />
+              {this.renderDetailBtn(record)}
             </span>
           );
         },
@@ -294,6 +356,7 @@ class WorkTodo extends PureComponent {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
+      lineNumber: false,
       loading: loading.effects['taskWorkTodo/getWorkTodoList'],
       dataSource: todoData,
       searchWidth: 320,
@@ -309,9 +372,33 @@ class WorkTodo extends PureComponent {
         },
       },
     };
+    const detailProps = {
+      closeFormModal: this.closeDetail,
+      rowData: detailData,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
+        {showApplicationDetail ? (
+          <Suspense fallback={<PageLoader />}>
+            <ApplicationDetail showModal={showApplicationDetail} {...detailProps} />
+          </Suspense>
+        ) : null}
+        {showAppModuleDetail ? (
+          <Suspense fallback={<PageLoader />}>
+            <ModuleDetail showModal={showAppModuleDetail} {...detailProps} />
+          </Suspense>
+        ) : null}
+        {showReleaseDetail ? (
+          <Suspense fallback={<PageLoader />}>
+            <PublishDetail showModal={showReleaseDetail} {...detailProps} />
+          </Suspense>
+        ) : null}
+        {showDeployDetail ? (
+          <Suspense fallback={<PageLoader />}>
+            <DeployDetail showModal={showDeployDetail} {...detailProps} />
+          </Suspense>
+        ) : null}
       </div>
     );
   }

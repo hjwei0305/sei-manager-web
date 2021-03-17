@@ -41,3 +41,51 @@ export async function submitHanlder(data) {
     data,
   });
 }
+
+/**
+ * 获取应用详情
+ * @id	单据id string
+ */
+export async function getApplicationDetail(params) {
+  const url = `${SERVER_PATH}/sei-manager/application/findOne`;
+  return request({
+    url,
+    params,
+  });
+}
+
+/**
+ * 获取应用模块申请详情
+ * @id	单据id string
+ */
+export async function getAppModuleDetail(params) {
+  const url = `${SERVER_PATH}/sei-manager/appModule/findOne`;
+  return request({
+    url,
+    params,
+  });
+}
+
+/**
+ * 获取发版申请详情
+ * @id	单据id string
+ */
+export async function getReleaseDetail(params) {
+  const url = `${SERVER_PATH}/sei-manager/releaseVersion/findOne`;
+  return request({
+    url,
+    params,
+  });
+}
+
+/**
+ * 获取部署申请详情
+ * @id	单据id string
+ */
+export async function getDeployDetail(params) {
+  const url = `${SERVER_PATH}/sei-manager/releaseRecord/findOne`;
+  return request({
+    url,
+    params,
+  });
+}

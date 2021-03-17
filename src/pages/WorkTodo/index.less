@@ -1,6 +1,7 @@
 @import '../../themes/vars.less';
 @passed: #25b864;
 @reject: @error-color;
+@detail: @primary-color;
 .container-box {
   position: relative;
   height: 100%;
@@ -36,6 +37,15 @@
             }
             &.reject:hover {
               color: @reject !important;
+              background-color: @white !important;
+            }
+            &.detail {
+              color: @white;
+              background-color: @detail;
+              border: 1px solid @detail;
+            }
+            &.detail:hover {
+              color: @detail !important;
               background-color: @white !important;
             }
           }
