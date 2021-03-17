@@ -220,7 +220,7 @@ class WorkTodo extends PureComponent {
     } = this.props;
     const orderType = APPLY_ORDER_TYPE[row.applyType];
     if (orderType) {
-      if (loading.effects['taskWorkTodo/getDetail'] && detailId === row.orderId) {
+      if (loading.effects['taskWorkTodo/getDetail'] && detailId === row.relationId) {
         return <ExtIcon className="detail loading" type="loading" antd />;
       }
       return (
@@ -229,7 +229,7 @@ class WorkTodo extends PureComponent {
           tooltip={{ title: '详情' }}
           type="read"
           antd
-          onClick={() => this.showDetail(orderType, row.orderId)}
+          onClick={() => this.showDetail(orderType, row.relationId)}
         />
       );
     }
