@@ -3,14 +3,16 @@ import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Alert, Row, Col, Button } from 'antd';
-import { ExtModal, ListLoader, utils } from 'suid';
+import { ExtModal, ListLoader, utils, ComboList } from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
 import 'react-markdown-editor-lite/lib/index.css';
+import { constants } from '@/utils';
 import styles from './FormModal.less';
 
+const { SERVER_PATH } = constants;
 const { getUUID } = utils;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -169,6 +171,7 @@ class FormModal extends PureComponent {
       onlyView,
       tagData,
       newTag,
+      currentModule,
     } = this.props;
     const { getFieldDecorator } = form;
     const title = newTag ? '新建标签' : '显示标签';
@@ -182,6 +185,22 @@ class FormModal extends PureComponent {
       bodyStyle: { padding: 0 },
       footer: this.renderFooterBtn(),
       title,
+    };
+    const branchProps = {
+      form,
+      name: 'branch',
+      showSearch: false,
+      pagination: false,
+      store: {
+        url: `${SERVER_PATH}/sei-manager/tag/getBranches`,
+      },
+      cascadeParams: {
+        gitId: get(currentModule, 'gitId'),
+      },
+      placeholder: '选择分支',
+      reader: {
+        name: 'key',
+      },
     };
     return (
       <ExtModal {...modalProps}>
@@ -259,6 +278,17 @@ class FormModal extends PureComponent {
                           },
                         ],
                       })(<Input autoComplete="off" disabled placeholder="根据版本号自动生成" />)}
+                    </FormItem>
+                    <FormItem label="分支">
+                      {getFieldDecorator('branch', {
+                        initialValue: get(tagData, 'branch'),
+                        rules: [
+                          {
+                            required: true,
+                            message: '分支不能为空',
+                          },
+                        ],
+                      })(<ComboList {...branchProps} disabled={onlyView} />)}
                     </FormItem>
                   </Form>
                 </div>

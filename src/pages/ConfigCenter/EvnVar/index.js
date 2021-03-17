@@ -35,8 +35,6 @@ class ConfigEvnVar extends Component {
     dispatch({
       type: `configEvnVar/updateState`,
       payload: {
-        selectedEvnVar: null,
-        currentEvnVar: null,
         showFormModal: false,
       },
     });

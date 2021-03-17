@@ -1,6 +1,6 @@
 import { utils, message } from 'suid';
 import { get } from 'lodash';
-import { createTag, removeTag, getNewTag, gitlabAsync } from './service';
+import { createTag, removeTag, getNewTag, gitlabAsync, getTag } from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -78,6 +78,17 @@ export default modelExtend(model, {
       }
       if (callback && callback instanceof Function) {
         callback(re);
+      }
+    },
+    *getTag({ payload, callback }, { call }) {
+      const re = yield call(getTag, payload);
+      message.destroy();
+      if (re.success) {
+        if (callback && callback instanceof Function) {
+          callback(re.data);
+        }
+      } else {
+        message.error(re.message);
       }
     },
   },

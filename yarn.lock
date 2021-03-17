@@ -14137,6 +14137,16 @@ rc-progress@~2.5.0:
     babel-runtime "6.x"
     prop-types "^15.5.8"
 
+rc-queue-anim@^1.8.5:
+  version "1.8.5"
+  resolved "http://rcsgit.changhong.com:8081/repository/npm_group/rc-queue-anim/-/rc-queue-anim-1.8.5.tgz#01ef3872bdfa0b70bb915ef9a637fc404244a589"
+  integrity sha1-Ae84cr36C3C7kV75pjf8QEJEpYk=
+  dependencies:
+    babel-runtime "6.x"
+    prop-types "^15.6.0"
+    rc-tween-one "^2.5.0"
+    react-lifecycles-compat "^3.0.4"
+
 rc-rate@~2.5.0:
   version "2.5.1"
   resolved "http://rcsgit.changhong.com:8081/repository/npm_group/rc-rate/-/rc-rate-2.5.1.tgz#55fc5fd23ea9dcc72250b9a889803479f4842961"
@@ -14357,7 +14367,7 @@ rc-trigger@^3.0.0:
     rc-animate "^3.0.0-rc.1"
     rc-util "^4.15.7"
 
-rc-tween-one@^2.2.0, rc-tween-one@^2.7.3:
+rc-tween-one@^2.2.0, rc-tween-one@^2.5.0, rc-tween-one@^2.7.3:
   version "2.7.3"
   resolved "http://rcsgit.changhong.com:8081/repository/npm_group/rc-tween-one/-/rc-tween-one-2.7.3.tgz#c9d3c44743e25c654d65c22ec3934afd79923fae"
   integrity sha1-ydPER0PiXGVNZcIuw5NK/XmSP64=

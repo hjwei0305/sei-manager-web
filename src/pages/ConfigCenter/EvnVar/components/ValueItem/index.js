@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import QueueAnim from 'rc-queue-anim';
+import TweenOne from 'rc-tween-one';
 import cls from 'classnames';
 import { get } from 'lodash';
 import { FormattedMessage } from 'umi-plugin-react/locale';
@@ -109,7 +111,11 @@ class ValueItem extends Component {
         value: row.value,
         onChange: e => this.setValue(e, row),
       };
-      return <Input {...inputProps} />;
+      return (
+        <TweenOne animation={{ opacity: 0, scale: 0, type: 'from' }}>
+          <Input key={row.id} {...inputProps} />
+        </TweenOne>
+      );
     }
     return <span style={{ padding: '12px 8px' }}>{t || '-'}</span>;
   };
@@ -180,7 +186,9 @@ class ValueItem extends Component {
           title={<BannerTitle title={get(selectedEvnVar, 'code')} subTitle="环境变量值" />}
           bordered={false}
         >
-          <ExtTable {...extTableProps} />
+          <QueueAnim style={{ height: '100%' }}>
+            <ExtTable key="aa" {...extTableProps} />
+          </QueueAnim>
         </Card>
       </div>
     );

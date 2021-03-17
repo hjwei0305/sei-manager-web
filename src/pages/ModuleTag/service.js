@@ -49,3 +49,15 @@ export async function gitlabAsync(params) {
     params,
   });
 }
+
+/**
+ * 获取一个标签
+ * @id string
+ */
+export async function getTag(params) {
+  const url = `${SERVER_PATH}/sei-manager/tag/getTag`;
+  return request({
+    url,
+    params,
+  });
+}

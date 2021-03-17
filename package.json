@@ -42,6 +42,7 @@
     "pubsub-js": "^1.9.1",
     "qs": "^6.9.3",
     "query-string": "^6.12.1",
+    "rc-queue-anim": "^1.8.5",
     "rc-resize-observer": "^0.2.1",
     "rc-texty": "^0.2.0",
     "rc-trigger": "^2.6.2",
