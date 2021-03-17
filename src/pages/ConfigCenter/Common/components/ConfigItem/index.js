@@ -394,6 +394,7 @@ class ConfigItem extends Component {
       checkbox: {
         rowCheck: false,
       },
+      pagination: false,
       selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
       onTableRef: ref => (this.tableRef = ref),
