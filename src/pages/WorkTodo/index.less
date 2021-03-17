@@ -9,6 +9,14 @@
   overflow: hidden;
   background-color: @page-background-color;
   :global {
+    .suid-panel {
+      height: 100%;
+      .panel-body {
+        width: 100%;
+        height: 100% !important;
+        max-height: 100% !important;
+      }
+    }
     .ant-table-tbody > tr > td {
       color: fade(@black, 65%);
       font-weight: normal;

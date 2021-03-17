@@ -379,26 +379,18 @@ class WorkTodo extends PureComponent {
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
-        {showApplicationDetail ? (
-          <Suspense fallback={<PageLoader />}>
-            <ApplicationDetail showModal={showApplicationDetail} {...detailProps} />
-          </Suspense>
-        ) : null}
-        {showAppModuleDetail ? (
-          <Suspense fallback={<PageLoader />}>
-            <ModuleDetail showModal={showAppModuleDetail} {...detailProps} />
-          </Suspense>
-        ) : null}
-        {showReleaseDetail ? (
-          <Suspense fallback={<PageLoader />}>
-            <PublishDetail showModal={showReleaseDetail} {...detailProps} />
-          </Suspense>
-        ) : null}
-        {showDeployDetail ? (
-          <Suspense fallback={<PageLoader />}>
-            <DeployDetail showModal={showDeployDetail} {...detailProps} />
-          </Suspense>
-        ) : null}
+        <Suspense fallback={<PageLoader />}>
+          <ApplicationDetail showModal={showApplicationDetail} {...detailProps} />
+        </Suspense>
+        <Suspense fallback={<PageLoader />}>
+          <ModuleDetail showModal={showAppModuleDetail} {...detailProps} />
+        </Suspense>
+        <Suspense fallback={<PageLoader />}>
+          <PublishDetail showModal={showReleaseDetail} {...detailProps} />
+        </Suspense>
+        <Suspense fallback={<PageLoader />}>
+          <DeployDetail showModal={showDeployDetail} {...detailProps} />
+        </Suspense>
       </div>
     );
   }
