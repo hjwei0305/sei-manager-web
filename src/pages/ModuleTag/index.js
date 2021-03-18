@@ -105,7 +105,7 @@ class ModuleTag extends Component {
 
   render() {
     const { moduleTag } = this.props;
-    const { currentModule } = moduleTag;
+    const { currentModule, hideSider } = moduleTag;
     const moduleProps = {
       className: 'left-content',
       title: '模块列表',
@@ -130,7 +130,15 @@ class ModuleTag extends Component {
     return (
       <div className={cls(styles['container-box'])}>
         <Layout className="auto-height">
-          <Sider width={420} className="auto-height" theme="light">
+          <Sider
+            collapsible
+            collapsedWidth={0}
+            collapsed={hideSider}
+            width={420}
+            trigger={null}
+            className="left-content auto-height"
+            theme="light"
+          >
             <ListCard {...moduleProps} />
           </Sider>
           <Content className={cls('main-content', 'auto-height')} style={{ paddingLeft: 4 }}>

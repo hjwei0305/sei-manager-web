@@ -15,6 +15,7 @@ export default modelExtend(model, {
     onlyView: false,
     newTag: false,
     moduleFilter: {},
+    hideSider: false,
   },
   effects: {
     *gitlabAsync({ callback }, { call, select }) {

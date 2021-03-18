@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card } from 'antd';
-import { ExtTable, BannerTitle } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import MdEditorView from './MdEditorView';
@@ -91,10 +91,41 @@ class TagList extends Component {
         id: record.id,
       },
       callback: data => {
-        Object.assign(record, { expanding: false, message: data.message || '标签描述是空的' });
+        Object.assign(record, {
+          expanding: false,
+          message: data.message || '<span style="color:#999">暂无数据</span>',
+        });
         this.forceUpdate();
       },
     });
+  };
+
+  handlerCollapsed = () => {
+    const { dispatch, moduleTag } = this.props;
+    const { hideSider } = moduleTag;
+    dispatch({
+      type: 'moduleTag/updateState',
+      payload: {
+        hideSider: !hideSider,
+      },
+    });
+  };
+
+  renderCollapsedTool = () => {
+    const { moduleTag } = this.props;
+    const { hideSider, currentModule } = moduleTag;
+    return (
+      <>
+        <ExtIcon
+          className="btn-collapsed"
+          tooltip={{ title: hideSider ? '显示应用模块' : '收起应用模块' }}
+          onClick={this.handlerCollapsed}
+          type={hideSider ? 'double-right' : 'double-left'}
+          antd
+        />
+        {get(currentModule, 'name')}
+      </>
+    );
   };
 
   render() {
@@ -168,7 +199,7 @@ class TagList extends Component {
     return (
       <div className={cls(styles['user-box'])}>
         <Card
-          title={<BannerTitle title={get(currentModule, 'name')} subTitle="标签列表" />}
+          title={<BannerTitle title={this.renderCollapsedTool()} subTitle="标签列表" />}
           bordered={false}
         >
           <ExtTable {...extTableProps} />

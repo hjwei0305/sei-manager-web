@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Alert, Row, Col, Button } from 'antd';
+import { Form, Input, Row, Col, Button } from 'antd';
 import { ExtModal, ListLoader, utils, ComboList } from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
@@ -211,9 +211,6 @@ class FormModal extends PureComponent {
             <Col span={9}>
               <div className="item-box">
                 <div className="form-body">
-                  {onlyView ? null : (
-                    <Alert message="请合并代码到 master 分支后，再创建标签!" banner />
-                  )}
                   <Form {...formItemLayout} layout="horizontal">
                     <FormItem label="主版本">
                       {getFieldDecorator('major', {
