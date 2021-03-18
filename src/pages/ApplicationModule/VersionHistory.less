@@ -1,0 +1,114 @@
+@import '../../themes/vars.less';
+.log-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  :global {
+    .ant-modal {
+      padding: 0;
+    }
+    .ant-modal,
+    .ant-modal-content {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      height: calc(100% - 0px);
+      padding: 0;
+      background-color: @page-background-color;
+    }
+    .left-content {
+      z-index: 2;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      .trigger-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 56px;
+        height: 56px;
+        font-weight: normal;
+        line-height: 58px;
+        cursor: pointer;
+        transition: all ease-in 0.2s;
+        &:hover {
+          color: @primary-color;
+          background-color: fade(@black, 2%);
+        }
+      }
+      .ant-card-head {
+        padding-left: 60px;
+      }
+      .ant-card-body {
+        height: calc(100% - 56px);
+        padding: 0;
+      }
+      .ant-descriptions {
+        margin: 16px 24px;
+        .ant-descriptions-item-label {
+          min-width: 90px;
+        }
+        .ant-descriptions-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .ant-tag {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+    .main-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 0;
+      text-align: center;
+      .log-box {
+        position: relative;
+        height: calc(100% - 0px);
+        padding: 0;
+        text-align: left;
+        background-color: @white;
+        .log-header {
+          position: relative;
+          z-index: 1;
+          height: 42px;
+          padding-left: 12px;
+          color: rgba(0, 0, 0, 0.85);
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 42px;
+          box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+        }
+        .log-content {
+          height: calc(100% - 42px);
+          padding: 0 8px;
+        }
+        .copy-btn {
+          width: 24px;
+          height: 24px;
+          color: fade(@black, 65%);
+          line-height: 28px;
+          border-radius: 4px;
+          transition: all 0.3s;
+          &:hover {
+            background-color: fade(@primary-color, 15%);
+          }
+        }
+      }
+      .blank-empty {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+      }
+    }
+  }
+}

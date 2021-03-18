@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { Button, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ListCard, message, ExtIcon } from 'suid';
+import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
 import { constants } from '@/utils';
 import ModuleUser from './ModuleUser';
 import styles from './index.less';
+
+const VersionHistory = React.lazy(() => import('./VersionHistory'));
 
 const { SERVER_PATH } = constants;
 const { Search } = Input;
@@ -33,6 +35,20 @@ class ApplicationModule extends Component {
     this.state = {
       appName: '全部',
     };
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        showModal: false,
+        showAssignedModal: false,
+        showVersionHistory: false,
+        logData: null,
+        selectVersion: null,
+      },
+    });
   }
 
   reloadData = () => {
@@ -269,6 +285,9 @@ class ApplicationModule extends Component {
         currentModule: null,
         showModal: false,
         showAssignedModal: false,
+        showVersionHistory: false,
+        logData: null,
+        selectVersion: null,
       },
     });
   };
@@ -301,9 +320,37 @@ class ApplicationModule extends Component {
     });
   };
 
+  showVersionHistory = currentModule => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        currentModule,
+        showVersionHistory: true,
+      },
+    });
+  };
+
+  handlerVersionSelect = selectVersion => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/getVersionDetail',
+      payload: {
+        selectVersion,
+      },
+    });
+  };
+
   render() {
     const { applicationModule, loading } = this.props;
-    const { currentModule, showModal } = applicationModule;
+    const {
+      currentModule,
+      showModal,
+      showVersionHistory,
+      logData,
+      selectVersion,
+    } = applicationModule;
+    const logLoading = loading.effects['applicationModule/getVersionDetail'];
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -320,6 +367,12 @@ class ApplicationModule extends Component {
               type="team"
               antd
               tooltip={{ title: '模块成员管理' }}
+            />
+            <ExtIcon
+              onClick={() => this.showVersionHistory(record)}
+              type="history"
+              antd
+              tooltip={{ title: '版本历史' }}
             />
           </span>
         ),
@@ -395,6 +448,7 @@ class ApplicationModule extends Component {
       searchProperties: ['code', 'name', 'remark'],
       searchWidth: 260,
       remotePaging: true,
+      lineNumber: false,
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/appModule/findByPage`,
@@ -419,10 +473,21 @@ class ApplicationModule extends Component {
       removeUsers: this.removeModuleUser,
       assignLoading: loading.effects['applicationModule/addModuleUser'],
     };
+    const detailProps = {
+      currentModule,
+      onVersionSelect: this.handlerVersionSelect,
+      selectVersion,
+      logLoading,
+      logData,
+      closeFormModal: this.closeModal,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
         <ModuleUser {...moduleUserProps} />
+        <Suspense fallback={<PageLoader />}>
+          <VersionHistory showModal={showVersionHistory} {...detailProps} />
+        </Suspense>
       </div>
     );
   }
