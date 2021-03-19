@@ -111,6 +111,11 @@ const routes = [
         namd: '持续集成',
         routes: [
           {
+            path: '/integration/projectGroup',
+            name: '项目组',
+            component: './ProjectGroup',
+          },
+          {
             path: '/integration/application',
             name: '应用管理',
             component: './Application',

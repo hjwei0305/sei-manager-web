@@ -1,16 +1,12 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import { get } from 'lodash';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { Button, Form, Input, Popconfirm, InputNumber } from 'antd';
-import { ScrollBar, ExtIcon, ComboList, BannerTitle } from 'suid';
-import { constants } from '@/utils';
+import { Button, Form, Input, Popconfirm, Alert } from 'antd';
+import { ScrollBar, ExtIcon, BannerTitle } from 'suid';
 import styles from './NodeForm.less';
 
-const { SERVER_PATH } = constants;
-
 const FormItem = Form.Item;
-
+const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
     span: 24,
@@ -27,11 +23,8 @@ const formItemLayout = {
       name: Form.createFormField({
         value: editData.name,
       }),
-      iconCls: Form.createFormField({
-        value: editData.iconCls,
-      }),
-      rank: Form.createFormField({
-        value: editData.rank,
+      remark: Form.createFormField({
+        value: editData.remark,
       }),
     };
   },
@@ -39,33 +32,27 @@ const formItemLayout = {
 class NodeForm extends PureComponent {
   onFormSubmit = e => {
     e.stopPropagation();
-    const { form, editData, saveMenu } = this.props;
+    const { form, editData, saveProjectGroup } = this.props;
     form.validateFields({ force: true }, (err, formData) => {
       if (err) {
         return false;
       }
       const params = { ...editData };
       Object.assign(params, formData);
-      saveMenu(params);
+      saveProjectGroup(params);
     });
   };
 
   handlerDelete = (e, id) => {
     e.stopPropagation();
-    const { deleteMenu } = this.props;
-    deleteMenu(id);
+    const { deleteProjectGroup } = this.props;
+    deleteProjectGroup(id);
   };
 
   handlerAddChild = (e, editData) => {
     e.stopPropagation();
     const { addChild } = this.props;
     addChild(editData);
-  };
-
-  handlerMove = (e, editData) => {
-    e.stopPropagation();
-    const { moveChild } = this.props;
-    moveChild(editData);
   };
 
   handlerGoBackParent = e => {
@@ -86,36 +73,22 @@ class NodeForm extends PureComponent {
 
   getExtAction = () => {
     const { editData, loading } = this.props;
-    const deleting = loading.effects['appMenu/del'];
-    const saving = loading.effects['appMenu/save'];
-    const moving = loading.effects['appMenu/move'];
+    const deleting = loading.effects['projectGroup/del'];
+    const saving = loading.effects['projectGroup/save'];
     if (editData && editData.id) {
       return (
         <>
-          <Button
-            disabled={deleting || saving || moving}
-            onClick={e => this.handlerAddChild(e, editData)}
-          >
-            新建子菜单
+          <Button disabled={saving || deleting} onClick={e => this.handlerAddChild(e, editData)}>
+            新建子项目
           </Button>
-          {editData.parentId ? (
-            <Button
-              loading={moving}
-              disabled={deleting || saving}
-              onClick={e => this.handlerMove(e, editData)}
-            >
-              移动
-            </Button>
-          ) : null}
           <Popconfirm
-            disabled={deleting || saving || moving}
             overlayClassName={cls(styles['pop-confirm-box'])}
             title={this.renderPopconfirmTitle('确定要删除吗？', '提示：删除后不能恢复')}
             placement="top"
             icon={<ExtIcon type="question-circle" antd />}
             onConfirm={e => this.handlerDelete(e, editData.id)}
           >
-            <Button disabled={saving || moving} type="danger" ghost loading={deleting}>
+            <Button type="danger" disabled={saving} ghost loading={deleting}>
               删除
             </Button>
           </Popconfirm>
@@ -124,13 +97,14 @@ class NodeForm extends PureComponent {
     }
     return (
       <Popconfirm
+        disabled={saving || deleting}
         overlayClassName={cls(styles['pop-confirm-box'])}
         title={this.renderPopconfirmTitle('确定要返回吗？', '提示：未保存的数据将会丢失')}
         placement="top"
         icon={<ExtIcon type="question-circle" antd />}
         onConfirm={e => this.handlerGoBackParent(e)}
       >
-        <Button>返回</Button>
+        <Button disabled={saving || deleting}>返回</Button>
       </Popconfirm>
     );
   };
@@ -145,7 +119,7 @@ class NodeForm extends PureComponent {
         subTitle = '编辑';
       } else {
         title = editData.parentName;
-        subTitle = '新建子菜单';
+        subTitle = '新建子项目';
       }
     } else if (editData.id) {
       title = editData.name;
@@ -156,42 +130,20 @@ class NodeForm extends PureComponent {
     return <BannerTitle title={title} subTitle={subTitle} />;
   };
 
+  validateName = (rule, value, callback) => {
+    const reg = /^(?!-)[A-Z0-9-](?!.*-$)/;
+    if (value && !reg.test(value)) {
+      callback('项目组名称不规范!');
+    }
+    callback();
+  };
+
   render() {
     const { form, loading, editData } = this.props;
     const { getFieldDecorator } = form;
     const title = this.getFormTitle();
-    getFieldDecorator('featureId', { initialValue: get(editData, 'featureId') });
-    const featureProps = {
-      form,
-      allowClear: true,
-      remotePaging: true,
-      name: 'featureName',
-      field: ['featureId'],
-      searchPlaceHolder: '输入名称关键字查询',
-      searchProperties: ['name'],
-      store: {
-        type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/feature/findByFilters`,
-        params: {
-          filters: [
-            {
-              fieldName: 'type',
-              operator: 'EQ',
-              value: 1,
-            },
-          ],
-        },
-      },
-      reader: {
-        name: 'name',
-        description: 'url',
-        field: ['id'],
-      },
-    };
-    const hasIcon = (!editData.id && !editData.parentId) || editData.nodeLevel === 0;
-    const deleting = loading.effects['appMenu/del'];
-    const saving = loading.effects['appMenu/save'];
-    const moving = loading.effects['appMenu/move'];
+    const saving = loading.effects['projectGroup/save'];
+    const deleting = loading.effects['projectGroup/del'];
     return (
       <div key="node-form" className={cls(styles['node-form'])}>
         <div className="base-view-body">
@@ -199,9 +151,9 @@ class NodeForm extends PureComponent {
           <div className="tool-bar-box">
             <div className="tool-action-box">
               <Button
-                disabled={deleting || moving}
                 type="primary"
                 loading={saving}
+                disabled={deleting}
                 onClick={e => this.onFormSubmit(e)}
               >
                 保存
@@ -212,58 +164,42 @@ class NodeForm extends PureComponent {
           </div>
           <div className="form-box">
             <ScrollBar>
+              {!editData || !editData.id ? (
+                <Alert type="warning" message="项目组名称一旦创建就不能修改" banner />
+              ) : null}
               <Form {...formItemLayout} className="form-body" layout="vertical">
-                <FormItem label="菜单名称">
+                <FormItem
+                  label="项目组名称"
+                  extra={
+                    <span style={{ fontSize: 12 }}>
+                      只能是字母或字母与中横线组成,且不能以中横线开头和结尾
+                    </span>
+                  }
+                >
                   {getFieldDecorator('name', {
                     initialValue: get(editData, 'name'),
                     rules: [
                       {
                         required: true,
-                        message: '菜单名称不能为空',
+                        message: '项目组名称不能为空',
+                      },
+                      {
+                        validator: this.validateName,
                       },
                     ],
-                  })(<Input />)}
+                  })(<Input disabled={!editData || !!editData.id} autoComplete="off" />)}
                 </FormItem>
-                {hasIcon ? (
-                  <FormItem label="图标类名">
-                    {getFieldDecorator('iconCls', {
-                      initialValue: get(editData, 'iconCls'),
-                      rules: [
-                        {
-                          required: true,
-                          message: '图标类名不能为空',
-                        },
-                      ],
-                    })(<Input />)}
-                  </FormItem>
-                ) : null}
-                <FormItem label="序号">
-                  {getFieldDecorator('rank', {
-                    initialValue: get(editData, 'rank'),
+                <FormItem label="项目组描述">
+                  {getFieldDecorator('remark', {
+                    initialValue: get(editData, 'remark'),
                     rules: [
                       {
                         required: true,
-                        message: formatMessage({
-                          id: 'global.rank.required',
-                          defaultMessage: '序号不能为空',
-                        }),
+                        message: '项目组描述不能为空',
                       },
                     ],
-                  })(<InputNumber precision={0} min={0} style={{ width: '100%' }} />)}
+                  })(<TextArea rows={4} style={{ resize: 'none' }} autoComplete="off" />)}
                 </FormItem>
-                {editData.children && editData.children.length === 0 && editData.parentId ? (
-                  <FormItem label="菜单项">
-                    {getFieldDecorator('featureName', {
-                      initialValue: get(editData, 'featureName'),
-                      rules: [
-                        {
-                          required: false,
-                          message: '菜单项不能为空',
-                        },
-                      ],
-                    })(<ComboList {...featureProps} />)}
-                  </FormItem>
-                ) : null}
               </Form>
             </ScrollBar>
           </div>

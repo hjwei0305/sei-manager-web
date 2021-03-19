@@ -1,4 +1,5 @@
 import { notification } from 'antd';
+import { message } from 'suid';
 import { formatMessage } from 'umi-plugin-react/locale';
 
 export default {
@@ -30,6 +31,7 @@ export default {
         }
       }
       if (err.statusCode !== -1) {
+        message.destroy();
         notification.error({
           message: formatMessage({ id: 'app.request.error', defaultMessage: '接口请求异常' }),
           description: err.message,
