@@ -131,6 +131,7 @@ class FormModal extends PureComponent {
     const title = rowData ? '修改发版申请' : '新建发版申请';
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
     getFieldDecorator('gitId', { initialValue: get(rowData, 'gitId') });
+    getFieldDecorator('moduleId', { initialValue: get(rowData, 'moduleId') });
     getFieldDecorator('moduleCode', { initialValue: get(rowData, 'moduleCode') });
     const appProps = {
       form,
@@ -172,11 +173,11 @@ class FormModal extends PureComponent {
         form.setFieldsValue({ refTag: '' });
       },
       remotePaging: true,
-      field: ['gitId', 'moduleCode'],
+      field: ['gitId', 'moduleCode', 'moduleId'],
       reader: {
         name: 'name',
         description: 'remark',
-        field: ['gitId', 'code'],
+        field: ['gitId', 'code', 'id'],
       },
     };
     const tagProps = {

@@ -138,6 +138,7 @@ class FormModal extends PureComponent {
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
     getFieldDecorator('gitId', { initialValue: get(rowData, 'gitId') });
     getFieldDecorator('moduleCode', { initialValue: get(rowData, 'moduleCode') });
+    getFieldDecorator('moduleId', { initialValue: get(rowData, 'moduleId') });
     const envProps = {
       form,
       name: 'envName',
@@ -194,11 +195,11 @@ class FormModal extends PureComponent {
         form.setFieldsValue({ tagName: '' });
       },
       remotePaging: true,
-      field: ['gitId', 'moduleCode'],
+      field: ['gitId', 'moduleCode', 'moduleId'],
       reader: {
         name: 'name',
         description: 'remark',
-        field: ['gitId', 'code'],
+        field: ['gitId', 'code', 'id'],
       },
     };
     const tagProps = {
