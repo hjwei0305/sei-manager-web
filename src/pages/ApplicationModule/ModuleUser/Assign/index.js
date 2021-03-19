@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2020-12-25 08:44:46
+ * @Last Modified time: 2021-03-19 15:34:12
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -112,22 +112,22 @@ class FeatureRoleAssign extends Component {
       className: 'anyone-user-box',
       title: '人员列表',
       bordered: false,
-      searchPlaceHolder: '输入名称关键字查询',
+      searchPlaceHolder: '输入名称关键字',
       checkbox: true,
       selectedKeys,
-      searchProperties: ['nickname'],
+      searchProperties: ['userName'],
       itemField: {
-        title: item => item.nickname,
+        title: item => item.userName,
         description: item => item.account,
       },
       rowKey: 'account',
       showArrow: false,
       showSearch: false,
+      remotePaging: true,
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/appModule/getUnassignedUsers/${moduleId}`,
+        url: `${SERVER_PATH}/sei-manager/projectUser/getUnassignedUser/${moduleId}`,
       },
-      cascadeParams: {},
       onListCardRef: ref => (this.listCardRef = ref),
       onSelectChange: this.handerAssignUserSelectChange,
       customTool: this.renderCustomTool,

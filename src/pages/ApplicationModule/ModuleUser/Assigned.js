@@ -60,9 +60,9 @@ class FeatureRoleAssigned extends PureComponent {
     e.stopPropagation();
     const { save } = this.props;
     if (save) {
-      const selectedKeys = [item.gitUserId];
+      const selectedKeys = [item.account];
       this.setState({
-        removeId: item.gitUserId,
+        removeId: item.account,
       });
       save(selectedKeys, re => {
         if (re.success) {
@@ -166,15 +166,15 @@ class FeatureRoleAssigned extends PureComponent {
       bordered: false,
       checkbox: true,
       selectedKeys,
-      rowKey: 'gitUserId',
+      rowKey: 'account',
       itemField: {
-        title: item => item.name,
+        title: item => item.userName,
         description: item => item.account,
       },
       store: {
-        url: `${SERVER_PATH}/sei-manager/appModule/getModuleUsers`,
+        url: `${SERVER_PATH}/sei-manager/projectUser/getAssignedUser`,
         params: {
-          id: moduleId,
+          objectId: moduleId,
         },
       },
       showArrow: false,

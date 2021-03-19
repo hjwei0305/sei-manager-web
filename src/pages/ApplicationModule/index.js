@@ -292,7 +292,7 @@ class ApplicationModule extends Component {
     });
   };
 
-  removeModuleUser = (gitUserIds, callback) => {
+  removeModuleUser = (accounts, callback) => {
     const {
       dispatch,
       applicationModule: { currentModule },
@@ -300,7 +300,7 @@ class ApplicationModule extends Component {
     dispatch({
       type: 'applicationModule/removeModuleUser',
       payload: {
-        gitUserIds,
+        accounts,
         moduleId: get(currentModule, 'id', ''),
       },
       callback,
@@ -312,7 +312,14 @@ class ApplicationModule extends Component {
       applicationModule: { currentModule },
       dispatch,
     } = this.props;
-    const userData = { moduleId: get(currentModule, 'id', null), accounts: keys };
+    const userData = [];
+    keys.forEach(account => {
+      userData.push({
+        objectId: get(currentModule, 'id', null),
+        objectName: get(currentModule, 'name', null),
+        account,
+      });
+    });
     dispatch({
       type: 'applicationModule/addModuleUser',
       payload: userData,

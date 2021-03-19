@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-18 14:34:09
+ * @Last Modified time: 2021-03-19 15:32:13
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -13,21 +13,20 @@ const { SERVER_PATH } = constants;
 
 /** 移除应用模块用户 */
 export async function removeModuleUser(params) {
-  const { gitUserIds, moduleId } = params;
+  const { accounts, moduleId } = params;
   return request({
     method: 'DELETE',
     url: `${SERVER_PATH}/sei-manager/appModule/removeModuleUser/${moduleId}`,
-    data: gitUserIds,
+    data: accounts,
   });
 }
 
 /** 为应用模块添加用户 */
 export async function addModuleUser(data) {
-  const { moduleId, accounts } = data;
   return request({
     method: 'POST',
-    url: `${SERVER_PATH}/sei-manager/appModule/addModuleUser/${moduleId}`,
-    data: accounts,
+    url: `${SERVER_PATH}/sei-manager/projectUser/assign`,
+    data,
   });
 }
 
