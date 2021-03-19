@@ -1,7 +1,7 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 import { utils, message } from 'suid';
 import get from 'lodash.get';
-import { save, del, syncConfigs, releaseConfigs } from './service';
+import { save, del, syncConfigs, releaseConfigs, getProjectList } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -15,6 +15,7 @@ export default modelExtend(model, {
     selectedApp: null,
     showModal: false,
     rowData: null,
+    projectGroupData: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -28,18 +29,26 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    *initEnv(_, { select, put }) {
+    *initEnv(_, { call, select, put }) {
       const { selectedEnv: originSelectedEnv } = yield select(sel => sel.appGateway);
       const { envData } = yield select(sel => sel.menu);
       let selectedEnv = { ...originSelectedEnv };
       if (!originSelectedEnv && envData && envData.length > 0) {
         [selectedEnv] = envData;
       }
+      let projectGroupData = [];
+      const re = yield call(getProjectList);
+      if (re.success) {
+        projectGroupData = re.data;
+      } else {
+        message.error(re.message);
+      }
       yield put({
         type: 'updateState',
         payload: {
           selectedEnv,
           envData,
+          projectGroupData,
         },
       });
     },

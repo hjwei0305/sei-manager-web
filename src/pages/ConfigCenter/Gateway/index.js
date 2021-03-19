@@ -182,12 +182,14 @@ class AppGateway extends Component {
   render() {
     const { groupCode } = this.state;
     const { appGateway } = this.props;
-    const { selectedApp } = appGateway;
+    const { selectedApp, projectGroupData } = appGateway;
     const selectedKeys = selectedApp ? [selectedApp.code] : [];
     const appListProps = {
       className: 'left-content',
       title: '应用列表',
-      extra: <DropdownGroup onAction={this.handlerGroupChange} />,
+      extra: (
+        <DropdownGroup onAction={this.handlerGroupChange} projectGroupData={projectGroupData} />
+      ),
       showSearch: false,
       onSelectChange: this.handlerAppSelect,
       selectedKeys,

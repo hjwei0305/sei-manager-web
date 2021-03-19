@@ -44,3 +44,13 @@ export async function releaseConfigs(data) {
     data,
   });
 }
+
+/** 获取所有项目组 */
+export async function getProjectList(params) {
+  const url = `${SERVER_PATH}/sei-manager/projectGroup/getGroupTree`;
+  return request({
+    url,
+    method: 'GET',
+    params,
+  });
+}

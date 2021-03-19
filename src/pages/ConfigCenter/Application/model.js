@@ -14,6 +14,7 @@ import {
   saveYamlData,
   getCompareData,
   getAppRuntimeConfig,
+  getProjectList,
 } from './service';
 
 const { pathMatchRegexp, dvaModel } = utils;
@@ -36,6 +37,7 @@ export default modelExtend(model, {
     yamlText: '',
     runtimeConfig: null,
     currentTabKey: 'appParam',
+    projectGroupData: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -49,18 +51,26 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    *initEnv(_, { select, put }) {
+    *initEnv(_, { call, select, put }) {
       const { selectedEnv: originSelectedEnv } = yield select(sel => sel.configApp);
       const { envData } = yield select(sel => sel.menu);
       let selectedEnv = { ...originSelectedEnv };
       if (!originSelectedEnv && envData && envData.length > 0) {
         [selectedEnv] = envData;
       }
+      let projectGroupData = [];
+      const re = yield call(getProjectList);
+      if (re.success) {
+        projectGroupData = re.data;
+      } else {
+        message.error(re.message);
+      }
       yield put({
         type: 'updateState',
         payload: {
           selectedEnv,
           envData,
+          projectGroupData,
         },
       });
     },

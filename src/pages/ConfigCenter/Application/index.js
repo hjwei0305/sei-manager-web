@@ -216,6 +216,7 @@ class ConfigCommon extends Component {
       compareData,
       targetCompareEvn,
       runtimeConfig,
+      projectGroupData,
     } = configApp;
     const selectedKeys = selectedApp ? [selectedApp.code] : [];
     const releasing = loading.effects['configApp/appRelease'];
@@ -223,7 +224,9 @@ class ConfigCommon extends Component {
     const appListProps = {
       className: 'left-content',
       title: '应用列表',
-      extra: <DropdownGroup onAction={this.handlerGroupChange} />,
+      extra: (
+        <DropdownGroup onAction={this.handlerGroupChange} projectGroupData={projectGroupData} />
+      ),
       showSearch: false,
       onSelectChange: this.handlerAppSelect,
       selectedKeys,
