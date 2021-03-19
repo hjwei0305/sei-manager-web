@@ -163,8 +163,10 @@ class ProjectGroup extends Component {
     const newArr = [];
     treeData.forEach(treeNode => {
       const nodeChildren = treeNode[childFieldKey];
-      const fieldValue = treeNode.name;
-      if (fieldValue.toLowerCase().indexOf(valueKey) > -1) {
+      if (
+        treeNode.remark.toLowerCase().indexOf(valueKey) > -1 ||
+        treeNode.name.toLowerCase().indexOf(valueKey) > -1
+      ) {
         newArr.push(treeNode);
         expandedKeys.push(treeNode.id);
       } else if (nodeChildren && nodeChildren.length > 0) {
@@ -270,7 +272,7 @@ class ProjectGroup extends Component {
   renderTreeNodes = treeData => {
     const searchValue = this.allValue || '';
     return treeData.map(item => {
-      const readerValue = item.name;
+      const readerValue = item.remark;
       const readerChildren = item[childFieldKey];
       const i = readerValue.toLowerCase().indexOf(searchValue.toLowerCase());
       const beforeStr = readerValue.substr(0, i);
@@ -330,7 +332,7 @@ class ProjectGroup extends Component {
             >
               <div className="header-tool-box">
                 <Search
-                  placeholder="输入名称关键字查询"
+                  placeholder="输入名称或描述关键字"
                   defaultValue={allValue}
                   onChange={e => this.handlerSearchChange(e.target.value)}
                   onSearch={this.handlerSearch}
