@@ -332,7 +332,7 @@ class ProjectGroup extends Component {
             >
               <div className="header-tool-box">
                 <Search
-                  placeholder="输入名称或描述关键字"
+                  placeholder="输入项目名或标题关键字"
                   defaultValue={allValue}
                   onChange={e => this.handlerSearchChange(e.target.value)}
                   onSearch={this.handlerSearch}

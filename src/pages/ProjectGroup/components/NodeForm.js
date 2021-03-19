@@ -6,7 +6,6 @@ import { ScrollBar, ExtIcon, BannerTitle } from 'suid';
 import styles from './NodeForm.less';
 
 const FormItem = Form.Item;
-const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
     span: 24,
@@ -133,7 +132,7 @@ class NodeForm extends PureComponent {
   validateName = (rule, value, callback) => {
     const reg = /^(?!-)[A-Z0-9-](?!.*-$)/;
     if (value && !reg.test(value)) {
-      callback('项目组名称不规范!');
+      callback('项目组名不规范!');
     }
     callback();
   };
@@ -165,11 +164,11 @@ class NodeForm extends PureComponent {
           <div className="form-box">
             <ScrollBar>
               {!editData || !editData.id ? (
-                <Alert type="warning" message="项目组名称一旦创建就不能修改" banner />
+                <Alert type="warning" message="项目组名一旦创建就不能修改" banner />
               ) : null}
               <Form {...formItemLayout} className="form-body" layout="vertical">
                 <FormItem
-                  label="项目组名称"
+                  label="项目组名"
                   extra={
                     <span style={{ fontSize: 12 }}>
                       只能是字母或字母与中横线组成,且不能以中横线开头和结尾
@@ -181,7 +180,7 @@ class NodeForm extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '项目组名称不能为空',
+                        message: '项目组名不能为空',
                       },
                       {
                         validator: this.validateName,
@@ -189,16 +188,16 @@ class NodeForm extends PureComponent {
                     ],
                   })(<Input disabled={!editData || !!editData.id} autoComplete="off" />)}
                 </FormItem>
-                <FormItem label="项目组描述">
+                <FormItem label="项目组标题">
                   {getFieldDecorator('remark', {
                     initialValue: get(editData, 'remark'),
                     rules: [
                       {
                         required: true,
-                        message: '项目组描述不能为空',
+                        message: '项目组标题不能为空',
                       },
                     ],
-                  })(<TextArea rows={4} style={{ resize: 'none' }} autoComplete="off" />)}
+                  })(<Input autoComplete="off" />)}
                 </FormItem>
               </Form>
             </ScrollBar>
