@@ -144,6 +144,9 @@ class ConfigCommon extends Component {
     if (currentTabKey === 'yamlPreview') {
       this.getYamlData();
     }
+    if (currentTabKey === 'runtime') {
+      this.getRuntimeData();
+    }
   };
 
   closeCompareModal = () => {
