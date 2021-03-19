@@ -70,13 +70,13 @@ class ApplicationDetail extends PureComponent {
               ],
             })(<Input autoComplete="off" disabled />)}
           </FormItem>
-          <FormItem label="应用所属组">
+          <FormItem label="项目组">
             {getFieldDecorator('groupName', {
               initialValue: get(rowData, 'groupName'),
               rules: [
                 {
                   required: true,
-                  message: '应用所属组不能为空',
+                  message: '项目组不能为空',
                 },
               ],
             })(<Input autoComplete="off" disabled />)}

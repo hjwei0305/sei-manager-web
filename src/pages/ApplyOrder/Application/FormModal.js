@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Button } from 'antd';
-import { ExtModal, ComboList } from 'suid';
+import { ExtModal, ComboTree } from 'suid';
 import { constants } from '../../../utils';
 
 const { TextArea } = Input;
@@ -105,15 +105,14 @@ class FormModal extends PureComponent {
       form,
       name: 'groupName',
       store: {
-        url: `${SERVER_PATH}/sei-manager/userGroup/findAll`,
+        url: `${SERVER_PATH}/sei-manager/projectGroup/getGroupTree`,
       },
       showSearch: false,
       pagination: false,
       field: ['groupCode'],
       reader: {
-        name: 'name',
-        description: 'description',
-        field: ['code'],
+        name: 'remark',
+        field: ['name'],
       },
     };
     return (
@@ -155,16 +154,16 @@ class FormModal extends PureComponent {
               ],
             })(<Input autoComplete="off" disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="应用所属组">
+          <FormItem label="项目组">
             {getFieldDecorator('groupName', {
               initialValue: get(rowData, 'groupName'),
               rules: [
                 {
                   required: true,
-                  message: '应用所属组不能为空',
+                  message: '项目组不能为空',
                 },
               ],
-            })(<ComboList {...groupProps} disabled={onlyView} />)}
+            })(<ComboTree {...groupProps} disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用初始版本">
             {getFieldDecorator('version', {
