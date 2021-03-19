@@ -28,7 +28,7 @@ class ProjectGroup extends Component {
       treeData: [],
       expandedKeys: [],
       selectedKeys: currentNode ? [currentNode.id] : [],
-      autoExpandParent: true,
+      autoExpandParent: false,
       childParentNode: null,
     };
   }
@@ -50,7 +50,7 @@ class ProjectGroup extends Component {
             const parentData = this.getCurrentNodeAllParents(treeData, currentNode.id);
             expandedKeys = parentData.map(p => p.id);
           } else {
-            expandedKeys = dataSource.map(p => p.id);
+            // expandedKeys = dataSource.map(p => p.id);
           }
           this.setState({ expandedKeys });
         },
