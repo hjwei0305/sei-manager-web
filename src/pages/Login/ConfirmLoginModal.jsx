@@ -2,7 +2,7 @@
  * @Author: zp
  * @Date: 2020-04-13 15:01:55
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-12 09:12:40
+ * @Last Modified time: 2021-03-22 09:11:47
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -144,7 +144,7 @@ class ConfirmLoginModal extends Component {
           <div style={{ float: 'right' }}>
             <Button
               size="large"
-              loading={isLoading}
+              disabled={isLoading}
               onClick={this.handleReLogin}
               style={{ marginRight: 8, width: 136 }}
             >
