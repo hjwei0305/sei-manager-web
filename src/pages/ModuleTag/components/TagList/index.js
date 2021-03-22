@@ -122,7 +122,7 @@ class TagList extends Component {
       <>
         <ExtIcon
           className="btn-collapsed"
-          tooltip={{ title: hideSider ? '显示应用模块' : '收起应用模块' }}
+          tooltip={{ title: hideSider ? '显示模块列表' : '收起模块列表' }}
           onClick={this.handlerCollapsed}
           type={hideSider ? 'double-right' : 'double-left'}
           antd

@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import cls from 'classnames';
+import { connect } from 'dva';
 import { Button } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable } from 'suid';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { ExtTable, ExtIcon } from 'suid';
 import { constants } from '@/utils';
+import UserList from './UserList';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
+
+@connect(({ application, loading }) => ({ application, loading }))
 class Application extends Component {
   static tableRef;
+
+  componentWillUnmount() {
+    this.closeUserListModal();
+  }
 
   reloadData = () => {
     if (this.tableRef) {
@@ -16,8 +24,64 @@ class Application extends Component {
     }
   };
 
+  showAdminUserSet = currentApp => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'application/updateState',
+      payload: {
+        currentApp,
+        showModal: true,
+      },
+    });
+  };
+
+  assignAppAdminUser = data => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'application/assignAppAdminUser',
+      payload: data,
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+        }
+      },
+    });
+  };
+
+  closeUserListModal = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'application/updateState',
+      payload: {
+        currentApp: null,
+        showModal: false,
+      },
+    });
+  };
+
   render() {
+    const { application, loading } = this.props;
+    const { currentApp, showModal } = application;
     const columns = [
+      {
+        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+        key: 'operation',
+        width: 80,
+        align: 'center',
+        dataIndex: 'id',
+        className: 'action',
+        required: true,
+        render: (text, record) => (
+          <span className={cls('action-box')}>
+            <ExtIcon
+              onClick={() => this.showAdminUserSet(record)}
+              type="team"
+              antd
+              tooltip={{ title: '设置管理员' }}
+            />
+          </span>
+        ),
+      },
       {
         title: '应用代码',
         dataIndex: 'code',
@@ -31,11 +95,18 @@ class Application extends Component {
         required: true,
       },
       {
-        title: '应用版本',
+        title: '版本',
         dataIndex: 'version',
-        width: 120,
+        width: 80,
         required: true,
         render: t => t || '-',
+      },
+      {
+        title: '管理员',
+        dataIndex: 'managerAccount',
+        width: 180,
+        required: true,
+        render: (t, row) => (t ? `${row.managerAccountName}(${t})` : '-'),
       },
       {
         title: '描述说明',
@@ -45,13 +116,13 @@ class Application extends Component {
         render: t => t || '-',
       },
       {
-        title: '所属组代码',
+        title: '项目组名称',
         dataIndex: 'groupCode',
         width: 200,
         render: t => t || '-',
       },
       {
-        title: '所属组名称',
+        title: '项目组描述',
         dataIndex: 'groupName',
         width: 280,
         render: t => t || '-',
@@ -69,6 +140,7 @@ class Application extends Component {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
+      lineNumber: false,
       onTableRef: ref => (this.tableRef = ref),
       showSearchTooltip: true,
       searchPlaceHolder: '应用代码、应用名称、描述说明、所属组代码、所属组名称',
@@ -94,9 +166,17 @@ class Application extends Component {
         },
       },
     };
+    const userListProps = {
+      currentApp,
+      showModal,
+      assignUser: this.assignAppAdminUser,
+      assignLoading: loading.effects['application/assignAppAdminUser'],
+      closeModal: this.closeUserListModal,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
+        <UserList {...userListProps} />
       </div>
     );
   }
