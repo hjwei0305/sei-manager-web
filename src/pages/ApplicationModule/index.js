@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { Button, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
+import { ExtTable, ListCard, message, ExtIcon, PageLoader, AuthAction } from 'suid';
 import { constants } from '@/utils';
 import ModuleUser from './ModuleUser';
 import styles from './index.less';
@@ -369,12 +369,15 @@ class ApplicationModule extends Component {
         required: true,
         render: (text, record) => (
           <span className={cls('action-box')}>
-            <ExtIcon
-              onClick={() => this.showModuleUser(record)}
-              type="team"
-              antd
-              tooltip={{ title: '模块成员管理' }}
-            />
+            <AuthAction>
+              <ExtIcon
+                authCode="SZMKCY"
+                onClick={() => this.showModuleUser(record)}
+                type="team"
+                antd
+                tooltip={{ title: '模块成员管理' }}
+              />
+            </AuthAction>
             <ExtIcon
               onClick={() => this.showVersionHistory(record)}
               type="history"

@@ -66,6 +66,8 @@ class FormModal extends PureComponent {
       placeholder: '请先选择审核人',
       remotePaging: true,
       field: ['handleAccount'],
+      searchPlaceHolder: '姓名或账号关键字查询',
+      searchProperties: ['nickname', 'account'],
       reader: {
         name: 'nickname',
         description: 'account',

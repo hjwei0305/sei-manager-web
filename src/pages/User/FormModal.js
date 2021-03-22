@@ -35,11 +35,8 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
-      if (formData.status) {
-        Object.assign(params, { status: -1 });
-      } else {
-        Object.assign(params, { status: 0 });
-      }
+      const status = !formData.status;
+      Object.assign(params, { status });
       if (params.id) {
         editSave(params);
       } else {
@@ -121,7 +118,7 @@ class FormModal extends PureComponent {
           </FormItem>
           <FormItem label="停用">
             {getFieldDecorator('status', {
-              initialValue: get(rowData, 'status', false),
+              initialValue: !get(rowData, 'status', false),
               valuePropName: 'checked',
             })(<Switch size="small" disabled={get(rowData, 'admin')} />)}
           </FormItem>

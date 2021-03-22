@@ -101,6 +101,8 @@ class TypeNodeList extends Component {
         placeholder: '选择审核人',
         remotePaging: true,
         value: row.handleUserName,
+        searchPlaceHolder: '姓名或账号关键字查询',
+        searchProperties: ['nickname', 'account'],
         afterSelect: item => {
           this.saveHandleUser(row.id, item);
         },
