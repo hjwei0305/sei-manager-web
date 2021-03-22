@@ -72,7 +72,7 @@ export default modelExtend(model, {
       }
       currentTabKey = originTabKey || currentTabKey;
       const re = yield call(getFlowInstanceTask, {
-        relation: get(currentModule, 'id'),
+        relation: get(currentModule, 'code'),
         typeCode: get(redefinedType, 'code'),
         version: get(redefinedType, 'version'),
       });
