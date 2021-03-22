@@ -184,14 +184,20 @@ class FormModal extends PureComponent {
       form,
       name: 'refTag',
       store: {
+        type: 'POST',
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
+      remotePaging: true,
+      searchProperties: ['tagName'],
       cascadeParams: {
-        gitId: form.getFieldValue('gitId') || '',
+        filters: [
+          { fieldName: 'moduleId', operator: 'EQ', value: form.getFieldValue('moduleId') || '' },
+        ],
       },
       placeholder: '请先选择要发版的模块',
       reader: {
         name: 'tagName',
+        description: 'branch',
       },
     };
     const modalTitle = onlyView || dataLoading ? '发版详情' : title;

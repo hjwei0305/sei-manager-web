@@ -19,8 +19,15 @@ class ModuleUserModal extends PureComponent {
   constructor() {
     super();
     this.state = {
-      accountSelected: false,
+      accountSelected: null,
     };
+  }
+
+  componentDidUpdate(preProps) {
+    const { showModal } = this.props;
+    if (preProps.showModal !== showModal && showModal) {
+      this.setState({ accountSelected: null });
+    }
   }
 
   assignUser = () => {

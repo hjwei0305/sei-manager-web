@@ -204,16 +204,22 @@ class FormModal extends PureComponent {
     };
     const tagProps = {
       form,
-      name: 'tagName',
+      name: 'refTag',
       store: {
+        type: 'POST',
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
+      remotePaging: true,
+      searchProperties: ['tagName'],
       cascadeParams: {
-        gitId: form.getFieldValue('gitId') || '',
+        filters: [
+          { fieldName: 'moduleId', operator: 'EQ', value: form.getFieldValue('moduleId') || '' },
+        ],
       },
-      placeholder: '请先选择要部署的模块',
+      placeholder: '请先选择要发版的模块',
       reader: {
         name: 'tagName',
+        description: 'branch',
       },
     };
     const expCompleteTime = get(rowData, 'expCompleteTime');

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Form, Input, Row, Col, Button } from 'antd';
-import { ExtModal, ListLoader, utils, ComboList } from 'suid';
+import { ExtModal, ListLoader, utils, ComboList, NoticeBar } from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
@@ -294,7 +294,15 @@ class FormModal extends PureComponent {
             <Col span={15}>
               <div className="item-box">
                 <div className="item-label">
-                  <span className="title">标签描述(Markdown)</span>
+                  <span className="title">
+                    标签描述(Markdown)
+                    <NoticeBar
+                      style={{ marginLeft: 8, display: 'inline-flex', fontSize: 12, width: 330 }}
+                      marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}
+                    >
+                      注意：标签创建保存以后不能修改，请保存前检查版本、分支及标签描述。
+                    </NoticeBar>
+                  </span>
                   <div className="tool-box">
                     {!onlyView ? (
                       <span onClick={this.handlerMarkdownView} className="tool-item">

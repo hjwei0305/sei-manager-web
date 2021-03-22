@@ -2,9 +2,11 @@ import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import { get } from 'lodash';
 import { Button, Form, Input, Popconfirm, Alert } from 'antd';
-import { ScrollBar, ExtIcon, BannerTitle } from 'suid';
+import { ScrollBar, ExtIcon, BannerTitle, ComboList } from 'suid';
+import { constants } from '@/utils';
 import styles from './NodeForm.less';
 
+const { SERVER_PATH } = constants;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
@@ -143,6 +145,23 @@ class NodeForm extends PureComponent {
     const title = this.getFormTitle();
     const saving = loading.effects['projectGroup/save'];
     const deleting = loading.effects['projectGroup/del'];
+    getFieldDecorator('managerAccount', { initialValue: get(editData, 'managerAccount') });
+    const adminProps = {
+      form,
+      name: 'managerAccountName',
+      remotePaging: true,
+      field: ['managerAccount'],
+      store: {
+        type: 'POST',
+        url: `${SERVER_PATH}/sei-manager/user/findByPage`,
+      },
+      placeholder: '选择项目管理员',
+      reader: {
+        name: 'nickname',
+        description: 'account',
+        field: ['account'],
+      },
+    };
     return (
       <div key="node-form" className={cls(styles['node-form'])}>
         <div className="base-view-body">
@@ -198,6 +217,17 @@ class NodeForm extends PureComponent {
                       },
                     ],
                   })(<Input autoComplete="off" />)}
+                </FormItem>
+                <FormItem label="项目组管理员" wrapperCol={{ span: 12 }}>
+                  {getFieldDecorator('managerAccountName', {
+                    initialValue: get(editData, 'managerAccountName'),
+                    rules: [
+                      {
+                        required: true,
+                        message: '项目组管理员不能为空',
+                      },
+                    ],
+                  })(<ComboList {...adminProps} />)}
                 </FormItem>
               </Form>
             </ScrollBar>

@@ -12,11 +12,18 @@ export default modelExtend(model, {
     showModal: false,
   },
   effects: {
-    *assignAppAdminUser({ payload, callback }, { call }) {
+    *assignAppAdminUser({ payload, callback }, { call, put }) {
       const re = yield call(assignAppAdminUser, payload);
       message.destroy();
       if (re.success) {
         message.success('设置成功');
+        yield put({
+          type: 'updateState',
+          payload: {
+            currentApp: null,
+            showModal: false,
+          },
+        });
       } else {
         message.error(re.message);
       }
