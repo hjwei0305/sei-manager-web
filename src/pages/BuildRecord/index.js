@@ -331,7 +331,7 @@ class BuildRecord extends Component {
         render: t => <JenkinsState state={t} />,
       },
       {
-        title: '发布主题',
+        title: '构建主题',
         dataIndex: 'name',
         width: 260,
         required: true,
@@ -379,9 +379,9 @@ class BuildRecord extends Component {
       toolBar: toolBarProps,
       columns,
       onTableRef: ref => (this.tableRef = ref),
-      showSearchTooltip: false,
-      searchPlaceHolder: '版本名称、描述说明',
-      searchProperties: ['name', 'remark'],
+      showSearchTooltip: true,
+      searchPlaceHolder: '应用名称、模块代码、模块名称和构建主题',
+      searchProperties: ['appName', 'moduleCode', 'moduleName', 'name'],
       searchWidth: 260,
       remotePaging: true,
       store: {

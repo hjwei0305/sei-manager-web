@@ -2,7 +2,7 @@ import { utils } from 'suid';
 import { get } from 'lodash';
 import moment from 'moment';
 import { constants } from '@/utils';
-import { getLogDetail, getTranceLog, getServices } from './service';
+import { getLogDetail, getTranceLog } from './service';
 
 const { LEVEL_CATEGORY, SEARCH_DATE_PERIOD } = constants;
 const { pathMatchRegexp, dvaModel } = utils;
@@ -31,7 +31,6 @@ export default modelExtend(model, {
     filter: { timestamp: getDefaultTimeViewType() },
     logData: null,
     tranceData: [],
-    serviceList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -39,10 +38,6 @@ export default modelExtend(model, {
         if (pathMatchRegexp('/log/logRecord', location.pathname)) {
           dispatch({
             type: 'updateEnvViewData',
-          }).then(() => {
-            dispatch({
-              type: 'getServices',
-            });
           });
         }
       });
@@ -71,19 +66,6 @@ export default modelExtend(model, {
           envViewData,
         },
       });
-    },
-    *getServices(_, { call, put, select }) {
-      const { currentEnvViewType } = yield select(sel => sel.runtimeLog);
-      const agentServer = get(currentEnvViewType, 'agentServer');
-      const re = yield call(getServices, { agentServer });
-      if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            serviceList: re.data || [],
-          },
-        });
-      }
     },
     *getLogDetail({ payload }, { call, put, select }) {
       const { currentEnvViewType } = yield select(sel => sel.runtimeLog);

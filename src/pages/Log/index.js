@@ -16,7 +16,7 @@ import LogDetail from './components/LogDetail';
 import LogLevel from './components/LogLevel';
 import styles from './index.less';
 
-const { LEVEL_CATEGORY, LOG_ACTION } = constants;
+const { LEVEL_CATEGORY, LOG_ACTION, SERVER_PATH } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'level', operator: 'EQ', value: null },
@@ -48,7 +48,6 @@ class LogList extends PureComponent {
         showTranceLog: false,
         logData: null,
         tranceData: [],
-        serviceList: [],
       },
     });
   }
@@ -214,22 +213,29 @@ class LogList extends PureComponent {
     }
     if (dataIndex === 'serviceName') {
       const { runtimeLog } = this.props;
-      const { serviceList, filter } = runtimeLog;
+      const { filter } = runtimeLog;
       const serviceName = get(filter, 'serviceName') || '全部';
       const serviceNameProps = {
         className: 'search-content',
-        dataSource: serviceList,
         searchProperties: ['code', 'name'],
         showArrow: false,
         showSearch: false,
         rowKey: 'code',
         selectedKeys,
-        pagination: { pageSize: 60 },
+        remotePaging: true,
         onSelectChange: keys => {
           setSelectedKeys(keys);
           this.handleColumnSearch(keys, dataIndex, confirm);
         },
-        customTool: () => this.renderCustomTool(dataIndex, clearFilters),
+        store: {
+          type: 'POST',
+          url: `${SERVER_PATH}/sei-manager/appModule/findByPage`,
+          autoLoad: false,
+          params: {
+            filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
+          },
+        },
+        customTool: () => this.renderCustomTool(),
         onListCardRef: ref => (this.listCardRef = ref),
         itemField: {
           title: item => item.code,
@@ -336,6 +342,9 @@ class LogList extends PureComponent {
         ),
       onFilterDropdownVisibleChange: visible => {
         if (visible) {
+          if (dataIndex === 'serviceName') {
+            this.listCardRef.remoteDataRefresh();
+          }
           setTimeout(() => {
             if (this.searchInput) {
               this.searchInput.select();
@@ -471,7 +480,7 @@ class LogList extends PureComponent {
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 60,
+        width: 80,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -569,6 +578,7 @@ class LogList extends PureComponent {
       bordered: false,
       toolBar: toolBarProps,
       columns,
+      lineNumber: false,
       searchProperties: ['*'],
       searchPlaceHolder: '输入关键字查询',
       cascadeParams: {

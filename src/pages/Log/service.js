@@ -37,15 +37,3 @@ export async function getTranceLog(params) {
     params: rest,
   });
 }
-
-/**
- * 获取当前所有可用应用服务清单
- */
-export async function getServices(params) {
-  const { agentServer } = params;
-  const url = `${agentServer}/serviceInstance/getServices`;
-  return request({
-    url,
-    method: 'GET',
-  });
-}
