@@ -3,12 +3,13 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { Button } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ExtIcon } from 'suid';
+import { ExtTable, ExtIcon, utils } from 'suid';
 import { constants } from '@/utils';
 import UserList from './UserList';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;
+const { authAction } = utils;
 
 @connect(({ application, loading }) => ({ application, loading }))
 class Application extends Component {
@@ -64,25 +65,6 @@ class Application extends Component {
     const { currentApp, showModal } = application;
     const columns = [
       {
-        title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
-        key: 'operation',
-        width: 80,
-        align: 'center',
-        dataIndex: 'id',
-        className: 'action',
-        required: true,
-        render: (text, record) => (
-          <span className={cls('action-box')}>
-            <ExtIcon
-              onClick={() => this.showAdminUserSet(record)}
-              type="team"
-              antd
-              tooltip={{ title: '设置管理员' }}
-            />
-          </span>
-        ),
-      },
-      {
         title: '应用代码',
         dataIndex: 'code',
         width: 180,
@@ -128,6 +110,28 @@ class Application extends Component {
         render: t => t || '-',
       },
     ];
+    const action = {
+      title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
+      key: 'operation',
+      width: 80,
+      align: 'center',
+      dataIndex: 'id',
+      className: 'action',
+      required: true,
+      render: (text, record) => (
+        <span className={cls('action-box')}>
+          <ExtIcon
+            onClick={() => this.showAdminUserSet(record)}
+            type="team"
+            antd
+            tooltip={{ title: '设置管理员' }}
+          />
+        </span>
+      ),
+    };
+    if (authAction(<span authCode="SZGLY" />)) {
+      columns.unshift(action);
+    }
     const toolBarProps = {
       left: (
         <>
