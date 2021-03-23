@@ -168,7 +168,7 @@ class FeatureHandler extends Component {
       {
         title: '权限名称',
         dataIndex: 'name',
-        width: 140,
+        width: 220,
         required: true,
       },
       {
