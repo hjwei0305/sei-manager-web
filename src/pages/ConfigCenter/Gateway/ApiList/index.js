@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Popconfirm, Popover, Tag } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon, ListCard } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction } from 'suid';
 import { FilterView } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
@@ -180,15 +180,18 @@ class ApiList extends Component {
     return (
       <>
         <div className="tool-box">
-          <Popconfirm
-            disabled={syncLoading || this.syncEvnData.length === 0}
-            title="确定要同步吗?"
-            onConfirm={() => this.handlerSync()}
-          >
-            <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
-              开始同步
-            </Button>
-          </Popconfirm>
+          <AuthAction>
+            <Popconfirm
+              authCode="SYNC"
+              disabled={syncLoading || this.syncEvnData.length === 0}
+              title="确定要同步吗?"
+              onConfirm={() => this.handlerSync()}
+            >
+              <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
+                开始同步
+              </Button>
+            </Popconfirm>
+          </AuthAction>
         </div>
         <div className="env-box">
           <ListCard {...listProps} />
@@ -204,16 +207,19 @@ class ApiList extends Component {
       return <ExtIcon className="del-loading" type="loading" antd />;
     }
     return (
-      <Popconfirm
-        placement="topLeft"
-        title={formatMessage({
-          id: 'global.delete.confirm',
-          defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-        })}
-        onConfirm={() => this.del(row)}
-      >
-        <ExtIcon className="del" type="delete" antd />
-      </Popconfirm>
+      <AuthAction>
+        <Popconfirm
+          authCode="CUD"
+          placement="topLeft"
+          title={formatMessage({
+            id: 'global.delete.confirm',
+            defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+          })}
+          onConfirm={() => this.del(row)}
+        >
+          <ExtIcon className="del" type="delete" antd />
+        </Popconfirm>
+      </AuthAction>
     );
   };
 
@@ -242,13 +248,16 @@ class ApiList extends Component {
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
-            <ExtIcon
-              className="edit"
-              onClick={() => this.edit(record)}
-              type="edit"
-              ignore="true"
-              antd
-            />
+            <AuthAction>
+              <ExtIcon
+                authCode="CUD"
+                className="edit"
+                onClick={() => this.edit(record)}
+                type="edit"
+                ignore="true"
+                antd
+              />
+            </AuthAction>
             {this.renderDelBtn(record)}
           </span>
         ),
@@ -285,17 +294,22 @@ class ApiList extends Component {
               value: 'code',
             }}
           />
-          <Button type="primary" onClick={this.add}>
-            新建
-          </Button>
-          <Button
-            type="primary"
-            loading={loading.effects['appGateway/releaseConfigs']}
-            ghost
-            onClick={this.release}
-          >
-            发布
-          </Button>
+          <AuthAction>
+            <Button authCode="CUD" type="primary" onClick={this.add}>
+              新建
+            </Button>
+          </AuthAction>
+          <AuthAction>
+            <Button
+              authCode="RELEASE"
+              type="primary"
+              loading={loading.effects['appGateway/releaseConfigs']}
+              ghost
+              onClick={this.release}
+            >
+              发布
+            </Button>
+          </AuthAction>
           <Popover
             overlayClassName={styles['sync-popover-box']}
             onVisibleChange={this.handlerEvnSync}

@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import cls from 'classnames';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Input, Empty, Popconfirm, Layout } from 'antd';
-import { ExtIcon, ListCard } from 'suid';
+import { ExtIcon, ListCard, AuthAction } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { UseStatus } from '@/components';
 import { constants } from '@/utils';
@@ -133,21 +133,26 @@ class ConfigEvnVar extends Component {
     return (
       <>
         <div className="tool-action" onClick={e => e.stopPropagation()}>
-          <Edit saving={saving} save={this.save} data={item} />
+          <AuthAction>
+            <Edit authCode="EDIT" saving={saving} save={this.save} data={item} />
+          </AuthAction>
           {useStatus === USER_STATUS.NONE.key ? (
-            <Popconfirm
-              title={formatMessage({
-                id: 'global.delete.confirm',
-                defaultMessage: '确定要删除吗?',
-              })}
-              onConfirm={e => this.del(item, e)}
-            >
-              {loading.effects['configEvnVar/del'] && delId === item.id ? (
-                <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
-              ) : (
-                <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
-              )}
-            </Popconfirm>
+            <AuthAction>
+              <Popconfirm
+                authCode="DELETE"
+                title={formatMessage({
+                  id: 'global.delete.confirm',
+                  defaultMessage: '确定要删除吗?',
+                })}
+                onConfirm={e => this.del(item, e)}
+              >
+                {loading.effects['configEvnVar/del'] && delId === item.id ? (
+                  <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
+                ) : (
+                  <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
+                )}
+              </Popconfirm>
+            </AuthAction>
           ) : null}
         </div>
       </>
@@ -168,7 +173,11 @@ class ConfigEvnVar extends Component {
       onListCardRef: ref => (this.listCardRef = ref),
       searchProperties: ['code', 'remark'],
       selectedKeys,
-      extra: <Add saving={saving} save={this.save} />,
+      extra: (
+        <AuthAction>
+          <Add authCode="CREATE" saving={saving} save={this.save} />
+        </AuthAction>
+      ),
       itemField: {
         title: item => (
           <>

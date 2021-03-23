@@ -6,7 +6,7 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Input } from 'antd';
-import { ExtTable, BannerTitle } from 'suid';
+import { ExtTable, BannerTitle, AuthAction } from 'suid';
 import { constants } from '@/utils';
 import styles from './index.less';
 
@@ -153,9 +153,11 @@ class ValueItem extends Component {
               </Button>
             </>
           ) : (
-            <Button type="primary" onClick={this.edit}>
-              编辑
-            </Button>
+            <AuthAction>
+              <Button authCode="EDIT_VALUE" type="primary" onClick={this.edit}>
+                编辑
+              </Button>
+            </AuthAction>
           )}
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />

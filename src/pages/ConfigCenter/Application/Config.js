@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from 'react';
 import { get } from 'lodash';
 import { Tabs, Card, Button, Popover } from 'antd';
-import { BannerTitle, PageLoader, ListCard } from 'suid';
+import { BannerTitle, PageLoader, ListCard, AuthAction } from 'suid';
 import { FilterView } from '@/components';
 import YamlModel from './components/YamlModel';
 import RuntimeModel from './components/RuntimeModel';
@@ -104,9 +104,17 @@ const Config = ({
             value: 'code',
           }}
         />
-        <Button type="primary" ghost loading={releaseLoading} onClick={handlerShowRelease}>
-          发布
-        </Button>
+        <AuthAction>
+          <Button
+            authCode="RELEASE"
+            type="primary"
+            ghost
+            loading={releaseLoading}
+            onClick={handlerShowRelease}
+          >
+            发布
+          </Button>
+        </AuthAction>
         <Popover
           overlayClassName={styles['compare-popover-box']}
           destroyTooltipOnHide

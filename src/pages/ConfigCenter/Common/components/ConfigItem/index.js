@@ -4,7 +4,7 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Drawer, Popconfirm, Popover } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon, ListCard } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction } from 'suid';
 import { UseStatus } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
@@ -197,19 +197,26 @@ class ConfigItem extends Component {
         return <ExtIcon className="del-loading" type="loading" antd />;
       }
       return (
-        <Popconfirm
-          placement="topLeft"
-          title={formatMessage({
-            id: 'global.delete.confirm',
-            defaultMessage: '确定要删除吗？提示：删除后不可恢复',
-          })}
-          onConfirm={() => this.del(row)}
-        >
-          <ExtIcon className="del" type="delete" antd />
-        </Popconfirm>
+        <AuthAction>
+          <Popconfirm
+            authCode="DELETE"
+            placement="topLeft"
+            title={formatMessage({
+              id: 'global.delete.confirm',
+              defaultMessage: '确定要删除吗？提示：删除后不可恢复',
+            })}
+            onConfirm={() => this.del(row)}
+          >
+            <ExtIcon className="del" type="delete" antd />
+          </Popconfirm>
+        </AuthAction>
       );
     }
-    return <ExtIcon className="del disabled" type="delete" antd />;
+    return (
+      <AuthAction>
+        <ExtIcon authCode="DELETE" className="del disabled" type="delete" antd />
+      </AuthAction>
+    );
   };
 
   renderEvnVarList = () => {
@@ -239,15 +246,18 @@ class ConfigItem extends Component {
     return (
       <>
         <div className="tool-box">
-          <Popconfirm
-            disabled={syncLoading || this.syncEvnData.length === 0}
-            title="确定要同步吗?"
-            onConfirm={() => this.handlerSync()}
-          >
-            <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
-              开始同步
-            </Button>
-          </Popconfirm>
+          <AuthAction>
+            <Popconfirm
+              authCode="SYNC"
+              disabled={syncLoading || this.syncEvnData.length === 0}
+              title="确定要同步吗?"
+              onConfirm={() => this.handlerSync()}
+            >
+              <Button loading={syncLoading} disabled={this.syncEvnData.length === 0} type="primary">
+                开始同步
+              </Button>
+            </Popconfirm>
+          </AuthAction>
         </div>
         <div className="env-box">
           <ListCard {...listProps} />
@@ -276,13 +286,16 @@ class ConfigItem extends Component {
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
-            <ExtIcon
-              className="edit"
-              onClick={() => this.edit(record)}
-              type="edit"
-              ignore="true"
-              antd
-            />
+            <AuthAction>
+              <ExtIcon
+                authCode="EDIT"
+                className="edit"
+                onClick={() => this.edit(record)}
+                type="edit"
+                ignore="true"
+                antd
+              />
+            </AuthAction>
             {this.renderDelBtn(record)}
           </span>
         ),
@@ -322,9 +335,11 @@ class ConfigItem extends Component {
     const toolBarProps = {
       left: (
         <>
-          <Button type="primary" onClick={this.add}>
-            新建配置键
-          </Button>
+          <AuthAction>
+            <Button authCode="CREATE" type="primary" onClick={this.add}>
+              新建配置键
+            </Button>
+          </AuthAction>
           <Button onClick={this.reloadData}>
             <FormattedMessage id="global.refresh" defaultMessage="刷新" />
           </Button>
@@ -343,31 +358,37 @@ class ConfigItem extends Component {
             >
               取消
             </Button>
-            <Popconfirm
-              disabled={enableConfigLoading || syncConfigLoading}
-              title="确定要停用选择的项吗?"
-              onConfirm={() => this.disableConfig()}
-            >
-              <Button
-                type="danger"
+            <AuthAction>
+              <Popconfirm
+                authCode="DISABLED_KEY"
                 disabled={enableConfigLoading || syncConfigLoading}
-                loading={disableConfigLoading}
+                title="确定要停用选择的项吗?"
+                onConfirm={() => this.disableConfig()}
               >
-                停用
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              disabled={disableConfigLoading || syncConfigLoading}
-              title="确定要启用选择的项吗?"
-              onConfirm={() => this.enableConfig()}
-            >
-              <Button
+                <Button
+                  type="danger"
+                  disabled={enableConfigLoading || syncConfigLoading}
+                  loading={disableConfigLoading}
+                >
+                  停用
+                </Button>
+              </Popconfirm>
+            </AuthAction>
+            <AuthAction>
+              <Popconfirm
+                authCode="ENABLE_KEY"
                 disabled={disableConfigLoading || syncConfigLoading}
-                loading={enableConfigLoading}
+                title="确定要启用选择的项吗?"
+                onConfirm={() => this.enableConfig()}
               >
-                启用
-              </Button>
-            </Popconfirm>
+                <Button
+                  disabled={disableConfigLoading || syncConfigLoading}
+                  loading={enableConfigLoading}
+                >
+                  启用
+                </Button>
+              </Popconfirm>
+            </AuthAction>
             <Popover
               overlayClassName={styles['sync-popover-box']}
               onVisibleChange={this.handlerEvnSync}
