@@ -112,7 +112,7 @@ class FormModal extends PureComponent {
       field: ['groupCode'],
       reader: {
         name: 'remark',
-        field: ['name'],
+        field: ['code'],
       },
     };
     return (
