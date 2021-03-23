@@ -134,12 +134,18 @@ class WorkFlow extends Component {
             {publishing && dealId === item.id ? (
               <ExtIcon className={cls('action-item', 'loading')} type="sync" spin antd />
             ) : (
-              <ExtIcon className={cls('action-item', 'publish')} type="play-circle" antd />
+              <ExtIcon
+                tooltip={{ title: '发布流程', placement: 'bottom' }}
+                className={cls('action-item', 'publish')}
+                type="play-circle"
+                antd
+              />
             )}
           </Popconfirm>
           <ExtIcon
             className={cls('action-item')}
             type="history"
+            tooltip={{ title: '流程版本历史', placement: 'bottom' }}
             onClick={() => this.handlerShowFlowHistory(item)}
             antd
           />
