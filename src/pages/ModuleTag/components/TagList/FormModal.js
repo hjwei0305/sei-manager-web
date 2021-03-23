@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Row, Col, Button } from 'antd';
+import { Form, Input, Button, Layout } from 'antd';
 import { ExtModal, ListLoader, utils, ComboList, NoticeBar } from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
@@ -13,6 +13,7 @@ import { constants } from '@/utils';
 import styles from './FormModal.less';
 
 const { SERVER_PATH } = constants;
+const { Sider, Content } = Layout;
 const { getUUID } = utils;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -207,8 +208,8 @@ class FormModal extends PureComponent {
         {dataLoading ? (
           <ListLoader />
         ) : (
-          <Row gutter={8}>
-            <Col span={9}>
+          <Layout className="auto-height">
+            <Sider width={300} className="auto-height" theme="light">
               <div className="item-box">
                 <div className="form-body">
                   <Form {...formItemLayout} layout="horizontal">
@@ -290,8 +291,8 @@ class FormModal extends PureComponent {
                   </Form>
                 </div>
               </div>
-            </Col>
-            <Col span={15}>
+            </Sider>
+            <Content className="auto-height" style={{ paddingLeft: 4 }}>
               <div className="item-box">
                 <div className="item-label">
                   <span className="title">
@@ -332,8 +333,8 @@ class FormModal extends PureComponent {
                   />
                 </div>
               </div>
-            </Col>
-          </Row>
+            </Content>
+          </Layout>
         )}
       </ExtModal>
     );
