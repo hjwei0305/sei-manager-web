@@ -5,12 +5,16 @@ import PropTypes from 'prop-types';
 import { Form, Input, Button, Layout } from 'antd';
 import { ExtModal, ListLoader, utils, ComboList, NoticeBar } from 'suid';
 import * as MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
+import MdEditor, { Plugins } from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
 import 'react-markdown-editor-lite/lib/index.css';
 import { constants } from '@/utils';
+import { MdEditorViewSwitch } from '@/components';
 import styles from './FormModal.less';
+
+MdEditor.unuse(Plugins.ModeToggle);
+MdEditor.use(MdEditorViewSwitch);
 
 const { SERVER_PATH } = constants;
 const { Sider, Content } = Layout;
@@ -65,7 +69,6 @@ class FormModal extends PureComponent {
     const { message = '' } = tagData || {};
     this.state = {
       message,
-      markdownPreview: false,
     };
     this.editorId = getUUID();
   }
@@ -146,24 +149,12 @@ class FormModal extends PureComponent {
     );
   };
 
-  handlerMarkdownView = () => {
-    const { markdownPreview: preview } = this.state;
-    const markdownPreview = !preview;
-    this.setState({ markdownPreview }, () => {
-      this.mdEditor.setView({
-        menu: !markdownPreview,
-        md: !markdownPreview,
-        html: markdownPreview,
-      });
-    });
-  };
-
   renderHTML = text => {
     return mdParser.render(text);
   };
 
   render() {
-    const { message, markdownPreview } = this.state;
+    const { message } = this.state;
     const {
       form,
       closeFormModal,
@@ -298,19 +289,12 @@ class FormModal extends PureComponent {
                   <span className="title">
                     标签描述(Markdown)
                     <NoticeBar
-                      style={{ marginLeft: 8, display: 'inline-flex', fontSize: 12, width: 330 }}
+                      style={{ marginLeft: 8, display: 'inline-flex', fontSize: 12, width: 410 }}
                       marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}
                     >
-                      注意：标签创建保存以后不能修改，请保存前检查版本、分支及标签描述。
+                      温馨提示：标签保存以后不能修改，请保存前检查版本、分支及标签描述。
                     </NoticeBar>
                   </span>
-                  <div className="tool-box">
-                    {!onlyView ? (
-                      <span onClick={this.handlerMarkdownView} className="tool-item">
-                        {markdownPreview ? '编辑' : '预览'}
-                      </span>
-                    ) : null}
-                  </div>
                 </div>
                 <div className="item-body">
                   <MdEditor
@@ -318,15 +302,15 @@ class FormModal extends PureComponent {
                     style={{ height: '526px', width: '100%' }}
                     name={this.editorId}
                     value={message || ''}
-                    readOnly={onlyView || markdownPreview}
+                    readOnly={onlyView}
                     placeholder="请输入标签说明(例如：修订的内容)"
                     renderHTML={text => this.renderHTML(text)}
                     onChange={this.handlerAceChannge}
                     config={{
                       view: {
                         menu: !onlyView,
-                        md: !onlyView && !markdownPreview,
-                        html: onlyView || markdownPreview,
+                        md: !onlyView,
+                        html: onlyView,
                       },
                       canView: { fullScreen: true, hideMenu: false },
                     }}

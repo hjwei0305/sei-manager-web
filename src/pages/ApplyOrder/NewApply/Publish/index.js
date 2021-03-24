@@ -51,9 +51,19 @@ class NewPublish extends PureComponent {
     eventBus.emit('closeTab', ['publish']);
   };
 
+  getTagContent = tagId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applyPublish/getTag',
+      payload: {
+        id: tagId,
+      },
+    });
+  };
+
   render() {
     const { applyPublish, loading } = this.props;
-    const { showModal, rowData, versionTypeData } = applyPublish;
+    const { showModal, rowData, versionTypeData, tagContent } = applyPublish;
     const formModalProps = {
       save: this.save,
       rowData,
@@ -63,6 +73,9 @@ class NewPublish extends PureComponent {
       saving: loading.effects['applyPublish/createSave'],
       saveToApprove: this.saveToApprove,
       saveToApproving: loading.effects['applyPublish/saveToApprove'],
+      tagContent,
+      getTagContent: this.getTagContent,
+      loadingTagContent: loading.effects['applyPublish/getTag'],
     };
     return (
       <div className={cls(styles['container-box'])}>

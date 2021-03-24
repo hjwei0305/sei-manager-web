@@ -463,9 +463,26 @@ class ApplyPublish extends PureComponent {
     return `应用(${appName})`;
   };
 
+  getTagContent = tagId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applyPublish/getTag',
+      payload: {
+        id: tagId,
+      },
+    });
+  };
+
   render() {
     const { applyPublish, loading } = this.props;
-    const { showModal, rowData, onlyView, versionTypeData, flowNodeData } = applyPublish;
+    const {
+      showModal,
+      rowData,
+      onlyView,
+      versionTypeData,
+      flowNodeData,
+      tagContent,
+    } = applyPublish;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -537,6 +554,9 @@ class ApplyPublish extends PureComponent {
         loading.effects['applyPublish/createSave'] || loading.effects['applyPublish/editSave'],
       saveToApprove: this.saveToApprove,
       saveToApproving: loading.effects['applyPublish/saveToApprove'],
+      tagContent,
+      getTagContent: this.getTagContent,
+      loadingTagContent: loading.effects['applyPublish/getTag'],
     };
     const toolBarProps = {
       left: (

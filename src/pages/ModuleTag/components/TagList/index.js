@@ -5,9 +5,9 @@ import { connect } from 'dva';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card } from 'antd';
 import { ExtTable, BannerTitle, ExtIcon, ComboList } from 'suid';
+import { MdEditorView } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
-import MdEditorView from './MdEditorView';
 import styles from './index.less';
 
 const { SERVER_PATH } = constants;

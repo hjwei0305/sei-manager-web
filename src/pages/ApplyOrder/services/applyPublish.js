@@ -42,3 +42,12 @@ export async function del(params) {
     method: 'DELETE',
   });
 }
+
+/** 获取标签内容 */
+export async function getTag(params) {
+  const url = `${SERVER_PATH}/sei-manager/tag/getTag`;
+  return request({
+    url,
+    params,
+  });
+}

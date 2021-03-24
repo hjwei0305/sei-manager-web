@@ -1,37 +1,93 @@
 @import '../../../themes/vars.less';
 .form-box {
   :global {
-    .ant-modal-body {
-      height: 568px;
-      padding: 0;
-      background-color: @page-background-color;
-      .ant-row,
-      .ant-col {
-        height: 100%;
+    .trigger-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      font-weight: normal;
+      line-height: 58px;
+      cursor: pointer;
+      transition: all ease-in 0.2s;
+      &:hover {
+        color: @primary-color;
+        background-color: fade(@black, 2%);
       }
-      .item-box {
-        height: 100%;
-        background-color: @white;
-        .item-label {
-          height: 42px;
-          padding: 0 16px;
-          color: fade(@black, 85%);
-          font-weight: 700;
-          line-height: 42px;
+    }
+    .ant-modal-title {
+      padding-left: 36px;
+    }
+    .ant-modal,
+    .ant-modal-content {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .ant-modal {
+      top: 0;
+      padding-bottom: 0;
+      .ant-modal-body {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        height: calc(100% - 55px);
+        padding: 0;
+        background-color: @page-background-color;
+        .tag-content {
+          background-color: @white;
+          .ant-collapse-item-active {
+            .ant-collapse-header {
+              border-bottom: 1px solid #d9d9d9;
+            }
+          }
+          &.ant-collapse-borderless > .ant-collapse-item {
+            border-bottom: 4px solid #eee;
+          }
         }
-        .form-body {
+        .form-box {
           height: 100%;
           overflow: hidden;
           .ant-form {
             margin: 8px 16px;
           }
         }
-        .ace_content {
-          height: 526px;
-        }
-        .item-body {
-          height: 526px;
+        .main-content {
           overflow: hidden;
+          .ant-card {
+            height: 100%;
+            .ant-card-body {
+              height: calc(100% - 57px);
+              padding: 0;
+            }
+            .ant-card-extra {
+              button {
+                margin-left: 8px;
+              }
+            }
+          }
+          ol,
+          ul,
+          li {
+            list-style: decimal;
+          }
+          .rc-md-editor {
+            border-width: 0;
+            .rc-md-navigation {
+              background-color: #fff;
+            }
+          }
+          .tag-content-box {
+            transition: width ease-in 0.3s;
+            .tag-content {
+              .rc-md-editor {
+                padding-left: 24px;
+              }
+            }
+          }
         }
       }
     }

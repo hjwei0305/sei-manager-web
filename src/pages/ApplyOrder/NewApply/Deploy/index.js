@@ -51,9 +51,19 @@ class NewDeploy extends PureComponent {
     eventBus.emit('closeTab', ['deploy']);
   };
 
+  getTagContent = tagId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applyDeploy/getTag',
+      payload: {
+        id: tagId,
+      },
+    });
+  };
+
   render() {
     const { applyDeploy, loading } = this.props;
-    const { showModal, rowData } = applyDeploy;
+    const { showModal, rowData, tagContent } = applyDeploy;
     const formModalProps = {
       save: this.save,
       rowData,
@@ -62,6 +72,9 @@ class NewDeploy extends PureComponent {
       saving: loading.effects['applyDeploy/createSave'],
       saveToApprove: this.saveToApprove,
       saveToApproving: loading.effects['applyDeploy/saveToApprove'],
+      tagContent,
+      getTagContent: this.getTagContent,
+      loadingTagContent: loading.effects['applyDeploy/getTag'],
     };
     return (
       <div className={cls(styles['container-box'])}>

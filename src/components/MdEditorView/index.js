@@ -7,7 +7,7 @@ import MdEditor from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
 import 'react-markdown-editor-lite/lib/index.css';
-import styles from './MdEditorView.less';
+import styles from './index.less';
 
 const { getUUID } = utils;
 const mdParser = new MarkdownIt({

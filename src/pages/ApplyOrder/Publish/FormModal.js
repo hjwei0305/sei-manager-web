@@ -1,14 +1,23 @@
+/* eslint-disable no-empty */
 import React, { PureComponent } from 'react';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Row, Col } from 'antd';
-import { ExtModal, ComboList, utils, ListLoader } from 'suid';
-import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/mode-markdown';
-import 'ace-builds/src-noconflict/theme-textmate';
+import QueueAnim from 'rc-queue-anim';
+import { Form, Input, Button, Row, Col, Layout, Card } from 'antd';
+import { ExtModal, ComboList, utils, ListLoader, ExtIcon, BannerTitle, ScrollBar } from 'suid';
+import * as MarkdownIt from 'markdown-it';
+import MdEditor, { Plugins } from 'react-markdown-editor-lite';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/a11y-light.css';
+import 'react-markdown-editor-lite/lib/index.css';
+import { MdEditorView, MdEditorViewSwitch } from '@/components';
 import { constants } from '../../../utils';
 import styles from './FormModal.less';
 
+MdEditor.unuse(Plugins.ModeToggle);
+MdEditor.use(MdEditorViewSwitch);
+
+const { Sider, Content } = Layout;
 const FormItem = Form.Item;
 const { getUUID } = utils;
 const { SERVER_PATH } = constants;
@@ -21,9 +30,27 @@ const formItemLayout = {
   },
 };
 
+const mdParser = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  langPrefix: 'language-',
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) {}
+    }
+
+    return ''; // 使用额外的默认转义
+  },
+});
+
 @Form.create()
 class FormModal extends PureComponent {
-  static aceId;
+  static editorId;
+
+  static mdEditor;
 
   static propTypes = {
     onlyView: PropTypes.bool,
@@ -35,6 +62,9 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
     saveToApprove: PropTypes.func,
     saveToApproving: PropTypes.bool,
+    loadingTagContent: PropTypes.bool,
+    getTagContent: PropTypes.func,
+    tagContent: PropTypes.object,
   };
 
   constructor(props) {
@@ -43,8 +73,9 @@ class FormModal extends PureComponent {
     const { remark = '' } = rowData || {};
     this.state = {
       remark,
+      tagId: '',
     };
-    this.aceId = getUUID();
+    this.editorId = getUUID();
   }
 
   componentDidUpdate(preProps) {
@@ -79,8 +110,12 @@ class FormModal extends PureComponent {
     });
   };
 
-  handlerAceChannge = remark => {
-    this.setState({ remark });
+  handlerMdChannge = ({ text }) => {
+    this.setState({ remark: text });
+  };
+
+  renderHTML = text => {
+    return mdParser.render(text);
   };
 
   closeFormModal = () => {
@@ -93,42 +128,71 @@ class FormModal extends PureComponent {
 
   renderFooterBtn = () => {
     const { saving, saveToApproving, onlyView, dataLoading } = this.props;
-    if (onlyView) {
+    if (!onlyView) {
       return (
-        <Button type="primary" onClick={this.closeFormModal}>
-          关闭
-        </Button>
+        <>
+          <Button disabled={saving || saveToApproving} onClick={this.closeFormModal}>
+            取消
+          </Button>
+          <Button
+            disabled={saveToApproving || dataLoading}
+            loading={saving}
+            onClick={() => this.handlerFormSubmit()}
+          >
+            仅保存
+          </Button>
+          <Button
+            disabled={saving || dataLoading}
+            loading={saveToApproving}
+            onClick={() => this.handlerFormSubmit(true)}
+            type="primary"
+          >
+            保存并提交
+          </Button>
+        </>
       );
+    }
+  };
+
+  handlerTagContent = () => {
+    const { tagId } = this.state;
+    const { tagContent, getTagContent } = this.props;
+    if (
+      tagId &&
+      !isEqual(get(tagContent, 'id'), tagId) &&
+      getTagContent &&
+      getTagContent instanceof Function
+    ) {
+      getTagContent(tagId);
+    }
+  };
+
+  renderTitle = () => {
+    const { rowData, onlyView } = this.props;
+    let title = rowData ? '修改' : '新建';
+    if (onlyView) {
+      title = '显示';
     }
     return (
       <>
-        <Button disabled={saving || saveToApproving} onClick={this.closeFormModal}>
-          取消
-        </Button>
-        <Button
-          disabled={saveToApproving || dataLoading}
-          loading={saving}
-          onClick={() => this.handlerFormSubmit()}
-        >
-          仅保存
-        </Button>
-        <Button
-          disabled={saving || dataLoading}
-          loading={saveToApproving}
-          onClick={() => this.handlerFormSubmit(true)}
-          type="primary"
-        >
-          保存并提交
-        </Button>
+        <ExtIcon onClick={this.closeFormModal} type="left" className="trigger-back" antd />
+        <BannerTitle title={title} subTitle="发版申请" />
       </>
     );
   };
 
   render() {
-    const { remark } = this.state;
-    const { form, rowData, showModal, onlyView, dataLoading } = this.props;
+    const { remark, tagId } = this.state;
+    const {
+      form,
+      rowData,
+      showModal,
+      onlyView,
+      dataLoading,
+      loadingTagContent,
+      tagContent,
+    } = this.props;
     const { getFieldDecorator } = form;
-    const title = rowData ? '修改发版申请' : '新建发版申请';
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
     getFieldDecorator('gitId', { initialValue: get(rowData, 'gitId') });
     getFieldDecorator('moduleId', { initialValue: get(rowData, 'moduleId') });
@@ -146,6 +210,7 @@ class FormModal extends PureComponent {
       placeholder: '选择要发版的应用',
       afterSelect: () => {
         form.setFieldsValue({ moduleName: '', gitId: '', refTag: '' });
+        this.setState({ tagId: '' }, this.handlerTagContent);
       },
       remotePaging: true,
       field: ['appId'],
@@ -171,6 +236,7 @@ class FormModal extends PureComponent {
       },
       afterSelect: () => {
         form.setFieldsValue({ refTag: '' });
+        this.setState({ tagId: '' }, this.handlerTagContent);
       },
       remotePaging: true,
       field: ['gitId', 'moduleCode', 'moduleId'],
@@ -194,119 +260,151 @@ class FormModal extends PureComponent {
           { fieldName: 'moduleId', operator: 'EQ', value: form.getFieldValue('moduleId') || '' },
         ],
       },
+      afterSelect: item => {
+        this.setState({ tagId: get(item, 'id') }, this.handlerTagContent);
+      },
       placeholder: '请先选择要发版的模块',
       reader: {
         name: 'tagName',
         description: 'branch',
       },
     };
-    const modalTitle = onlyView || dataLoading ? '发版详情' : title;
     return (
       <ExtModal
         maskClosable={false}
         centered
         destroyOnClose
-        width={860}
         visible={showModal}
         onCancel={this.closeFormModal}
         wrapClassName={styles['form-box']}
         bodyStyle={{ paddingBottom: 0 }}
-        title={modalTitle}
-        footer={this.renderFooterBtn()}
+        title={this.renderTitle()}
+        footer={null}
       >
         {dataLoading ? (
           <ListLoader />
         ) : (
-          <Row gutter={8}>
-            <Col span={10}>
-              <div className="item-box">
-                <div className="form-body">
-                  <Form {...formItemLayout} layout="horizontal">
-                    <FormItem label="发版主题">
-                      {getFieldDecorator('name', {
-                        initialValue: get(rowData, 'name'),
-                        rules: [
-                          {
-                            required: true,
-                            message: '发版主题不能为空',
+          <Layout className="auto-height">
+            <Sider width={300} className="auto-height form-box" theme="light">
+              <ScrollBar>
+                <Form {...formItemLayout} layout="horizontal">
+                  <FormItem label="发版主题">
+                    {getFieldDecorator('name', {
+                      initialValue: get(rowData, 'name'),
+                      rules: [
+                        {
+                          required: true,
+                          message: '发版主题不能为空',
+                        },
+                      ],
+                    })(
+                      <Input autoComplete="off" placeholder="请输入发版主题" disabled={onlyView} />,
+                    )}
+                  </FormItem>
+                  <FormItem label="发版应用">
+                    {getFieldDecorator('appName', {
+                      initialValue: get(rowData, 'appName'),
+                      rules: [
+                        {
+                          required: true,
+                          message: '发版应用不能为空',
+                        },
+                      ],
+                    })(<ComboList {...appProps} disabled={onlyView} />)}
+                  </FormItem>
+                  <FormItem label="模块名称">
+                    {getFieldDecorator('moduleName', {
+                      initialValue: get(rowData, 'moduleName'),
+                      rules: [
+                        {
+                          required: true,
+                          message: '模块名称不能为空',
+                        },
+                      ],
+                    })(<ComboList {...moduleProps} disabled={onlyView} />)}
+                  </FormItem>
+                  <FormItem label="标签名称">
+                    {getFieldDecorator('refTag', {
+                      initialValue: get(rowData, 'refTag'),
+                      rules: [
+                        {
+                          required: true,
+                          message: '标签名称不能为空',
+                        },
+                      ],
+                    })(<ComboList {...tagProps} disabled={onlyView} />)}
+                  </FormItem>
+                </Form>
+              </ScrollBar>
+            </Sider>
+            <Content className="auto-height main-content" style={{ paddingLeft: 8 }}>
+              <Row className="auto-height" gutter={4}>
+                <Col span={tagId ? 12 : 0} className="auto-height tag-content-box">
+                  <QueueAnim
+                    className="auto-height"
+                    key="tag-content-anim"
+                    delay={200}
+                    animConfig={[
+                      { opacity: [1, 0], scale: [1, 0] },
+                      { opacity: [1, 0], scale: [1, 0] },
+                    ]}
+                  >
+                    {tagId ? (
+                      <Card
+                        bordered={false}
+                        key="tag-content"
+                        className="tag-content"
+                        title={`标签描述${tagId ? `(${get(tagContent, 'tagName')})` : ''}`}
+                      >
+                        <MdEditorView
+                          key="tag-content-md"
+                          expanding={loadingTagContent}
+                          message={
+                            get(tagContent, 'message') || '<span style="color:#999">暂无数据</span>'
+                          }
+                        />
+                      </Card>
+                    ) : null}
+                  </QueueAnim>
+                </Col>
+                <Col span={tagId ? 12 : 24} className="auto-height">
+                  <QueueAnim
+                    className="auto-height"
+                    key="mk-content-anim"
+                    forcedReplay={!!tagId}
+                    appear={false}
+                    animConfig={[{ translateX: [0, 500] }, { translateX: [0, -500] }]}
+                  >
+                    <Card
+                      key="mk-content-box"
+                      bordered={false}
+                      title="发版说明(Markdown)"
+                      extra={this.renderFooterBtn()}
+                    >
+                      <MdEditor
+                        key="mk-content"
+                        ref={ref => (this.mdEditor = ref || undefined)}
+                        style={{ height: '100%', width: '100%' }}
+                        name={this.editorId}
+                        value={remark || '<span style="color:#999">暂无数据</span>'}
+                        placeholder="请输入发版说明(例如：部署要求,脚本内容)"
+                        renderHTML={text => this.renderHTML(text)}
+                        onChange={this.handlerMdChannge}
+                        config={{
+                          view: {
+                            menu: !onlyView,
+                            md: !onlyView,
+                            html: onlyView,
                           },
-                        ],
-                      })(
-                        <Input
-                          autoComplete="off"
-                          placeholder="请输入发版主题"
-                          disabled={onlyView}
-                        />,
-                      )}
-                    </FormItem>
-                    <FormItem label="发版应用">
-                      {getFieldDecorator('appName', {
-                        initialValue: get(rowData, 'appName'),
-                        rules: [
-                          {
-                            required: true,
-                            message: '发版应用不能为空',
-                          },
-                        ],
-                      })(<ComboList {...appProps} disabled={onlyView} />)}
-                    </FormItem>
-                    <FormItem label="模块名称">
-                      {getFieldDecorator('moduleName', {
-                        initialValue: get(rowData, 'moduleName'),
-                        rules: [
-                          {
-                            required: true,
-                            message: '模块名称不能为空',
-                          },
-                        ],
-                      })(<ComboList {...moduleProps} disabled={onlyView} />)}
-                    </FormItem>
-                    <FormItem label="标签名称">
-                      {getFieldDecorator('refTag', {
-                        initialValue: get(rowData, 'refTag'),
-                        rules: [
-                          {
-                            required: true,
-                            message: '标签名称不能为空',
-                          },
-                        ],
-                      })(<ComboList {...tagProps} disabled={onlyView} />)}
-                    </FormItem>
-                  </Form>
-                </div>
-              </div>
-            </Col>
-            <Col span={14}>
-              <div className="item-box">
-                <div className="item-label">发版说明(支持Markdown)</div>
-                <div className="item-body">
-                  <AceEditor
-                    style={{ marginBottom: 24 }}
-                    mode="markdown"
-                    theme="textmate"
-                    placeholder="请输入发版说明(例如：部署要求,脚本内容)"
-                    name={this.aceId}
-                    fontSize={14}
-                    onChange={this.handlerAceChannge}
-                    showPrintMargin={false}
-                    showGutter={false}
-                    readOnly={onlyView}
-                    highlightActiveLine
-                    width="100%"
-                    height="526px"
-                    value={remark}
-                    setOptions={{
-                      enableBasicAutocompletion: true,
-                      enableLiveAutocompletion: true,
-                      enableSnippets: true,
-                      showLineNumbers: false,
-                      tabSize: 2,
-                    }}
-                  />
-                </div>
-              </div>
-            </Col>
-          </Row>
+                          canView: { fullScreen: true, hideMenu: false },
+                        }}
+                      />
+                    </Card>
+                  </QueueAnim>
+                </Col>
+              </Row>
+            </Content>
+          </Layout>
         )}
       </ExtModal>
     );
