@@ -437,7 +437,7 @@ class FormModal extends PureComponent {
                         ref={ref => (this.mdEditor = ref || undefined)}
                         style={{ height: '100%', width: '100%' }}
                         name={this.editorId}
-                        value={remark || '<span style="color:#999">暂无数据</span>'}
+                        value={remark || ''}
                         placeholder="请输入部署说明(例如：部署要求,脚本内容)"
                         renderHTML={text => this.renderHTML(text)}
                         onChange={this.handlerMdChannge}
