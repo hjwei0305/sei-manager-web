@@ -70,21 +70,39 @@ class FormModal extends PureComponent {
   constructor(props) {
     super(props);
     const { rowData } = props;
-    const { remark = '' } = rowData || {};
+    const remark = get(rowData, 'remark') || '';
+    const tagId = get(rowData, 'refTagId') || '';
     this.state = {
       remark,
-      tagId: '',
+      tagId,
     };
     this.editorId = getUUID();
   }
 
+  componentDidMount() {
+    const { tagId } = this.state;
+    const { getTagContent } = this.props;
+    if (tagId && getTagContent && getTagContent instanceof Function) {
+      getTagContent(tagId);
+    }
+  }
+
   componentDidUpdate(preProps) {
-    const { rowData } = this.props;
+    const { rowData, getTagContent } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
-      const { remark = '' } = rowData || {};
-      this.setState({
-        remark,
-      });
+      const remark = get(rowData, 'remark') || '';
+      const tagId = get(rowData, 'refTagId') || '';
+      this.setState(
+        {
+          remark,
+          tagId,
+        },
+        () => {
+          if (tagId && getTagContent && getTagContent instanceof Function) {
+            getTagContent(tagId);
+          }
+        },
+      );
     }
   }
 
@@ -197,6 +215,7 @@ class FormModal extends PureComponent {
     getFieldDecorator('gitId', { initialValue: get(rowData, 'gitId') });
     getFieldDecorator('moduleId', { initialValue: get(rowData, 'moduleId') });
     getFieldDecorator('moduleCode', { initialValue: get(rowData, 'moduleCode') });
+    getFieldDecorator('refTagId', { initialValue: get(rowData, 'refTagId') });
     const appProps = {
       form,
       name: 'appName',
@@ -209,7 +228,7 @@ class FormModal extends PureComponent {
       },
       placeholder: '选择要发版的应用',
       afterSelect: () => {
-        form.setFieldsValue({ moduleName: '', gitId: '', refTag: '' });
+        form.setFieldsValue({ moduleName: '', gitId: '', refTag: '', refTagId: '' });
         this.setState({ tagId: '' }, this.handlerTagContent);
       },
       remotePaging: true,
@@ -235,7 +254,7 @@ class FormModal extends PureComponent {
         ],
       },
       afterSelect: () => {
-        form.setFieldsValue({ refTag: '' });
+        form.setFieldsValue({ refTag: '', refTagId: '' });
         this.setState({ tagId: '' }, this.handlerTagContent);
       },
       remotePaging: true,
@@ -253,6 +272,7 @@ class FormModal extends PureComponent {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
       },
+      field: ['refTagId'],
       remotePaging: true,
       searchProperties: ['tagName'],
       cascadeParams: {
@@ -267,6 +287,7 @@ class FormModal extends PureComponent {
       reader: {
         name: 'tagName',
         description: 'branch',
+        field: ['id'],
       },
     };
     return (
@@ -339,41 +360,16 @@ class FormModal extends PureComponent {
             </Sider>
             <Content className="auto-height main-content" style={{ paddingLeft: 8 }}>
               <Row className="auto-height" gutter={4}>
-                <Col span={tagId ? 12 : 0} className="auto-height tag-content-box">
-                  <QueueAnim
-                    className="auto-height"
-                    key="tag-content-anim"
-                    delay={200}
-                    animConfig={[
-                      { opacity: [1, 0], scale: [1, 0] },
-                      { opacity: [1, 0], scale: [1, 0] },
-                    ]}
-                  >
-                    {tagId ? (
-                      <Card
-                        bordered={false}
-                        key="tag-content"
-                        className="tag-content"
-                        title={`标签描述${tagId ? `(${get(tagContent, 'tagName')})` : ''}`}
-                      >
-                        <MdEditorView
-                          key="tag-content-md"
-                          expanding={loadingTagContent}
-                          message={
-                            get(tagContent, 'message') || '<span style="color:#999">暂无数据</span>'
-                          }
-                        />
-                      </Card>
-                    ) : null}
-                  </QueueAnim>
-                </Col>
                 <Col span={tagId ? 12 : 24} className="auto-height">
                   <QueueAnim
                     className="auto-height"
                     key="mk-content-anim"
                     forcedReplay={!!tagId}
                     appear={false}
-                    animConfig={[{ translateX: [0, 500] }, { translateX: [0, -500] }]}
+                    animConfig={[
+                      { opacity: [1, 0], translateX: [0, -200] },
+                      { opacity: [1, 0], translateX: [0, 200] },
+                    ]}
                   >
                     <Card
                       key="mk-content-box"
@@ -400,6 +396,34 @@ class FormModal extends PureComponent {
                         }}
                       />
                     </Card>
+                  </QueueAnim>
+                </Col>
+                <Col span={tagId ? 12 : 0} className="auto-height tag-content-box">
+                  <QueueAnim
+                    className="auto-height"
+                    key="tag-content-anim"
+                    delay={200}
+                    animConfig={[
+                      { opacity: [1, 0], scale: [1, 0] },
+                      { opacity: [1, 0], scale: [1, 0] },
+                    ]}
+                  >
+                    {tagId ? (
+                      <Card
+                        bordered={false}
+                        key="tag-content"
+                        className="tag-content"
+                        title={`标签描述${tagId ? `(${get(tagContent, 'tagName')})` : ''}`}
+                      >
+                        <MdEditorView
+                          key="tag-content-md"
+                          expanding={loadingTagContent}
+                          message={
+                            get(tagContent, 'message') || '<span style="color:#999">暂无数据</span>'
+                          }
+                        />
+                      </Card>
+                    ) : null}
                   </QueueAnim>
                 </Col>
               </Row>
