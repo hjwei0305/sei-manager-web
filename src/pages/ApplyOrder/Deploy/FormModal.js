@@ -418,8 +418,8 @@ class FormModal extends PureComponent {
                     forcedReplay={!!tagId}
                     appear={false}
                     animConfig={[
-                      { opacity: [1, 0], translateX: [0, -200] },
-                      { opacity: [1, 0], translateX: [0, 200] },
+                      { opacity: [1, 0], scaleX: [1, 0.5], translateX: [0, -500] },
+                      { opacity: [1, 0], scaleX: [1, 0.5], translateX: [0, 500] },
                     ]}
                   >
                     <Card
@@ -455,8 +455,8 @@ class FormModal extends PureComponent {
                     key="tag-content-anim"
                     delay={200}
                     animConfig={[
-                      { opacity: [1, 0], scale: [1, 0] },
-                      { opacity: [1, 0], scale: [1, 0] },
+                      { opacity: [1, 0], scale: [1, 1.5] },
+                      { opacity: [1, 0], scale: [1, 1.5] },
                     ]}
                   >
                     {tagId ? (
