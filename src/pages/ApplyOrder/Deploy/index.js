@@ -463,19 +463,22 @@ class ApplyDeploy extends PureComponent {
     return `应用(${appName})`;
   };
 
-  getTagContent = tagId => {
+  getTag = (tagId, callback) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'applyDeploy/getTag',
       payload: {
         id: tagId,
       },
+      callback: data => {
+        callback(data);
+      },
     });
   };
 
   render() {
     const { applyDeploy, loading } = this.props;
-    const { showModal, rowData, onlyView, flowNodeData, tagContent } = applyDeploy;
+    const { showModal, rowData, onlyView, flowNodeData } = applyDeploy;
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
@@ -560,9 +563,7 @@ class ApplyDeploy extends PureComponent {
       saving: loading.effects['applyDeploy/createSave'] || loading.effects['applyDeploy/editSave'],
       saveToApprove: this.saveToApprove,
       saveToApproving: loading.effects['applyDeploy/saveToApprove'],
-      tagContent,
-      getTagContent: this.getTagContent,
-      loadingTagContent: loading.effects['applyDeploy/getTag'],
+      getTag: this.getTag,
     };
     const toolBarProps = {
       left: (

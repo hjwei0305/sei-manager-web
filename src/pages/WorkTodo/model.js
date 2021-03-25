@@ -8,6 +8,7 @@ import {
   getAppModuleDetail,
   getReleaseDetail,
   getDeployDetail,
+  getTag,
 } from './service';
 
 const { APPLY_ORDER_TYPE } = constants;
@@ -151,6 +152,17 @@ export default modelExtend(model, {
             showDeployDetail,
           },
         });
+      } else {
+        message.error(re.message);
+      }
+    },
+    *getTag({ payload, callback }, { call }) {
+      const re = yield call(getTag, payload);
+      message.destroy();
+      if (re.success) {
+        if (callback && callback instanceof Function) {
+          callback(re.data);
+        }
       } else {
         message.error(re.message);
       }

@@ -16,7 +16,6 @@ export default modelExtend(model, {
     showModal: false,
     onlyView: false,
     filter: {},
-    tagContent: null,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -161,18 +160,12 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *getTag({ payload, callback }, { call, put }) {
+    *getTag({ payload, callback }, { call }) {
       const re = yield call(getTag, payload);
       message.destroy();
       if (re.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            tagContent: re.data,
-          },
-        });
         if (callback && callback instanceof Function) {
-          callback(re);
+          callback(re.data);
         }
       } else {
         message.error(re.message);

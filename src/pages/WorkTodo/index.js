@@ -235,6 +235,19 @@ class WorkTodo extends PureComponent {
     }
   };
 
+  getTag = (tagId, callback) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'taskWorkTodo/getTag',
+      payload: {
+        id: tagId,
+      },
+      callback: data => {
+        callback(data);
+      },
+    });
+  };
+
   render() {
     const { taskWorkTodo, loading } = this.props;
     const {
@@ -375,6 +388,7 @@ class WorkTodo extends PureComponent {
     const detailProps = {
       closeFormModal: this.closeDetail,
       rowData: detailData,
+      getTag: this.getTag,
     };
     return (
       <div className={cls(styles['container-box'])}>

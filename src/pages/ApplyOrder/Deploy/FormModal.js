@@ -11,8 +11,9 @@ import MdEditor, { Plugins } from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
 import 'react-markdown-editor-lite/lib/index.css';
-import { MdEditorView, MdEditorViewSwitch } from '@/components';
+import { MdEditorViewSwitch } from '@/components';
 import { constants } from '../../../utils';
+import TagList from './TagList';
 import styles from './FormModal.less';
 
 MdEditor.unuse(Plugins.ModeToggle);
@@ -62,9 +63,7 @@ class FormModal extends PureComponent {
     saving: PropTypes.bool,
     saveToApprove: PropTypes.func,
     saveToApproving: PropTypes.bool,
-    loadingTagContent: PropTypes.bool,
-    getTagContent: PropTypes.func,
-    tagContent: PropTypes.object,
+    getTag: PropTypes.func,
   };
 
   constructor(props) {
@@ -72,37 +71,34 @@ class FormModal extends PureComponent {
     const { rowData } = props;
     const remark = get(rowData, 'remark') || '';
     const tagId = get(rowData, 'refTagId') || '';
+    const currentTagName = get(rowData, 'refTag') || '';
+    const currentEnvCode = get(rowData, 'envCode') || '';
+    const currentModuleId = get(rowData, 'moduleId') || '';
     this.state = {
       remark,
       tagId,
+      currentEnvCode,
+      currentModuleId,
+      currentTagName,
     };
     this.editorId = getUUID();
   }
 
-  componentDidMount() {
-    const { tagId } = this.state;
-    const { getTagContent } = this.props;
-    if (tagId && getTagContent && getTagContent instanceof Function) {
-      getTagContent(tagId);
-    }
-  }
-
   componentDidUpdate(preProps) {
-    const { rowData, getTagContent } = this.props;
+    const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
       const remark = get(rowData, 'remark') || '';
       const tagId = get(rowData, 'refTagId') || '';
-      this.setState(
-        {
-          remark,
-          tagId,
-        },
-        () => {
-          if (tagId && getTagContent && getTagContent instanceof Function) {
-            getTagContent(tagId);
-          }
-        },
-      );
+      const currentTagName = get(rowData, 'refTag') || '';
+      const currentEnvCode = get(rowData, 'envCode') || '';
+      const currentModuleId = get(rowData, 'moduleId') || '';
+      this.setState({
+        remark,
+        tagId,
+        currentEnvCode,
+        currentModuleId,
+        currentTagName,
+      });
     }
   }
 
@@ -116,10 +112,12 @@ class FormModal extends PureComponent {
       const params = {};
       Object.assign(params, rowData || {});
       Object.assign(params, formData);
-      Object.assign(params, {
-        remark,
-        expCompleteTime: moment(params.expCompleteTime).format('YYYY-MM-DD HH:mm:00'),
-      });
+      Object.assign(params, { remark });
+      if (params.expCompleteTime) {
+        Object.assign(params, {
+          expCompleteTime: moment(params.expCompleteTime).format('YYYY-MM-DD HH:mm:00'),
+        });
+      }
       if (approve) {
         saveToApprove(params);
       } else {
@@ -176,19 +174,6 @@ class FormModal extends PureComponent {
     }
   };
 
-  handlerTagContent = () => {
-    const { tagId } = this.state;
-    const { tagContent, getTagContent } = this.props;
-    if (
-      tagId &&
-      !isEqual(get(tagContent, 'id'), tagId) &&
-      getTagContent &&
-      getTagContent instanceof Function
-    ) {
-      getTagContent(tagId);
-    }
-  };
-
   renderTitle = () => {
     const { rowData, onlyView } = this.props;
     let title = rowData ? '修改' : '新建';
@@ -204,16 +189,8 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { remark, tagId } = this.state;
-    const {
-      form,
-      rowData,
-      showModal,
-      onlyView,
-      dataLoading,
-      loadingTagContent,
-      tagContent,
-    } = this.props;
+    const { remark, tagId, currentEnvCode, currentModuleId, currentTagName } = this.state;
+    const { form, rowData, showModal, onlyView, dataLoading, getTag } = this.props;
     const { getFieldDecorator } = form;
     getFieldDecorator('envCode', { initialValue: get(rowData, 'envCode') });
     getFieldDecorator('appId', { initialValue: get(rowData, 'appId') });
@@ -231,6 +208,9 @@ class FormModal extends PureComponent {
       showSearch: false,
       pagination: false,
       field: ['envCode'],
+      afterSelect: item => {
+        this.setState({ currentEnvCode: item.code });
+      },
       reader: {
         name: 'name',
         description: 'remark',
@@ -250,7 +230,7 @@ class FormModal extends PureComponent {
       placeholder: '选择要部署的应用',
       afterSelect: () => {
         form.setFieldsValue({ moduleName: '', gitId: '', refTag: '', refTagId: '' });
-        this.setState({ tagId: '' }, this.handlerTagContent);
+        this.setState({ tagId: '', currentModuleId: '', currentTagName: '' });
       },
       remotePaging: true,
       field: ['appId'],
@@ -274,9 +254,9 @@ class FormModal extends PureComponent {
           { fieldName: 'appId', operator: 'EQ', value: form.getFieldValue('appId') || null },
         ],
       },
-      afterSelect: () => {
+      afterSelect: item => {
         form.setFieldsValue({ refTag: '', refTagId: '' });
-        this.setState({ tagId: '' }, this.handlerTagContent);
+        this.setState({ currentModuleId: item.id, tagId: '', currentTagName: '' });
       },
       remotePaging: true,
       field: ['gitId', 'moduleCode', 'moduleId'],
@@ -302,7 +282,7 @@ class FormModal extends PureComponent {
         ],
       },
       afterSelect: item => {
-        this.setState({ tagId: get(item, 'id') }, this.handlerTagContent);
+        this.setState({ tagId: get(item, 'id'), currentTagName: get(item, 'tagName') });
       },
       placeholder: '请先选择要发版的模块',
       reader: {
@@ -312,6 +292,12 @@ class FormModal extends PureComponent {
       },
     };
     const expCompleteTime = get(rowData, 'expCompleteTime');
+    const tagListPros = {
+      currentEnvCode,
+      currentModuleId,
+      currentTagName,
+      getTag,
+    };
     return (
       <ExtModal
         maskClosable={false}
@@ -391,7 +377,7 @@ class FormModal extends PureComponent {
                       initialValue: expCompleteTime ? moment(expCompleteTime) : null,
                       rules: [
                         {
-                          required: true,
+                          required: false,
                           message: '期望完成时间不能为空',
                         },
                       ],
@@ -464,15 +450,9 @@ class FormModal extends PureComponent {
                         bordered={false}
                         key="tag-content"
                         className="tag-content"
-                        title={`标签描述${tagId ? `(${get(tagContent, 'tagName')})` : ''}`}
+                        title="标签列表"
                       >
-                        <MdEditorView
-                          key="tag-content-md"
-                          expanding={loadingTagContent}
-                          message={
-                            get(tagContent, 'message') || '<span style="color:#999">暂无数据</span>'
-                          }
-                        />
+                        <TagList {...tagListPros} />
                       </Card>
                     ) : null}
                   </QueueAnim>

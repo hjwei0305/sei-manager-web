@@ -2,9 +2,11 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Form, Input, DatePicker, Layout, Card } from 'antd';
+import QueueAnim from 'rc-queue-anim';
+import { Form, Input, DatePicker, Layout, Row, Col, Card } from 'antd';
 import { ExtModal, ExtIcon, BannerTitle, ScrollBar } from 'suid';
 import { MdEditorView } from '@/components';
+import TagList from './TagList';
 import styles from './index.less';
 
 const { Sider, Content } = Layout;
@@ -24,6 +26,7 @@ class DeployDetail extends PureComponent {
     showModal: PropTypes.bool,
     closeFormModal: PropTypes.func,
     rowData: PropTypes.object,
+    getTag: PropTypes.func,
   };
 
   renderTitle = () => {
@@ -37,9 +40,16 @@ class DeployDetail extends PureComponent {
   };
 
   render() {
-    const { form, rowData, showModal, closeFormModal } = this.props;
+    const { form, rowData, showModal, closeFormModal, getTag } = this.props;
     const { getFieldDecorator } = form;
     const expCompleteTime = get(rowData, 'expCompleteTime');
+    const tagId = get(rowData, 'refTagId');
+    const tagListPros = {
+      currentEnvCode: get(rowData, 'envCode'),
+      currentModuleId: get(rowData, 'moduleId'),
+      currentTagName: get(rowData, 'refTag'),
+      getTag,
+    };
     return (
       <ExtModal
         centered
@@ -100,8 +110,8 @@ class DeployDetail extends PureComponent {
                   })(<Input disabled />)}
                 </FormItem>
                 <FormItem label="标签名称">
-                  {getFieldDecorator('tagName', {
-                    initialValue: get(rowData, 'tagName'),
+                  {getFieldDecorator('refTag', {
+                    initialValue: get(rowData, 'refTag'),
                     rules: [
                       {
                         required: true,
@@ -133,12 +143,49 @@ class DeployDetail extends PureComponent {
             </ScrollBar>
           </Sider>
           <Content className="auto-height main-content" style={{ paddingLeft: 8 }}>
-            <Card bordered={false} key="tag-content" className="tag-content" title="部署说明">
-              <MdEditorView
-                key="tag-content-md"
-                message={get(rowData, 'remark') || '<span style="color:#999">暂无数据</span>'}
-              />
-            </Card>
+            <Row className="auto-height" gutter={4}>
+              <Col span={tagId ? 12 : 24} className="auto-height">
+                <QueueAnim
+                  className="auto-height"
+                  key="mk-content-anim"
+                  forcedReplay={!!tagId}
+                  appear={false}
+                  animConfig={[
+                    { opacity: [1, 0], scaleX: [1, 0.5], translateX: [0, -500] },
+                    { opacity: [1, 0], scaleX: [1, 0.5], translateX: [0, 500] },
+                  ]}
+                >
+                  <Card bordered={false} key="tag-content" className="tag-content" title="部署说明">
+                    <MdEditorView
+                      key="tag-content-md"
+                      message={get(rowData, 'remark') || '<span style="color:#999">暂无数据</span>'}
+                    />
+                  </Card>
+                </QueueAnim>
+              </Col>
+              <Col span={tagId ? 12 : 0} className="auto-height tag-content-box">
+                <QueueAnim
+                  className="auto-height"
+                  key="tag-content-anim"
+                  delay={200}
+                  animConfig={[
+                    { opacity: [1, 0], scale: [1, 1.5] },
+                    { opacity: [1, 0], scale: [1, 1.5] },
+                  ]}
+                >
+                  {tagId ? (
+                    <Card
+                      bordered={false}
+                      key="tag-content"
+                      className="tag-content"
+                      title="标签列表"
+                    >
+                      <TagList {...tagListPros} />
+                    </Card>
+                  ) : null}
+                </QueueAnim>
+              </Col>
+            </Row>
           </Content>
         </Layout>
       </ExtModal>
