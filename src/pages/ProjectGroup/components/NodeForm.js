@@ -156,6 +156,7 @@ class NodeForm extends PureComponent {
         url: `${SERVER_PATH}/sei-manager/user/findByPage`,
       },
       placeholder: '选择项目管理员',
+      searchProperties: ['nickname', 'account'],
       reader: {
         name: 'nickname',
         description: 'account',

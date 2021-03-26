@@ -167,6 +167,7 @@ class FeatureRoleAssigned extends PureComponent {
       checkbox: true,
       selectedKeys,
       rowKey: 'account',
+      searchProperties: ['userName', 'account'],
       itemField: {
         title: item => item.userName,
         description: item => item.account,
