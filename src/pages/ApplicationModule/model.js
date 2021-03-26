@@ -1,8 +1,8 @@
-import get from 'lodash.get';
+import { get, lowerCase } from 'lodash';
 import { utils, message } from 'suid';
 import { removeModuleUser, addModuleUser, getVersionDetail } from './service';
 
-const { dvaModel } = utils;
+const { dvaModel, pathMatchRegexp } = utils;
 const { modelExtend, model } = dvaModel;
 
 export default modelExtend(model, {
@@ -16,8 +16,39 @@ export default modelExtend(model, {
     showVersionHistory: false,
     logData: null,
     selectVersion: null,
+    devBaseUrl: '',
+    showApiDoc: false,
+  },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+        if (pathMatchRegexp('/integration/applicationModule', location.pathname)) {
+          dispatch({
+            type: 'initEnv',
+          });
+        }
+      });
+    },
   },
   effects: {
+    *initEnv(_, { select, put }) {
+      const { envData } = yield select(sel => sel.menu);
+      let devBaseUrl = '';
+      if (envData && envData.length > 0) {
+        const ds = envData.filter(
+          e => lowerCase(e.code).indexOf('dev') >= 0 || e.name.indexOf('开发') >= 0,
+        );
+        if (ds.length > 0) {
+          devBaseUrl = get(ds[0], 'gatewayServer');
+        }
+      }
+      yield put({
+        type: 'updateState',
+        payload: {
+          devBaseUrl,
+        },
+      });
+    },
     *addModuleUser({ payload, callback }, { call }) {
       const re = yield call(addModuleUser, payload);
       message.destroy();

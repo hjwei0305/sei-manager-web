@@ -1,0 +1,42 @@
+@import '../../themes/vars.less';
+.api-box {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  :global {
+    .ant-modal {
+      padding: 0;
+    }
+    .ant-modal,
+    .ant-modal-content {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .ant-modal-title {
+      padding-left: 42px;
+    }
+    .ant-modal-body {
+      height: calc(100% - 0px);
+      padding: 0;
+      background-color: @page-background-color;
+    }
+    .trigger-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      font-weight: normal;
+      line-height: 58px;
+      cursor: pointer;
+      transition: all ease-in 0.2s;
+      &:hover {
+        color: @primary-color;
+        background-color: fade(@black, 2%);
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Button, Input } from 'antd';
+import { Button, Input, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard, message, ExtIcon, PageLoader, AuthAction } from 'suid';
 import { constants } from '@/utils';
@@ -11,6 +11,7 @@ import ModuleUser from './ModuleUser';
 import styles from './index.less';
 
 const VersionHistory = React.lazy(() => import('./VersionHistory'));
+const ApiDoc = React.lazy(() => import('./ApiDoc'));
 
 const { SERVER_PATH } = constants;
 const { Search } = Input;
@@ -47,6 +48,7 @@ class ApplicationModule extends Component {
         showVersionHistory: false,
         logData: null,
         selectVersion: null,
+        showApiDoc: false,
       },
     });
   }
@@ -288,6 +290,18 @@ class ApplicationModule extends Component {
         showVersionHistory: false,
         logData: null,
         selectVersion: null,
+        showApiDoc: false,
+      },
+    });
+  };
+
+  showApiDocModal = currentModule => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        currentModule,
+        showApiDoc: true,
       },
     });
   };
@@ -356,13 +370,15 @@ class ApplicationModule extends Component {
       showVersionHistory,
       logData,
       selectVersion,
+      devBaseUrl,
+      showApiDoc,
     } = applicationModule;
     const logLoading = loading.effects['applicationModule/getVersionDetail'];
     const columns = [
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 100,
+        width: 120,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
@@ -384,6 +400,12 @@ class ApplicationModule extends Component {
               antd
               tooltip={{ title: '版本历史' }}
             />
+            <ExtIcon
+              onClick={() => this.showApiDocModal(record)}
+              type="api"
+              antd
+              tooltip={{ title: 'ApiDoc' }}
+            />
           </span>
         ),
       },
@@ -397,8 +419,24 @@ class ApplicationModule extends Component {
       {
         title: '模块代码',
         dataIndex: 'code',
-        width: 180,
+        width: 220,
         required: true,
+        render: (t, r) => {
+          let color = 'blue';
+          let desc = '前端';
+          if (r.nameSpace) {
+            color = 'cyan';
+            desc = '后端';
+          }
+          return (
+            <>
+              <Tag color={color} style={{ marginRight: 4 }}>
+                {desc}
+              </Tag>
+              {t}
+            </>
+          );
+        },
         ...this.getColumnSearchProps('code'),
       },
       {
@@ -491,12 +529,20 @@ class ApplicationModule extends Component {
       logData,
       closeFormModal: this.closeModal,
     };
+    const apiDocProps = {
+      currentModule,
+      closeFormModal: this.closeModal,
+      devBaseUrl,
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
         <ModuleUser {...moduleUserProps} />
         <Suspense fallback={<PageLoader />}>
           <VersionHistory showModal={showVersionHistory} {...detailProps} />
+        </Suspense>
+        <Suspense fallback={<PageLoader />}>
+          <ApiDoc showModal={showApiDoc} {...apiDocProps} />
         </Suspense>
       </div>
     );
