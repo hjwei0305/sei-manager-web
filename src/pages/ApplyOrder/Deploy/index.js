@@ -540,10 +540,10 @@ class ApplyDeploy extends PureComponent {
       },
       {
         title: '标签',
-        dataIndex: 'tagName',
+        dataIndex: 'refTag',
         width: 140,
         required: true,
-        ...this.getColumnSearchProps('tagName'),
+        ...this.getColumnSearchProps('refTag'),
       },
       {
         title: '期望完成时间',
