@@ -16,6 +16,18 @@
     }
     .ant-modal-title {
       padding-left: 42px;
+      .link-btn {
+        position: relative;
+        width: 24px;
+        height: 24px;
+        margin-left: 4px;
+        line-height: 28px;
+        border-radius: 4px;
+        transition: all 0.3s;
+        &:hover {
+          background-color: fade(@primary-color, 15%);
+        }
+      }
     }
     .ant-modal-body {
       height: calc(100% - 0px);

@@ -21,11 +21,30 @@ const ApiDoc = ({ devBaseUrl, closeFormModal, currentModule, showModal }) => {
 
   const docUrl = getDocUrl();
 
+  const openToBlank = () => {
+    window.open(docUrl);
+  };
+
   const renderTitle = () => {
     return (
       <>
         <ExtIcon onClick={closeFormModal} type="left" className="trigger-back" antd />
-        <BannerTitle title={`${get(currentModule, 'name')}`} subTitle={`API Doc (${docUrl})`} />
+        <BannerTitle
+          title={`${get(currentModule, 'name')}`}
+          subTitle={
+            <span>
+              API Doc (<em>{docUrl}</em>
+              <ExtIcon
+                className="link-btn"
+                tooltip={{ title: '独立窗口打开此文档', placement: 'bottom' }}
+                onClick={openToBlank}
+                type="link"
+                antd
+              />
+              )
+            </span>
+          }
+        />
       </>
     );
   };
