@@ -16,7 +16,7 @@ const FILTER_FIELDS = [
   { fieldName: 'appId', operator: 'EQ', value: null },
   { fieldName: 'name', operator: 'LK', value: null },
   { fieldName: 'moduleName', operator: 'LK', value: null },
-  { fieldName: 'tagName', operator: 'LK', value: null },
+  { fieldName: 'refTag', operator: 'LK', value: null },
 ];
 
 @connect(({ buildRecord, loading }) => ({ buildRecord, loading }))
@@ -353,10 +353,10 @@ class BuildRecord extends Component {
       },
       {
         title: '标签名称',
-        dataIndex: 'tagName',
+        dataIndex: 'refTag',
         width: 180,
         render: t => t || '-',
-        ...this.getColumnSearchProps('tagName'),
+        ...this.getColumnSearchProps('refTag'),
       },
       {
         title: '最后一次构建时间',
