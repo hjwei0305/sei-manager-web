@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, Layout, Card, Input, Empty, Avatar, Tag } from 'antd';
 import cls from 'classnames';
 import { get, split, trim } from 'lodash';
-import { ListCard, ExtIcon } from 'suid';
+import { ListCard, ExtIcon, BannerTitle } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import LogDetail from '../LogDetail';
 import LogLevel from '../LogLevel';
@@ -102,6 +102,16 @@ class TranceLog extends PureComponent {
     );
   };
 
+  renderTitle = () => {
+    const { onCloseModal } = this.props;
+    return (
+      <>
+        <ExtIcon onClick={onCloseModal} type="left" className="trigger-back" antd />
+        <BannerTitle title="链路列表" />
+      </>
+    );
+  };
+
   render() {
     const {
       loading,
@@ -115,7 +125,7 @@ class TranceLog extends PureComponent {
     } = this.props;
     const selectedKey = get(currentLog, 'id') || '';
     const tranceListProps = {
-      title: '链路列表',
+      title: this.renderTitle(),
       showSearch: false,
       selectedKeys: [selectedKey],
       dataSource: tranceData,
