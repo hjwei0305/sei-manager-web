@@ -4,13 +4,14 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Drawer, Popconfirm, Popover } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction, utils } from 'suid';
 import { UseStatus } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
 const { SERVER_PATH, USER_STATUS } = constants;
+const { authAction } = utils;
 
 @connect(({ configCommon, loading }) => ({ configCommon, loading }))
 class ConfigItem extends Component {
@@ -326,6 +327,9 @@ class ConfigItem extends Component {
         render: t => t || '-',
       },
     ];
+    if (!authAction([<span authCode="EDIT" />, <span authCode="DELETE" />])) {
+      columns.splice(0, 1);
+    }
     const enableConfigLoading = loading.effects['configCommon/enableConfig'];
     const disableConfigLoading = loading.effects['configCommon/disableConfig'];
     const syncConfigLoading = loading.effects['configCommon/syncConfigs'];
