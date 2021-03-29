@@ -156,13 +156,7 @@ class ConfigList extends Component {
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
-            <ExtIcon
-              className="edit"
-              onClick={() => this.edit(record)}
-              type="edit"
-              ignore="true"
-              antd
-            />
+            <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
             {this.renderDelBtn(record)}
           </span>
         ),

@@ -330,7 +330,6 @@ class ConfigItem extends Component {
                 className="edit"
                 onClick={() => this.edit(record)}
                 type="edit"
-                ignore="true"
                 antd
               />
             </AuthAction>

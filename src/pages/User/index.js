@@ -176,7 +176,6 @@ class UserList extends Component {
                 className="edit"
                 onClick={() => this.edit(record)}
                 type="edit"
-                ignore="true"
                 antd
               />,
             )}
@@ -223,7 +222,7 @@ class UserList extends Component {
       left: (
         <>
           {authAction(
-            <Button key={USER_BTN_KEY.CREATE} type="primary" onClick={this.add} ignore="true">
+            <Button key={USER_BTN_KEY.CREATE} type="primary" onClick={this.add}>
               <FormattedMessage id="global.add" defaultMessage="新建" />
             </Button>,
           )}

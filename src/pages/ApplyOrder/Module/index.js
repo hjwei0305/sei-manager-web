@@ -563,7 +563,7 @@ class Certificate extends PureComponent {
     const toolBarProps = {
       left: (
         <>
-          <Button type="primary" onClick={this.add} ignore="true">
+          <Button type="primary" onClick={this.add}>
             <FormattedMessage id="global.add" defaultMessage="新建" />
           </Button>
           <Button onClick={this.reloadData}>

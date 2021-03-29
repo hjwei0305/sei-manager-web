@@ -177,7 +177,6 @@ class TablePanel extends Component {
               tooltip={{
                 title: '配置模型字段',
               }}
-              ignore="true"
               antd
             />
             <ExtIcon
@@ -188,7 +187,6 @@ class TablePanel extends Component {
               tooltip={{
                 title: '编辑',
               }}
-              ignore="true"
               antd
             />
             <Popconfirm
@@ -242,7 +240,7 @@ class TablePanel extends Component {
     const toolBarProps = {
       left: (
         <Fragment>
-          <Button key="add" type="primary" onClick={this.add} ignore="true">
+          <Button key="add" type="primary" onClick={this.add}>
             新建
           </Button>
           <Button onClick={this.reloadData}>刷新</Button>

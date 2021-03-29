@@ -143,13 +143,7 @@ class DeployStage extends Component {
         required: true,
         render: (text, record) => (
           <span className={cls('action-box')}>
-            <ExtIcon
-              className="edit"
-              onClick={() => this.edit(record)}
-              type="edit"
-              ignore="true"
-              antd
-            />
+            <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
             <Popconfirm
               placement="topLeft"
               title={formatMessage({
@@ -211,7 +205,7 @@ class DeployStage extends Component {
     const toolBarProps = {
       left: (
         <>
-          <Button type="primary" onClick={this.add} ignore="true">
+          <Button type="primary" onClick={this.add}>
             <FormattedMessage id="global.add" defaultMessage="新建" />
           </Button>
           <Button onClick={this.reloadData}>

@@ -121,7 +121,6 @@ class ElementLibrary extends Component {
               className="edit"
               onClick={() => this.handleEvent('edit', record)}
               type="edit"
-              ignore="true"
               tooltip={{ title: '编辑' }}
               antd
             />
@@ -195,7 +194,6 @@ class ElementLibrary extends Component {
             onClick={() => {
               this.handleEvent('add', null);
             }}
-            ignore="true"
           >
             新建
           </Button>

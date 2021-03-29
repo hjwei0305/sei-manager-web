@@ -122,7 +122,6 @@ class DataSource extends Component {
               className="edit"
               onClick={() => this.handleEvent('edit', record)}
               type="edit"
-              ignore="true"
               tooltip={{ title: '编辑' }}
               antd
             />
@@ -189,7 +188,6 @@ class DataSource extends Component {
             onClick={() => {
               this.handleEvent('add', null);
             }}
-            ignore="true"
           >
             新建
           </Button>

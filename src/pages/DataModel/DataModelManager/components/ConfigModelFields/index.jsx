@@ -168,7 +168,6 @@ class ConfigModelFields extends Component {
               tooltip={{
                 title: '编辑',
               }}
-              ignore="true"
               antd
             />
             <Popconfirm
@@ -262,7 +261,7 @@ class ConfigModelFields extends Component {
     const toolBarProps = {
       left: (
         <Fragment>
-          <Button key="add" type="primary" onClick={this.add} ignore="true">
+          <Button key="add" type="primary" onClick={this.add}>
             新建
           </Button>
           <Button onClick={this.handleAddAuditFields}>添加审计字段</Button>
