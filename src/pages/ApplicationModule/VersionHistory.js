@@ -67,7 +67,7 @@ class RecordeLogModal extends PureComponent {
 
   renderLog = () => {
     const { logData, logLoading, selectVersion } = this.props;
-    const messageText = get(logData, 'message');
+    const messageText = get(logData, 'remark');
     return (
       <>
         <div className="log-box">
