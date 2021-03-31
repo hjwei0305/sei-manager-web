@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-19 15:32:13
+ * @Last Modified time: 2021-03-31 11:03:20
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -35,5 +35,14 @@ export async function getVersionDetail(params) {
   return request({
     url: `${SERVER_PATH}/sei-manager/releaseVersion/findOne`,
     params,
+  });
+}
+
+/** 应用模块派生二开模块 */
+export async function deriveModule(data) {
+  return request({
+    method: 'POST',
+    url: `${SERVER_PATH}/sei-manager/projectUser/assign`,
+    data,
   });
 }

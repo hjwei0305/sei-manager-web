@@ -150,7 +150,7 @@ class FormModal extends PureComponent {
       name: 'appName',
       store: {
         type: 'POST',
-        url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+        url: `${SERVER_PATH}/sei-manager/application/findByPageNoAuth`,
         params: {
           filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
         },
@@ -162,7 +162,7 @@ class FormModal extends PureComponent {
       field: ['appId'],
       reader: {
         name: 'name',
-        description: 'remark',
+        description: 'code',
         field: ['id'],
       },
     };

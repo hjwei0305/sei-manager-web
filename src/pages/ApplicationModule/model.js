@@ -1,6 +1,6 @@
 import { get, lowerCase } from 'lodash';
 import { utils, message } from 'suid';
-import { removeModuleUser, addModuleUser, getVersionDetail } from './service';
+import { removeModuleUser, addModuleUser, getVersionDetail, deriveModule } from './service';
 
 const { dvaModel, pathMatchRegexp } = utils;
 const { modelExtend, model } = dvaModel;
@@ -90,6 +90,18 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success('移除模块成员成功');
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *deriveModule({ payload, callback }, { call }) {
+      const re = yield call(deriveModule, payload);
+      message.destroy();
+      if (re.success) {
+        message.success('操作成功');
       } else {
         message.error(re.message);
       }

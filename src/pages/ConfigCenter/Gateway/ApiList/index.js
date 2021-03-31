@@ -4,13 +4,14 @@ import { get } from 'lodash';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card, Popconfirm, Popover, Tag } from 'antd';
-import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction } from 'suid';
+import { ExtTable, BannerTitle, ExtIcon, ListCard, AuthAction, utils } from 'suid';
 import { FilterView } from '@/components';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
 import styles from './index.less';
 
 const { SERVER_PATH, REQUEST_TYPE } = constants;
+const { authAction } = utils;
 
 @connect(({ appGateway, loading }) => ({ appGateway, loading }))
 class ApiList extends Component {
@@ -280,6 +281,9 @@ class ApiList extends Component {
         render: t => t || '-',
       },
     ];
+    if (!authAction([<span authCode="CUD" />])) {
+      columns.splice(0, 1);
+    }
     const toolBarProps = {
       left: (
         <>

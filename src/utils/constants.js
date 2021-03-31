@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-16 16:16:57
+ * @Last Modified time: 2021-03-31 10:36:17
  */
 import { name } from '../../package.json';
 
@@ -241,6 +241,16 @@ const CHANGE_TYPE = {
   DELETE: { key: 'DELETE', title: '删除', color: 'red' },
 };
 
+/**
+ * 应用模块操作
+ */
+const APP_MODULE_ACTION = {
+  SZMKCY: 'SZMKCY',
+  VERSION_HISTORY: 'VERSION_HISTORY',
+  VIEW_API_DOC: 'VIEW_API_DOC',
+  SEC_DEV: 'SEC_DEV',
+};
+
 export default {
   NoMenuPage,
   NoMenuPages,
@@ -270,4 +280,5 @@ export default {
   TEMPLATE_TYPE,
   USER_STATUS,
   CHANGE_TYPE,
+  APP_MODULE_ACTION,
 };

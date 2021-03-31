@@ -3,17 +3,18 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Button, Input, Tag } from 'antd';
+import { Button, Input, Tag, Modal } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { ExtTable, ListCard, message, ExtIcon, PageLoader, AuthAction } from 'suid';
+import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
 import { constants } from '@/utils';
 import ModuleUser from './ModuleUser';
+import ExtAction from './ExtAction';
 import styles from './index.less';
 
 const VersionHistory = React.lazy(() => import('./VersionHistory'));
 const ApiDoc = React.lazy(() => import('./ApiDoc'));
 
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, APP_MODULE_ACTION } = constants;
 const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'code', operator: 'LK', value: null },
@@ -30,6 +31,8 @@ class ApplicationModule extends Component {
   static tableRef;
 
   static listCardRef = null;
+
+  static confirmModal;
 
   constructor(props) {
     super(props);
@@ -362,6 +365,66 @@ class ApplicationModule extends Component {
     });
   };
 
+  deriveModule = rowData => {
+    const { dispatch } = this.props;
+    this.confirmModal = Modal.confirm({
+      title: '提示',
+      content: '确定要派生二开模块吗?',
+      okButtonProps: { type: 'primary' },
+      style: { top: '20%' },
+      okText: '确定',
+      onOk: () => {
+        return new Promise(resolve => {
+          this.confirmModal.update({
+            okButtonProps: { type: 'primary', loading: true },
+            cancelButtonProps: { disabled: true },
+          });
+          dispatch({
+            type: 'applicationModule/deriveModule',
+            payload: {
+              id: rowData.id,
+            },
+            callback: res => {
+              if (res.success) {
+                message.destroy();
+                resolve();
+                this.reloadData();
+              } else {
+                this.confirmModal.update({
+                  okButtonProps: { loading: false },
+                  cancelButtonProps: { disabled: false },
+                });
+              }
+            },
+          });
+        });
+      },
+      cancelText: '取消',
+      onCancel: () => {
+        this.confirmModal.destroy();
+        this.confirmModal = null;
+      },
+    });
+  };
+
+  handlerAction = (key, record) => {
+    switch (key) {
+      case APP_MODULE_ACTION.SZMKCY:
+        this.showModuleUser(record);
+        break;
+      case APP_MODULE_ACTION.VERSION_HISTORY:
+        this.showVersionHistory(record);
+        break;
+      case APP_MODULE_ACTION.VIEW_API_DOC:
+        this.showApiDocModal(record);
+        break;
+      case APP_MODULE_ACTION.SEC_DEV:
+        this.deriveModule(record);
+        break;
+      default:
+    }
+  };
+
   render() {
     const { applicationModule, loading } = this.props;
     const {
@@ -378,34 +441,14 @@ class ApplicationModule extends Component {
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 120,
+        width: 80,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
         required: true,
-        render: (text, record) => (
+        render: (id, record) => (
           <span className={cls('action-box')}>
-            <AuthAction>
-              <ExtIcon
-                authCode="SZMKCY"
-                onClick={() => this.showModuleUser(record)}
-                type="team"
-                antd
-                tooltip={{ title: '模块成员管理' }}
-              />
-            </AuthAction>
-            <ExtIcon
-              onClick={() => this.showVersionHistory(record)}
-              type="history"
-              antd
-              tooltip={{ title: '版本历史' }}
-            />
-            <ExtIcon
-              onClick={() => this.showApiDocModal(record)}
-              type="api"
-              antd
-              tooltip={{ title: 'ApiDoc' }}
-            />
+            <ExtAction key={id} onAction={this.handlerAction} recordItem={record} />
           </span>
         ),
       },
