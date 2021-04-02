@@ -66,6 +66,10 @@ class FormModal extends PureComponent {
     getTag: PropTypes.func,
   };
 
+  static defaultProps = {
+    onlyView: false,
+  };
+
   constructor(props) {
     super(props);
     const { rowData } = props;

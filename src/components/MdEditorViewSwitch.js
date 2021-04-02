@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { ExtIcon } from 'suid';
 
 const MdEditorViewSwitch = props => {
-  const [preview, setPreview] = useState(props.config.preview);
+  const [preview, setPreview] = useState(props.config.preview || false);
   const handleClick = () => {
-    setPreview(!preview);
+    const html = !preview;
+    setPreview(html);
     props.editor.setView({
-      md: preview,
-      html: !preview,
+      md: !html,
+      html,
     });
   };
 
