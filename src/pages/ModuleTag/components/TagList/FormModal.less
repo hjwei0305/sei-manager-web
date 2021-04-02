@@ -48,18 +48,30 @@
         .item-body {
           height: 526px;
           overflow: hidden;
-          ul {
-            li {
-              list-style: disc;
-            }
-          }
-          ol {
-            li {
-              list-style: decimal;
-            }
-          }
           .rc-md-editor {
             border-width: 0;
+            .custom-html-style {
+              ul {
+                li {
+                  list-style: disc;
+                }
+                ul {
+                  li {
+                    list-style-type: circle;
+                  }
+                  ul {
+                    li {
+                      list-style-type: square;
+                    }
+                  }
+                }
+              }
+              ol {
+                li {
+                  list-style: decimal;
+                }
+              }
+            }
             .rc-md-navigation {
               background-color: #fff;
             }
