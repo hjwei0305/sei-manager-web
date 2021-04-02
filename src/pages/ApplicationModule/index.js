@@ -154,7 +154,7 @@ class ApplicationModule extends Component {
         },
         store: {
           type: 'POST',
-          url: `${SERVER_PATH}/sei-manager/application/findByPage`,
+          url: `${SERVER_PATH}/sei-manager/application/findByPageNoAuth`,
           params: {
             filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],
           },
