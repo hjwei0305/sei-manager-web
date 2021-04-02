@@ -236,7 +236,7 @@ class FormModal extends PureComponent {
       field: ['appId'],
       reader: {
         name: 'name',
-        description: 'remark',
+        description: 'code',
         field: ['id'],
       },
     };
@@ -262,7 +262,7 @@ class FormModal extends PureComponent {
       field: ['gitId', 'moduleCode', 'moduleId'],
       reader: {
         name: 'name',
-        description: 'remark',
+        description: 'code',
         field: ['gitId', 'code', 'id'],
       },
     };
