@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { get } from 'lodash';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card, Popconfirm } from 'antd';
+import { Button, Card, Popconfirm, Modal } from 'antd';
 import { ExtTable, BannerTitle, ExtIcon } from 'suid';
 import { constants } from '@/utils';
 import FormModal from './FormModal';
@@ -15,6 +15,8 @@ const FILTER_FIELDS = [];
 @connect(({ deployConfig, loading }) => ({ deployConfig, loading }))
 class ConfigList extends Component {
   static tableRef;
+
+  static confirmModal;
 
   constructor(props) {
     super(props);
@@ -120,6 +122,47 @@ class ConfigList extends Component {
     return { filters };
   };
 
+  initConfirm = rowData => {
+    const { dispatch } = this.props;
+    this.confirmModal = Modal.confirm({
+      title: `模块初始化部署确认`,
+      content: `规则：模块初始化部署将从dev分支拉取代码构建后进行部署`,
+      okButtonProps: { type: 'primary' },
+      style: { top: '20%' },
+      okText: '确定',
+      onOk: () => {
+        return new Promise(resolve => {
+          this.confirmModal.update({
+            okButtonProps: { type: 'primary', loading: true },
+            cancelButtonProps: { disabled: true },
+          });
+          dispatch({
+            type: 'deployConfig/initDeploy',
+            payload: {
+              id: rowData.id,
+            },
+            callback: res => {
+              if (res.success) {
+                resolve();
+                this.reloadData();
+              } else {
+                this.confirmModal.update({
+                  okButtonProps: { loading: false },
+                  cancelButtonProps: { disabled: false },
+                });
+              }
+            },
+          });
+        });
+      },
+      cancelText: '取消',
+      onCancel: () => {
+        this.confirmModal.destroy();
+        this.confirmModal = null;
+      },
+    });
+  };
+
   renderDelBtn = row => {
     const { loading } = this.props;
     const { delRowId } = this.state;
@@ -149,13 +192,19 @@ class ConfigList extends Component {
       {
         title: formatMessage({ id: 'global.operation', defaultMessage: '操作' }),
         key: 'operation',
-        width: 120,
+        width: 140,
         align: 'center',
         dataIndex: 'id',
         className: 'action',
         required: true,
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
+            <ExtIcon
+              tooltip={{ title: '模块初始化部署' }}
+              onClick={() => this.initConfirm(record)}
+              type="play-circle"
+              antd
+            />
             <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
             {this.renderDelBtn(record)}
           </span>
@@ -199,6 +248,7 @@ class ConfigList extends Component {
       ),
     };
     const extTableProps = {
+      lineNumber: false,
       toolBar: toolBarProps,
       columns,
       rowKey: 'name',

@@ -25,3 +25,14 @@ export async function remove(data) {
     data: {},
   });
 }
+
+/** 初始化模块部署 */
+export async function initDeploy(data) {
+  const { id } = data;
+  const url = `${SERVER_PATH}/sei-manager/deployConfig/initializeDeploy/${id}`;
+  return request({
+    url,
+    method: 'POST',
+    data: {},
+  });
+}

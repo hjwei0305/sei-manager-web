@@ -35,8 +35,6 @@ const menuData = () => [
 ];
 
 class ExtAction extends PureComponent {
-  static confirmModal;
-
   static propTypes = {
     recordItem: PropTypes.object,
     onAction: PropTypes.func,

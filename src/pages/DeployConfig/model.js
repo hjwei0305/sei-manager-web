@@ -1,5 +1,5 @@
 import { utils, message } from 'suid';
-import { save, remove } from './service';
+import { save, remove, initDeploy } from './service';
 
 const { dvaModel } = utils;
 const { modelExtend, model } = dvaModel;
@@ -38,6 +38,18 @@ export default modelExtend(model, {
       message.destroy();
       if (re.success) {
         message.success('删除成功');
+      } else {
+        message.error(re.message);
+      }
+      if (callback && callback instanceof Function) {
+        callback(re);
+      }
+    },
+    *initDeploy({ payload, callback }, { call }) {
+      const re = yield call(initDeploy, payload);
+      message.destroy();
+      if (re.success) {
+        message.success('部署初始化成功');
       } else {
         message.error(re.message);
       }

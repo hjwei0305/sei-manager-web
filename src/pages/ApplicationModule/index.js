@@ -33,15 +33,8 @@ class ApplicationModule extends Component {
 
   static listCardRef = null;
 
-  static confirmModal;
-
-  static secDevAppId;
-
-  static nameSpace;
-
   constructor(props) {
     super(props);
-    this.secDevAppId = '';
     this.state = {
       appName: '全部',
     };
@@ -49,8 +42,6 @@ class ApplicationModule extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props;
-    this.secDevAppId = '';
-    this.nameSpace = '';
     dispatch({
       type: 'applicationModule/updateState',
       payload: {
@@ -60,6 +51,7 @@ class ApplicationModule extends Component {
         logData: null,
         selectVersion: null,
         showApiDoc: false,
+        showDeriveModule: false,
       },
     });
   }
