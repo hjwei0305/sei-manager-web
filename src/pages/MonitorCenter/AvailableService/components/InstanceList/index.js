@@ -11,8 +11,7 @@ const { Meta } = Card;
 const InstanceList = ({ loading, dataSource = [] }) => {
   const paramsDemo = item => {
     const aceId = getUUID();
-    const value =
-      Object.keys(item.metadata).length === 0 ? '无' : JSON.stringify(item.metadata, null, '\t');
+    const value = JSON.stringify(item.metadata, null, '\t');
     return (
       <AceEditor
         mode="json"
@@ -39,6 +38,9 @@ const InstanceList = ({ loading, dataSource = [] }) => {
   };
 
   const renderOther = it => {
+    if (Object.keys(it.metadata).length === 0) {
+      return null;
+    }
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>其它(metadata)</span>
