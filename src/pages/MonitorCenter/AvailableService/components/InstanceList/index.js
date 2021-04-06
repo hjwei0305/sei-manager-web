@@ -59,7 +59,7 @@ const InstanceList = ({ loading, dataSource = [] }) => {
       {dataSource.map((it, idx) => {
         const { uri } = it;
         return (
-          <Card bordered={false}>
+          <Card bordered={false} key={it.uri}>
             <Meta
               avatar={<Avatar size="small">{idx + 1}</Avatar>}
               title={uri}
