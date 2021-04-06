@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date:   2020-01-16 09:17:57
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-31 11:03:20
+ * @Last Modified time: 2021-04-06 12:39:35
  */
 import { utils } from 'suid';
 import { constants } from '@/utils';
@@ -42,7 +42,7 @@ export async function getVersionDetail(params) {
 export async function deriveModule(data) {
   return request({
     method: 'POST',
-    url: `${SERVER_PATH}/sei-manager/projectUser/assign`,
+    url: `${SERVER_PATH}/sei-manager/appModule/forkProject`,
     data,
   });
 }

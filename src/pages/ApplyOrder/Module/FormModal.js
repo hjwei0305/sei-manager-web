@@ -211,7 +211,7 @@ class FormModal extends PureComponent {
               </Radio.Group>,
             )}
           </FormItem>
-          <FormItem label="模块代码">
+          <FormItem label="模块代码" extra="规则：字母小写或中横线">
             {getFieldDecorator('code', {
               initialValue: get(rowData, 'code'),
               rules: [
@@ -223,7 +223,7 @@ class FormModal extends PureComponent {
                   validator: this.validateMoudleCode,
                 },
               ],
-            })(<Input placeholder="规则：字母小写或中横线" disabled={!!rowData || onlyView} />)}
+            })(<Input disabled={!!rowData || onlyView} />)}
           </FormItem>
           <FormItem label="模块名称">
             {getFieldDecorator('name', {

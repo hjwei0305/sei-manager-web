@@ -127,7 +127,7 @@ class FormModal extends PureComponent {
         footer={this.renderFooterBtn()}
       >
         <Form {...formItemLayout} layout="horizontal" style={{ margin: '8px 24px' }}>
-          <FormItem label="应用代码">
+          <FormItem label="应用代码" extra="规则：字母小写或中横线">
             {getFieldDecorator('code', {
               initialValue: get(rowData, 'code'),
               rules: [
@@ -139,9 +139,7 @@ class FormModal extends PureComponent {
                   validator: this.validateAppCode,
                 },
               ],
-            })(
-              <Input placeholder="规则：字母小写或中横线" autoComplete="off" disabled={onlyView} />,
-            )}
+            })(<Input autoComplete="off" disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用名称">
             {getFieldDecorator('name', {
@@ -165,7 +163,7 @@ class FormModal extends PureComponent {
               ],
             })(<ComboTree {...groupProps} disabled={onlyView} />)}
           </FormItem>
-          <FormItem label="应用初始版本">
+          <FormItem label="应用初始版本" extra="最多2位数字且不能以0开始">
             {getFieldDecorator('version', {
               initialValue: get(rowData, 'version'),
               rules: [
@@ -177,13 +175,7 @@ class FormModal extends PureComponent {
                   validator: this.validateVersion,
                 },
               ],
-            })(
-              <Input
-                placeholder="最多2位数字且不能以0开始"
-                autoComplete="off"
-                disabled={onlyView}
-              />,
-            )}
+            })(<Input autoComplete="off" disabled={onlyView} />)}
           </FormItem>
           <FormItem label="应用描述">
             {getFieldDecorator('remark', {

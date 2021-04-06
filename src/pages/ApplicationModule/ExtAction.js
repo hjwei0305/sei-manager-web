@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import cls from 'classnames';
 import PropTypes from 'prop-types';
-import { isEqual, takeWhile } from 'lodash';
+import { isEqual } from 'lodash';
 import { Dropdown, Menu } from 'antd';
 import { utils, ExtIcon } from 'suid';
 import { constants } from '@/utils';
@@ -23,12 +23,12 @@ const menuData = () => [
     disabled: false,
   },
   {
-    title: 'ApiDoc',
+    title: 'APIDoc',
     key: APP_MODULE_ACTION.VIEW_API_DOC,
     disabled: false,
   },
   {
-    title: '派生二开',
+    title: '生成二开项目',
     key: APP_MODULE_ACTION.SEC_DEV,
     disabled: !authAction(<span authCode="SEC_DEV" />),
   },
@@ -64,20 +64,20 @@ class ExtAction extends PureComponent {
 
   initActionMenus = () => {
     const { recordItem } = this.props;
-    const menus = menuData();
-    const mData = takeWhile(
-      menus.filter(m => !m.disabled),
-      m => {
-        if (
-          !recordItem.nameSpace &&
-          (m.key === APP_MODULE_ACTION.SEC_DEV || m.key === APP_MODULE_ACTION.VIEW_API_DOC)
-        ) {
-          return false;
+    const menus = menuData().filter(m => !m.disabled);
+    const mData = [];
+    menus.forEach(m => {
+      if (m.key === APP_MODULE_ACTION.VIEW_API_DOC || m.key === APP_MODULE_ACTION.SEC_DEV) {
+        if (recordItem.nameSpace && m.key === APP_MODULE_ACTION.VIEW_API_DOC) {
+          mData.push(m);
         }
-        return true;
-      },
-    );
-
+        if (m.key === APP_MODULE_ACTION.SEC_DEV && recordItem.type.indexOf('PRODUCT') !== -1) {
+          mData.push(m);
+        }
+      } else {
+        mData.push(m);
+      }
+    });
     this.setState({
       menusData: mData,
     });

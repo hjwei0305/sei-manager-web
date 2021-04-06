@@ -18,6 +18,7 @@ export default modelExtend(model, {
     selectVersion: null,
     devBaseUrl: '',
     showApiDoc: false,
+    showDeriveModule: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -97,11 +98,18 @@ export default modelExtend(model, {
         callback(re);
       }
     },
-    *deriveModule({ payload, callback }, { call }) {
+    *deriveModule({ payload, callback }, { call, put }) {
       const re = yield call(deriveModule, payload);
       message.destroy();
       if (re.success) {
         message.success('操作成功');
+        yield put({
+          type: 'updateState',
+          payload: {
+            showDeriveModule: false,
+            currentModule: null,
+          },
+        });
       } else {
         message.error(re.message);
       }

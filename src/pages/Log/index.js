@@ -229,7 +229,7 @@ class LogList extends PureComponent {
         },
         store: {
           type: 'POST',
-          url: `${SERVER_PATH}/sei-manager/appModule/findByPage`,
+          url: `${SERVER_PATH}/sei-manager/appModule/findByPageNoAuth`,
           autoLoad: false,
           params: {
             filters: [{ fieldName: 'frozen', operator: 'EQ', value: false }],

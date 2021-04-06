@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Button, Input, Tag, Modal } from 'antd';
+import { Button, Input, Tag, Divider } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
 import { constants } from '@/utils';
@@ -13,6 +13,7 @@ import styles from './index.less';
 
 const VersionHistory = React.lazy(() => import('./VersionHistory'));
 const ApiDoc = React.lazy(() => import('./ApiDoc'));
+const DeriveModule = React.lazy(() => import('./DeriveModule'));
 
 const { SERVER_PATH, APP_MODULE_ACTION } = constants;
 const { Search } = Input;
@@ -34,8 +35,13 @@ class ApplicationModule extends Component {
 
   static confirmModal;
 
+  static secDevAppId;
+
+  static nameSpace;
+
   constructor(props) {
     super(props);
+    this.secDevAppId = '';
     this.state = {
       appName: '全部',
     };
@@ -43,6 +49,8 @@ class ApplicationModule extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props;
+    this.secDevAppId = '';
+    this.nameSpace = '';
     dispatch({
       type: 'applicationModule/updateState',
       payload: {
@@ -294,6 +302,7 @@ class ApplicationModule extends Component {
         logData: null,
         selectVersion: null,
         showApiDoc: false,
+        showDeriveModule: false,
       },
     });
   };
@@ -365,44 +374,26 @@ class ApplicationModule extends Component {
     });
   };
 
-  deriveModule = rowData => {
+  deriveModule = data => {
     const { dispatch } = this.props;
-    this.confirmModal = Modal.confirm({
-      title: '提示',
-      content: '确定要派生二开模块吗?',
-      okButtonProps: { type: 'primary' },
-      style: { top: '20%' },
-      okText: '确定',
-      onOk: () => {
-        return new Promise(resolve => {
-          this.confirmModal.update({
-            okButtonProps: { type: 'primary', loading: true },
-            cancelButtonProps: { disabled: true },
-          });
-          dispatch({
-            type: 'applicationModule/deriveModule',
-            payload: {
-              id: rowData.id,
-            },
-            callback: res => {
-              if (res.success) {
-                message.destroy();
-                resolve();
-                this.reloadData();
-              } else {
-                this.confirmModal.update({
-                  okButtonProps: { loading: false },
-                  cancelButtonProps: { disabled: false },
-                });
-              }
-            },
-          });
-        });
+    dispatch({
+      type: 'applicationModule/deriveModule',
+      payload: data,
+      callback: res => {
+        if (res.success) {
+          this.reloadData();
+        }
       },
-      cancelText: '取消',
-      onCancel: () => {
-        this.confirmModal.destroy();
-        this.confirmModal = null;
+    });
+  };
+
+  showDeriveModule = currentModule => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applicationModule/updateState',
+      payload: {
+        currentModule,
+        showDeriveModule: true,
       },
     });
   };
@@ -419,7 +410,7 @@ class ApplicationModule extends Component {
         this.showApiDocModal(record);
         break;
       case APP_MODULE_ACTION.SEC_DEV:
-        this.deriveModule(record);
+        this.showDeriveModule(record);
         break;
       default:
     }
@@ -435,6 +426,7 @@ class ApplicationModule extends Component {
       selectVersion,
       devBaseUrl,
       showApiDoc,
+      showDeriveModule,
     } = applicationModule;
     const logLoading = loading.effects['applicationModule/getVersionDetail'];
     const columns = [
@@ -462,7 +454,7 @@ class ApplicationModule extends Component {
       {
         title: '模块代码',
         dataIndex: 'code',
-        width: 220,
+        width: 280,
         required: true,
         render: (t, r) => {
           let color = 'blue';
@@ -471,9 +463,15 @@ class ApplicationModule extends Component {
             color = 'cyan';
             desc = '后端';
           }
+          let tag = '产品';
+          if (r.type.indexOf('PROJECT') !== -1) {
+            tag = '二开';
+          }
           return (
             <>
               <Tag color={color} style={{ marginRight: 4 }}>
+                {tag}
+                <Divider type="vertical" />
                 {desc}
               </Tag>
               {t}
@@ -577,6 +575,12 @@ class ApplicationModule extends Component {
       closeFormModal: this.closeModal,
       devBaseUrl,
     };
+    const deriveModuleProps = {
+      currentModule,
+      closeFormModal: this.closeModal,
+      save: this.deriveModule,
+      saving: loading.effects['applicationModule/deriveModule'],
+    };
     return (
       <div className={cls(styles['container-box'])}>
         <ExtTable {...extTableProps} />
@@ -586,6 +590,9 @@ class ApplicationModule extends Component {
         </Suspense>
         <Suspense fallback={<PageLoader />}>
           <ApiDoc showModal={showApiDoc} {...apiDocProps} />
+        </Suspense>
+        <Suspense fallback={<PageLoader />}>
+          <DeriveModule showModal={showDeriveModule} {...deriveModuleProps} />
         </Suspense>
       </div>
     );
