@@ -246,6 +246,17 @@ const routes = [
         ],
       },
       {
+        path: '/monitorCenter',
+        namd: '监控中心',
+        routes: [
+          {
+            path: '/monitorCenter/availableService',
+            name: '服务目录',
+            component: './MonitorCenter/AvailableService',
+          },
+        ],
+      },
+      {
         path: '/model',
         namd: '数据模型',
         routes: [

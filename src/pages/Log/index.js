@@ -108,10 +108,6 @@ class LogList extends PureComponent {
       payload: {
         currentEnvViewType,
       },
-    }).then(() => {
-      dispatch({
-        type: 'runtimeLog/getServices',
-      });
     });
   };
 
