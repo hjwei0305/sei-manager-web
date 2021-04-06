@@ -124,6 +124,9 @@ class ConfigList extends Component {
 
   initConfirm = rowData => {
     const { dispatch } = this.props;
+    if (rowData.initialized) {
+      return false;
+    }
     this.confirmModal = Modal.confirm({
       title: `模块初始化部署确认`,
       content: `规则：模块初始化部署将从dev分支拉取代码构建后进行部署`,
@@ -200,9 +203,10 @@ class ConfigList extends Component {
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
             <ExtIcon
-              tooltip={{ title: '模块初始化部署' }}
+              tooltip={{ title: record.initialized ? '模块初始化部署' : '' }}
               onClick={() => this.initConfirm(record)}
               type="play-circle"
+              className={record.initialized ? 'disabled' : ''}
               antd
             />
             <ExtIcon className="edit" onClick={() => this.edit(record)} type="edit" antd />
