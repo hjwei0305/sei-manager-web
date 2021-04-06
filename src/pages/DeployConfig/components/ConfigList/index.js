@@ -203,7 +203,7 @@ class ConfigList extends Component {
         render: (_text, record) => (
           <span className={cls('action-box')} onClick={e => e.stopPropagation()}>
             <ExtIcon
-              tooltip={{ title: record.initialized ? '模块初始化部署' : '' }}
+              tooltip={{ title: record.initialized ? '' : '模块初始化部署' }}
               onClick={() => this.initConfirm(record)}
               type="play-circle"
               className={record.initialized ? 'disabled' : ''}
