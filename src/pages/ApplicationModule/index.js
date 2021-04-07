@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Button, Input, Tag, Divider } from 'antd';
+import { Button, Input, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
 import { constants } from '@/utils';
@@ -450,21 +450,20 @@ class ApplicationModule extends Component {
         required: true,
         render: (t, r) => {
           let color = 'blue';
-          let desc = '前端';
+          let desc = <span className="tag web">前端</span>;
           if (r.nameSpace) {
             color = 'cyan';
-            desc = '后端';
+            desc = <span className="tag api">后端</span>;
           }
-          let tag = '产品';
+          let tag = <span className="tp prd">产品</span>;
           if (r.type.indexOf('PROJECT') !== -1) {
-            tag = '二开';
+            tag = <span className="tp sec">二开</span>;
           }
           return (
             <>
               <Tag color={color} style={{ marginRight: 4 }}>
-                {tag}
-                <Divider type="vertical" />
                 {desc}
+                {tag}
               </Tag>
               {t}
             </>
