@@ -500,9 +500,9 @@ class Certificate extends PureComponent {
       {
         title: '状态',
         dataIndex: 'approvalStatus',
-        width: 100,
+        width: 160,
         required: true,
-        render: t => <ApplyState state={t} />,
+        render: (_, r) => <ApplyState item={r} />,
       },
       {
         title: this.renderColumnAppName(),
@@ -581,6 +581,8 @@ class Certificate extends PureComponent {
       searchProperties: ['code', 'name', 'remark', 'gitHttpUrl', 'nameSpace'],
       searchWidth: 260,
       remotePaging: true,
+      lineNumber: false,
+      allowCustomColumns: false,
       cascadeParams: {
         ...this.getFilter(),
       },

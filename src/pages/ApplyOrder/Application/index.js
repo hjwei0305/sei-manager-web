@@ -268,9 +268,9 @@ class Application extends PureComponent {
       {
         title: '状态',
         dataIndex: 'approvalStatus',
-        width: 100,
+        width: 160,
         required: true,
-        render: t => <ApplyState state={t} />,
+        render: (_, r) => <ApplyState item={r} />,
       },
       {
         title: '应用代码',
@@ -345,6 +345,8 @@ class Application extends PureComponent {
       searchProperties: ['code', 'name', 'remark', 'groupCode', 'groupName'],
       searchWidth: 260,
       remotePaging: true,
+      lineNumber: false,
+      allowCustomColumns: false,
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/application/findRequisitionByPage`,
