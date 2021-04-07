@@ -248,6 +248,7 @@ class UserList extends Component {
       searchPlaceHolder: '昵称、账号、手机号、电子邮箱',
       searchProperties: ['nickname', 'account', 'phone', 'email'],
       searchWidth: 260,
+      remotePaging: true,
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/user/findByPage`,
