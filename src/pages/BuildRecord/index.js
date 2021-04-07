@@ -15,6 +15,7 @@ const { Search } = Input;
 const FILTER_FIELDS = [
   { fieldName: 'appId', operator: 'EQ', value: null },
   { fieldName: 'name', operator: 'LK', value: null },
+  { fieldName: 'moduleCode', operator: 'LK', value: null },
   { fieldName: 'moduleName', operator: 'LK', value: null },
   { fieldName: 'refTag', operator: 'LK', value: null },
 ];
@@ -311,6 +312,7 @@ class BuildRecord extends Component {
         dataIndex: 'id',
         className: 'action',
         required: true,
+        fixed: 'left',
         render: (_text, record) => (
           <span className={cls('action-box')}>
             {this.renderBuildBtn(record)}
@@ -338,11 +340,11 @@ class BuildRecord extends Component {
         ...this.getColumnSearchProps('name'),
       },
       {
-        title: '应用名称',
-        dataIndex: 'appName',
-        width: 160,
+        title: '模块代码',
+        dataIndex: 'moduleCode',
+        width: 260,
         required: true,
-        ...this.getColumnSearchProps('appName'),
+        ...this.getColumnSearchProps('moduleCode'),
       },
       {
         title: '模块名称',
@@ -365,6 +367,13 @@ class BuildRecord extends Component {
         required: true,
         render: t => t || '-',
       },
+      {
+        title: '所属应用',
+        dataIndex: 'appName',
+        width: 160,
+        required: true,
+        ...this.getColumnSearchProps('appName'),
+      },
     ];
     const toolBarProps = {
       left: (
@@ -378,6 +387,7 @@ class BuildRecord extends Component {
     const extTableProps = {
       toolBar: toolBarProps,
       columns,
+      lineNumber: false,
       onTableRef: ref => (this.tableRef = ref),
       showSearchTooltip: true,
       searchPlaceHolder: '应用名称、模块代码、模块名称和构建主题',

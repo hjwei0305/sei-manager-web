@@ -6,6 +6,7 @@ import { Input, Empty, Layout, Tooltip } from 'antd';
 import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
+import { ModuleTag as ModuleTagMark } from '@/components';
 import TagList from './components/TagList';
 import DropdownApp from './components/DropdownApp';
 import styles from './index.less';
@@ -98,7 +99,7 @@ class ModuleTag extends Component {
     return (
       <>
         <div>{`版本：${item.version}`}</div>
-        <div>{`描述：${item.remark}`}</div>
+        <div>{`描述：${item.remark || '-'}`}</div>
       </>
     );
   };
@@ -117,6 +118,7 @@ class ModuleTag extends Component {
       itemField: {
         title: item => `${item.name}(${item.code})`,
         description: this.renderModuleDesc,
+        extra: item => <ModuleTagMark moduleItem={item} />,
       },
       remotePaging: true,
       store: {

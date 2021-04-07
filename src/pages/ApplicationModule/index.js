@@ -3,9 +3,10 @@ import cls from 'classnames';
 import { connect } from 'dva';
 import { get } from 'lodash';
 import copy from 'copy-to-clipboard';
-import { Button, Input, Tag } from 'antd';
+import { Button, Input } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ExtTable, ListCard, message, ExtIcon, PageLoader } from 'suid';
+import { ModuleTag } from '@/components';
 import { constants } from '@/utils';
 import ModuleUser from './ModuleUser';
 import ExtAction from './ExtAction';
@@ -449,22 +450,9 @@ class ApplicationModule extends Component {
         width: 280,
         required: true,
         render: (t, r) => {
-          let color = 'blue';
-          let desc = <span className="tag web">前端</span>;
-          if (r.nameSpace) {
-            color = 'cyan';
-            desc = <span className="tag api">后端</span>;
-          }
-          let tag = <span className="tp prd">产品</span>;
-          if (r.type.indexOf('PROJECT') !== -1) {
-            tag = <span className="tp sec">二开</span>;
-          }
           return (
             <>
-              <Tag color={color} style={{ marginRight: 4 }}>
-                {desc}
-                {tag}
-              </Tag>
+              <ModuleTag moduleItem={r} style={{ marginRight: 4 }} />
               {t}
             </>
           );

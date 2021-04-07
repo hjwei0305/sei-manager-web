@@ -7,6 +7,7 @@ import UseStatus from './UseStatus';
 import CodeDiff from './CodeDiff';
 import MdEditorView from './MdEditorView';
 import MdEditorViewSwitch from './MdEditorViewSwitch';
+import ModuleTag from './ModuleTag';
 
 export {
   Loader,
@@ -18,4 +19,5 @@ export {
   CodeDiff,
   MdEditorView,
   MdEditorViewSwitch,
+  ModuleTag,
 };

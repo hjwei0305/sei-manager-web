@@ -6,6 +6,7 @@ import { Input, Empty, Layout, Tooltip } from 'antd';
 import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
+import { ModuleTag as ModuleTagMark } from '@/components';
 import ConfigList from './components/ConfigList';
 import DropdownApp from './components/DropdownApp';
 import styles from './index.less';
@@ -133,6 +134,7 @@ class DeployConfig extends Component {
       itemField: {
         title: item => `${item.name}(${item.code})`,
         description: this.renderModuleDesc,
+        extra: item => <ModuleTagMark moduleItem={item} />,
       },
       remotePaging: true,
       store: {
