@@ -99,6 +99,7 @@ class AvailableService extends Component {
       toolBar: toolBarProps,
       columns,
       lineNumber: false,
+      allowCustomColumns: false,
       loading: loading.effects['availableService/getServices'],
       onTableRef: ref => (this.tableRef = ref),
       searchPlaceHolder: '输入服务名称关键字',
