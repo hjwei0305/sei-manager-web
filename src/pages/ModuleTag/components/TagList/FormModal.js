@@ -294,9 +294,9 @@ class FormModal extends PureComponent {
                     标签描述(Markdown)
                     <NoticeBar
                       style={{ marginLeft: 8, display: 'inline-flex', fontSize: 12, width: 410 }}
-                      marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}
+                      marqueeProps={{ style: { padding: '0 7.5px' } }}
                     >
-                      温馨提示：标签保存以后不能修改，请保存前检查版本、分支及标签描述。
+                      标签保存以后不能修改，请保存前检查版本、分支及标签描述。
                     </NoticeBar>
                   </span>
                 </div>
