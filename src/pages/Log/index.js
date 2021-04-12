@@ -5,7 +5,7 @@ import cls from 'classnames';
 import { get, isEqual } from 'lodash';
 import copy from 'copy-to-clipboard';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Input, Button, Menu, Drawer } from 'antd';
+import { Input, Button, Menu, Drawer, Badge } from 'antd';
 import { ExtTable, ExtIcon, message, ListCard } from 'suid';
 import { constants } from '@/utils';
 import { FilterView } from '@/components';
@@ -199,7 +199,10 @@ class LogList extends PureComponent {
                   {m.key === selectedKey ? (
                     <ExtIcon type="check" className="selected" antd />
                   ) : null}
-                  <span className="view-popover-box-trigger">{m.title}</span>
+                  <span className="view-popover-box-trigger">
+                    <Badge color={m.color === '' ? '#d9d9d9' : m.color} />
+                    {m.title}
+                  </span>
                 </Menu.Item>
               );
             })}
