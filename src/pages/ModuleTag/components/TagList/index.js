@@ -382,6 +382,9 @@ class TagList extends Component {
       store: {
         type: 'POST',
         url: `${SERVER_PATH}/sei-manager/tag/getTags`,
+        loaded: () => {
+          this.tableRef.expandedRowKeys = [];
+        },
       },
       cascadeParams: {
         ...this.getFilter(),

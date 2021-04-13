@@ -5,7 +5,6 @@ import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button } from 'antd';
 import { ExtTable } from 'suid';
 import { FilterView } from '@/components';
-import get from 'lodash.get';
 import InstanceList from './components/InstanceList';
 import styles from './index.less';
 
@@ -28,6 +27,7 @@ class AvailableService extends Component {
 
   reloadData = () => {
     const { dispatch } = this.props;
+    this.tableRef.expandedRowKeys = [];
     dispatch({
       type: 'availableService/getServices',
     });
@@ -42,6 +42,7 @@ class AvailableService extends Component {
         serviceData: [],
       },
     }).then(() => {
+      this.tableRef.expandedRowKeys = [];
       dispatch({
         type: 'availableService/getServices',
       });
@@ -121,7 +122,7 @@ class AvailableService extends Component {
     };
     return (
       <div className={cls(styles['service-box'])}>
-        <ExtTable key={get(currentEnvViewType, 'id')} {...extTableProps} />
+        <ExtTable {...extTableProps} />
       </div>
     );
   }

@@ -63,6 +63,9 @@ class TagList extends PureComponent {
       searchWidth: 260,
       store: {
         url: `${SERVER_PATH}/sei-manager/buildJob/getTags`,
+        loaded: () => {
+          this.tableRef.expandedRowKeys = [];
+        },
       },
       cascadeParams: {
         moduleId: currentModuleId,
