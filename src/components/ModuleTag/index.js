@@ -4,10 +4,13 @@ import styles from './index.less';
 
 const ModuleTag = ({ moduleItem, style = {} }) => {
   let color = 'blue';
-  let desc = <span className="tag web">前端</span>;
-  if (moduleItem.nameSpace) {
-    color = 'cyan';
-    desc = <span className="tag api">后端</span>;
+  let desc = null;
+  if (moduleItem.hasOwnProperty('nameSpace')) {
+    desc = <span className="tag web">前端</span>;
+    if (moduleItem.nameSpace) {
+      color = 'cyan';
+      desc = <span className="tag api">后端</span>;
+    }
   }
   let tag = <span className="tp prd">产品</span>;
   if (moduleItem.type.indexOf('PROJECT') !== -1) {

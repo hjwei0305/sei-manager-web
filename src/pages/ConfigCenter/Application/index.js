@@ -5,6 +5,7 @@ import { Empty, Layout, Input } from 'antd';
 import { ListCard } from 'suid';
 import empty from '@/assets/item_empty.svg';
 import { constants } from '@/utils';
+import { ModuleTag as ModuleTagMark } from '@/components';
 import DropdownGroup from './components/DropdownGroup';
 import Config from './Config';
 import styles from './index.less';
@@ -230,13 +231,13 @@ class ConfigCommon extends Component {
       showSearch: false,
       onSelectChange: this.handlerAppSelect,
       selectedKeys,
-      rowKey: 'code',
       onListCardRef: ref => (this.listCardRef = ref),
       searchProperties: ['code', 'name'],
       customTool: this.renderCustomTool,
       itemField: {
         title: item => item.name,
         description: item => item.code,
+        extra: item => <ModuleTagMark moduleItem={item} style={{ paddingLeft: 7 }} />,
       },
       store: {
         url: `${SERVER_PATH}/sei-manager/appConfig/getAppList`,
