@@ -219,7 +219,7 @@ class ConfigCommon extends Component {
       runtimeConfig,
       projectGroupData,
     } = configApp;
-    const selectedKeys = selectedApp ? [selectedApp.code] : [];
+    const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const releasing = loading.effects['configApp/appRelease'];
     const releaseLoading = loading.effects['configApp/compareBeforeRelease'];
     const appListProps = {

@@ -184,7 +184,7 @@ class AppGateway extends Component {
     const { groupCode } = this.state;
     const { appGateway } = this.props;
     const { selectedApp, projectGroupData } = appGateway;
-    const selectedKeys = selectedApp ? [selectedApp.code] : [];
+    const selectedKeys = selectedApp ? [selectedApp.id] : [];
     const appListProps = {
       className: 'left-content',
       title: '应用列表',
