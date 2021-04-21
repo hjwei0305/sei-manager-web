@@ -438,13 +438,6 @@ class ApplicationModule extends Component {
         ),
       },
       {
-        title: '应用名称',
-        dataIndex: 'appName',
-        width: 160,
-        required: true,
-        ...this.getColumnSearchProps('appName'),
-      },
-      {
         title: '模块代码',
         dataIndex: 'code',
         width: 280,
@@ -472,6 +465,13 @@ class ApplicationModule extends Component {
         width: 120,
         render: t => t || '-',
         ...this.getColumnSearchProps('version'),
+      },
+      {
+        title: '应用名称',
+        dataIndex: 'appName',
+        width: 160,
+        required: true,
+        ...this.getColumnSearchProps('appName'),
       },
       {
         title: 'Git地址',
