@@ -1,7 +1,7 @@
 /* eslint-disable no-empty */
 
 import React from 'react';
-import { utils, ListLoader } from 'suid';
+import { utils, SkeletonContent } from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
@@ -29,7 +29,13 @@ const mdParser = new MarkdownIt({
 const editorId = getUUID();
 const MdEditorView = ({ message, expanding }) => {
   if (expanding === true) {
-    return <ListLoader />;
+    return (
+      <SkeletonContent viewBox="0 0 100% 96" height={96}>
+        <rect x="0" y="14" rx="3" ry="3" width="154" height="24" />
+        <rect x="0" y="46" rx="3" ry="3" width="344" height="17" />
+        <rect x="0" y="70" rx="3" ry="3" width="229" height="17" />
+      </SkeletonContent>
+    );
   }
   return (
     <div className={styles.box}>
