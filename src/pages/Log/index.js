@@ -8,7 +8,7 @@ import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Input, Button, Menu, Drawer, Badge } from 'antd';
 import { ExtTable, ExtIcon, message, ListCard } from 'suid';
 import { constants } from '@/utils';
-import { FilterView } from '@/components';
+import { FilterView, ModuleTag as ModuleTagMark } from '@/components';
 import FilterDate from './components/FilterDate';
 import ExtAction from './components/ExtAction';
 import TranceLog from './components/TranceLog';
@@ -219,7 +219,6 @@ class LogList extends PureComponent {
         searchProperties: ['code', 'name'],
         showArrow: false,
         showSearch: false,
-        rowKey: 'code',
         selectedKeys,
         remotePaging: true,
         onSelectChange: keys => {
@@ -239,6 +238,7 @@ class LogList extends PureComponent {
         itemField: {
           title: item => item.code,
           description: item => item.name,
+          extra: item => <ModuleTagMark moduleItem={item} />,
         },
       };
       return (
