@@ -191,8 +191,8 @@ class UserList extends Component {
         render: this.renderAccount,
       },
       {
-        title: '昵称',
-        dataIndex: 'nickname',
+        title: '姓名',
+        dataIndex: 'userName',
         width: 160,
         required: true,
       },
@@ -245,8 +245,8 @@ class UserList extends Component {
       toolBar: toolBarProps,
       columns,
       showSearchTooltip: true,
-      searchPlaceHolder: '昵称、账号、手机号、电子邮箱',
-      searchProperties: ['nickname', 'account', 'phone', 'email'],
+      searchPlaceHolder: '姓名、账号、手机号、电子邮箱',
+      searchProperties: ['userName', 'account', 'phone', 'email'],
       searchWidth: 260,
       remotePaging: true,
       store: {
@@ -255,7 +255,7 @@ class UserList extends Component {
       },
       onTableRef: ref => (this.tableRef = ref),
       sort: {
-        field: { nickname: null, phone: null },
+        field: { userName: null, phone: null },
       },
     };
     return (

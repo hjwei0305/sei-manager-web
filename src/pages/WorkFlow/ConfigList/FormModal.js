@@ -67,9 +67,9 @@ class FormModal extends PureComponent {
       remotePaging: true,
       field: ['handleAccount'],
       searchPlaceHolder: '姓名或账号关键字查询',
-      searchProperties: ['nickname', 'account'],
+      searchProperties: ['userName', 'account'],
       reader: {
-        name: 'nickname',
+        name: 'userName',
         description: 'account',
         field: ['account'],
       },

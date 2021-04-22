@@ -71,7 +71,7 @@ class TypeNodeList extends Component {
       if (node.id === id) {
         Object.assign(node, {
           handleAccount: get(user, 'account'),
-          handleUserName: get(user, 'nickname'),
+          handleUserName: get(user, 'userName'),
         });
         break;
       }
@@ -102,12 +102,12 @@ class TypeNodeList extends Component {
         remotePaging: true,
         value: row.handleUserName,
         searchPlaceHolder: '姓名或账号关键字查询',
-        searchProperties: ['nickname', 'account'],
+        searchProperties: ['userName', 'account'],
         afterSelect: item => {
           this.saveHandleUser(row.id, item);
         },
         reader: {
-          name: 'nickname',
+          name: 'userName',
           description: 'account',
         },
       };

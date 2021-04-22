@@ -80,13 +80,13 @@ class FormModal extends PureComponent {
               ],
             })(<Input disabled={!!get(rowData, 'account')} />)}
           </FormItem>
-          <FormItem label="昵称">
-            {getFieldDecorator('nickname', {
-              initialValue: get(rowData, 'nickname'),
+          <FormItem label="姓名">
+            {getFieldDecorator('userName', {
+              initialValue: get(rowData, 'userName'),
               rules: [
                 {
                   required: true,
-                  message: '昵称不能为空',
+                  message: '姓名不能为空',
                 },
               ],
             })(<Input />)}

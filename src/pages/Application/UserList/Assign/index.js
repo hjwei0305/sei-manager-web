@@ -2,7 +2,7 @@
  * @Author: Eason
  * @Date: 2020-02-15 11:53:29
  * @Last Modified by: Eason
- * @Last Modified time: 2021-03-26 14:28:13
+ * @Last Modified time: 2021-04-22 10:10:35
  */
 import React, { Component } from 'react';
 import cls from 'classnames';
@@ -65,10 +65,10 @@ class FeatureRoleAssign extends Component {
       className: 'anyone-user-box',
       bordered: false,
       searchPlaceHolder: '输入姓名关键字',
-      searchProperties: ['nickname', 'account'],
+      searchProperties: ['userName', 'account'],
       itemField: {
         avatar: this.renderAvatar,
-        title: item => item.nickname,
+        title: item => item.userName,
         description: item => item.account,
       },
       rowKey: 'account',

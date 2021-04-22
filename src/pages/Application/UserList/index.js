@@ -56,7 +56,7 @@ class ModuleUserModal extends PureComponent {
               <span>已选择：</span>
               <span style={{ fontSize: 16, fontWeight: 700 }}>{`${get(
                 accountSelected,
-                'nickname',
+                'userName',
               )}(${get(accountSelected, 'account')})`}</span>
             </>
           ) : null}

@@ -103,11 +103,11 @@ class UnAssignUsers extends Component {
     const listCardProps = {
       showSearch: false,
       onSelectChange: this.handlerSelectRow,
-      searchProperties: ['nickname', 'phone', 'email'],
+      searchProperties: ['userName', 'phone', 'email'],
       checkbox: true,
       showArrow: false,
       itemField: {
-        title: item => item.nickname,
+        title: item => item.userName,
         description: item => item.email,
         extra: item => <span style={{ fontSize: 12 }}>{item.phone}</span>,
       },

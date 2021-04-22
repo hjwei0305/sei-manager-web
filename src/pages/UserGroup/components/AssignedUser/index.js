@@ -99,7 +99,7 @@ class AssignedUser extends Component {
     });
   };
 
-  renderNickname = (t, row) => {
+  renderUserName = (t, row) => {
     return (
       <>
         {t}
@@ -138,11 +138,11 @@ class AssignedUser extends Component {
       //   ),
       // },
       {
-        title: '昵称',
-        dataIndex: 'nickname',
+        title: '姓名',
+        dataIndex: 'userName',
         width: 220,
         required: true,
-        render: this.renderNickname,
+        render: this.renderUserName,
       },
       {
         title: '手机号',
@@ -198,8 +198,8 @@ class AssignedUser extends Component {
       selectedRowKeys,
       onSelectRow: this.handlerSelectRow,
       onTableRef: ref => (this.tableRef = ref),
-      searchPlaceHolder: '输入昵称、手机、邮箱关键字',
-      searchProperties: ['nickname', 'phone', 'email'],
+      searchPlaceHolder: '输入姓名、手机、邮箱关键字',
+      searchProperties: ['userName', 'phone', 'email'],
       searchWidth: 260,
       store: {
         url: `${SERVER_PATH}/sei-manager/userGroupUser/getChildrenFromParentId`,

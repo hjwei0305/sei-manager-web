@@ -93,13 +93,13 @@ class Profile extends PureComponent {
     return (
       <Card title="个人信息" bordered={false} className={styles['profile-box']}>
         <Form {...formItemLayout}>
-          <FormItem label="昵称">
-            {getFieldDecorator('nickname', {
-              initialValue: get(user, 'nickname'),
+          <FormItem label="姓名">
+            {getFieldDecorator('userName', {
+              initialValue: get(user, 'userName'),
               rules: [
                 {
                   required: true,
-                  message: '昵称不能为空',
+                  message: '姓名不能为空',
                 },
               ],
             })(<Input autoComplete="off" style={{ width: 320 }} />)}

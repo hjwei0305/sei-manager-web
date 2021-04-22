@@ -53,7 +53,7 @@ class UserRoleModal extends PureComponent {
 
   renderTitle = currentUser => {
     const { showAssign } = this.state;
-    const title = get(currentUser, 'nickname', '');
+    const title = get(currentUser, 'userName', '');
     if (showAssign) {
       return (
         <>

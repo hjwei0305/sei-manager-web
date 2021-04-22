@@ -147,7 +147,7 @@ class AssignedStage extends Component {
     });
   };
 
-  renderNickname = (t, row) => {
+  renderUserName = (t, row) => {
     return (
       <>
         <Tag>{row.rank}</Tag>
@@ -191,7 +191,7 @@ class AssignedStage extends Component {
         dataIndex: 'name',
         width: 220,
         required: true,
-        render: this.renderNickname,
+        render: this.renderUserName,
       },
       {
         title: '阶段描述',
