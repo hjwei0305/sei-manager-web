@@ -221,9 +221,10 @@ class LogList extends PureComponent {
         showSearch: false,
         selectedKeys,
         remotePaging: true,
-        onSelectChange: keys => {
+        onSelectChange: (keys, items) => {
           setSelectedKeys(keys);
-          this.handleColumnSearch(keys, dataIndex, confirm);
+          const cKeys = items.map(it => it.code);
+          this.handleColumnSearch(cKeys, dataIndex, confirm);
         },
         store: {
           type: 'POST',
