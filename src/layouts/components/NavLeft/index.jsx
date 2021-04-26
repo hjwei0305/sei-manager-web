@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Menu, Icon, Row, Col } from 'antd';
 import { Link } from 'umi';
-import { ScrollBar } from 'suid';
+import { ScrollBar, SkeletonContent } from 'suid';
 import cls from 'classnames';
 import { isEqual } from 'lodash';
 import { eventBus } from '@/utils';
@@ -131,7 +131,14 @@ class NavLeft extends React.Component {
 
   render() {
     const { currentSelectedKeys, openKeys } = this.state;
-    const { collapsed, menuConfig = [], allLeafMenus, onCollapse, onSelectSearchMenu } = this.props;
+    const {
+      collapsed,
+      menuConfig = [],
+      allLeafMenus,
+      onCollapse,
+      onSelectSearchMenu,
+      loading,
+    } = this.props;
     return (
       <div
         className={cls({
@@ -168,6 +175,33 @@ class NavLeft extends React.Component {
             }
           }}
         >
+          {loading ? (
+            <SkeletonContent wrapperStyle={{ height: '100%' }}>
+              <circle cx="16" cy="30" r="8" />
+              <rect x="32" y="22" rx="3" ry="3" width="180" height="16" />
+              <rect x="46" y="55" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="83" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="111" rx="3" ry="3" width="160" height="12" />
+
+              <circle cx="16" cy="157" r="8" />
+              <rect x="32" y="149" rx="3" ry="3" width="180" height="16" />
+              <rect x="46" y="181" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="209" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="237" rx="3" ry="3" width="160" height="12" />
+
+              <circle cx="16" cy="283" r="8" />
+              <rect x="32" y="275" rx="3" ry="3" width="180" height="16" />
+              <rect x="46" y="307" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="335" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="363" rx="3" ry="3" width="160" height="12" />
+
+              <circle cx="16" cy="407" r="8" />
+              <rect x="32" y="399" rx="3" ry="3" width="180" height="16" />
+              <rect x="46" y="431" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="459" rx="3" ry="3" width="160" height="12" />
+              <rect x="46" y="487" rx="3" ry="3" width="160" height="12" />
+            </SkeletonContent>
+          ) : null}
           {openKeys ? (
             <ScrollBar>
               <Menu
@@ -178,6 +212,7 @@ class NavLeft extends React.Component {
               >
                 {this.renderMenu(menuConfig)}
               </Menu>
+              )
             </ScrollBar>
           ) : null}
         </div>

@@ -15,7 +15,7 @@ import styles from './BasicLayout.less';
 const { TabPane, TabHeader } = Tab;
 const { getCurrentUser } = userInfoOperation;
 
-@connect(({ base, menu, user }) => ({ base, menu, user }))
+@connect(({ base, menu, user, loading }) => ({ base, menu, user, loading }))
 class BasicLayout extends React.Component {
   constructor(props) {
     super(props);
@@ -167,7 +167,7 @@ class BasicLayout extends React.Component {
 
   render() {
     const { collapsed } = this.state;
-    const { menu, children } = this.props;
+    const { menu, children, loading } = this.props;
     const {
       tabData,
       mode,
@@ -211,6 +211,7 @@ class BasicLayout extends React.Component {
                   },
                 }).then(() => router.push(currMenu.url));
               }}
+              loading={loading.effects['menu/getMenus']}
               favoriteMenus={favoriteMenus}
               allLeafMenus={allLeafMenus}
               menuConfig={currMenuTree ? currMenuTree || [] : []}
