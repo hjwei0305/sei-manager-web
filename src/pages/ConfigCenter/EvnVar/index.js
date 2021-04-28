@@ -146,7 +146,7 @@ class ConfigEvnVar extends Component {
                 })}
                 onConfirm={e => this.del(item, e)}
               >
-                {!loading.effects['configEvnVar/del'] && delId !== item.id ? (
+                {loading.effects['configEvnVar/del'] && delId === item.id ? (
                   <ExtIcon className={cls('del', 'action-item', 'loading')} type="loading" antd />
                 ) : (
                   <ExtIcon className={cls('del', 'action-item')} type="delete" antd />
