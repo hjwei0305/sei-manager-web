@@ -4,7 +4,16 @@ import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import QueueAnim from 'rc-queue-anim';
 import { Form, Input, Button, Row, Col, Layout, Card } from 'antd';
-import { ExtModal, ComboList, utils, ListLoader, ExtIcon, BannerTitle, ScrollBar } from 'suid';
+import {
+  ExtModal,
+  ComboList,
+  utils,
+  ListLoader,
+  ExtIcon,
+  BannerTitle,
+  ScrollBar,
+  message,
+} from 'suid';
 import * as MarkdownIt from 'markdown-it';
 import MdEditor, { Plugins } from 'react-markdown-editor-lite';
 import hljs from 'highlight.js';
@@ -116,6 +125,11 @@ class FormModal extends PureComponent {
     form.validateFields((err, formData) => {
       if (err) {
         return;
+      }
+      if (!remark) {
+        message.destroy();
+        message.warning('发版说明不能为空');
+        return false;
       }
       const params = {};
       Object.assign(params, rowData || {});
