@@ -212,7 +212,6 @@ class NavLeft extends React.Component {
               >
                 {this.renderMenu(menuConfig)}
               </Menu>
-              )
             </ScrollBar>
           ) : null}
         </div>
