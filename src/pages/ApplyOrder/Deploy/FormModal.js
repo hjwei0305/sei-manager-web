@@ -424,7 +424,7 @@ class FormModal extends PureComponent {
                         style={{ height: '100%', width: '100%' }}
                         name={this.editorId}
                         value={remark || ''}
-                        placeholder="请输入部署说明(例如：部署要求,脚本内容)"
+                        placeholder="请输入部署说明(例如：部署要求,脚本等内容（注：sql语句请使用markdown格式输入)"
                         renderHTML={text => this.renderHTML(text)}
                         onChange={this.handlerMdChannge}
                         config={{
