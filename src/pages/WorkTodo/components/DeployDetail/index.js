@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import copy from 'copy-to-clipboard';
 import QueueAnim from 'rc-queue-anim';
 import { Form, Input, DatePicker, Layout, Row, Col, Card } from 'antd';
-import { ExtModal, ExtIcon, BannerTitle, ScrollBar } from 'suid';
+import { ExtModal, ExtIcon, BannerTitle, ScrollBar, message } from 'suid';
 import { MdEditorView } from '@/components';
 import TagList from './TagList';
 import styles from './index.less';
@@ -29,6 +30,11 @@ class DeployDetail extends PureComponent {
     getTag: PropTypes.func,
   };
 
+  handlerCopy = text => {
+    copy(text);
+    message.success(`已复制到粘贴板`);
+  };
+
   renderTitle = () => {
     const { closeFormModal } = this.props;
     return (
@@ -36,6 +42,18 @@ class DeployDetail extends PureComponent {
         <ExtIcon onClick={closeFormModal} type="left" className="trigger-back" antd />
         <BannerTitle title="显示" subTitle="部署申请" />
       </>
+    );
+  };
+
+  renderCopyBtn = t => {
+    return (
+      <ExtIcon
+        type="copy"
+        className="copy-btn"
+        antd
+        tooltip={{ title: '复制部署说明到粘贴板' }}
+        onClick={() => this.handlerCopy(t)}
+      />
     );
   };
 
@@ -155,7 +173,13 @@ class DeployDetail extends PureComponent {
                     { opacity: [1, 0], scaleX: [1, 0.5], translateX: [0, 500] },
                   ]}
                 >
-                  <Card bordered={false} key="tag-content" className="tag-content" title="部署说明">
+                  <Card
+                    bordered={false}
+                    key="tag-content"
+                    className="tag-content"
+                    title="部署说明"
+                    extra={this.renderCopyBtn(get(rowData, 'remark'))}
+                  >
                     <MdEditorView
                       key="tag-content-md"
                       message={get(rowData, 'remark') || '<span style="color:#999">暂无数据</span>'}

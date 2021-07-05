@@ -1,6 +1,16 @@
 @import '../../../../themes/vars.less';
 .form-box {
   :global {
+    .copy-btn {
+      width: 24px;
+      height: 24px;
+      line-height: 28px;
+      border-radius: 4px;
+      transition: all 0.3s;
+      &:hover {
+        background-color: fade(@primary-color, 15%);
+      }
+    }
     .trigger-back {
       position: absolute;
       top: 0;
