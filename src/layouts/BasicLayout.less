@@ -36,6 +36,15 @@
         box-sizing: border-box;
         padding: 8px;
         overflow: auto;
+        > div {
+          height: 100%;
+          > div:first-child {
+            height: 100%;
+          }
+        }
+        > .suid-list-loader {
+          height: auto;
+        }
         #root-subapp {
           height: 100%;
           overflow: hidden;
