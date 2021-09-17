@@ -34,6 +34,16 @@ class BuildRecord extends Component {
     };
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'buildRecord/updateState',
+      payload: {
+        filter: {},
+      },
+    });
+  }
+
   reloadData = () => {
     if (this.tableRef) {
       this.tableRef.remoteDataRefresh();
