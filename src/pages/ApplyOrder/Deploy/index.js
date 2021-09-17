@@ -37,6 +37,16 @@ class ApplyDeploy extends PureComponent {
     };
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applyDeploy/updateState',
+      payload: {
+        filter: {},
+      },
+    });
+  }
+
   reloadData = () => {
     if (this.tableRef) {
       this.tableRef.remoteDataRefresh();

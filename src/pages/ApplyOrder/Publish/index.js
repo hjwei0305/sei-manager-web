@@ -37,6 +37,16 @@ class ApplyPublish extends PureComponent {
     };
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'applyPublish/updateState',
+      payload: {
+        filter: {},
+      },
+    });
+  }
+
   reloadData = () => {
     if (this.tableRef) {
       this.tableRef.remoteDataRefresh();
