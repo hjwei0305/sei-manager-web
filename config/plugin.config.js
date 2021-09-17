@@ -6,6 +6,13 @@ export default [
     },
   ],
   [
+    'umi-plugin-cache-route',
+    {
+      keepalive: ['/log/logRecord', '/monitorCenter/availableService'],
+      className: 'tset',
+    },
+  ],
+  [
     'umi-plugin-react',
     {
       antd: true,
