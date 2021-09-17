@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import cls from 'classnames';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card } from 'antd';
@@ -19,6 +19,21 @@ class TagList extends Component {
   static startTagName = '';
 
   static endTagName = '';
+
+  static localClearFilter;
+
+  componentDidUpdate(prevProps) {
+    const {
+      moduleTag: { currentModule },
+    } = this.props;
+    if (!isEqual(prevProps.moduleTag.currentModule, currentModule)) {
+      if (this.localClearFilter) {
+        this.startTagName = '';
+        this.endTagName = '';
+        this.localClearFilter();
+      }
+    }
+  }
 
   reloadData = () => {
     if (this.tableRef) {
@@ -198,6 +213,7 @@ class TagList extends Component {
   };
 
   getColumnSearchComponent = (dataIndex, setSelectedKeys, selectedKeys, confirm, clearFilters) => {
+    this.localClearFilter = clearFilters;
     if (dataIndex === 'tagName') {
       const listProps = {
         allowClear: true,

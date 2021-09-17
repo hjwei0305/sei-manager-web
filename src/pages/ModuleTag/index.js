@@ -38,6 +38,7 @@ class ModuleTag extends Component {
       type: 'moduleTag/updateState',
       payload: {
         currentModule,
+        filter: {},
       },
     });
   };

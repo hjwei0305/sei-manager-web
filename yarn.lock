@@ -14772,6 +14772,11 @@ react-resizable@^1.9.0:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
+react-router-cache-route@1.8.3:
+  version "1.8.3"
+  resolved "http://rcsgit.changhong.com:8081/repository/npm_group/react-router-cache-route/-/react-router-cache-route-1.8.3.tgz#8e7e57cedc32b234a48a25804400c56179e04d20"
+  integrity sha1-jn5XztwysjSkiiWARADFYXngTSA=
+
 react-router-config@5.1.1:
   version "5.1.1"
   resolved "http://rcsgit.changhong.com:8081/repository/npm_group/react-router-config/-/react-router-config-5.1.1.tgz#0f4263d1a80c6b2dc7b9c1902c9526478194a988"
@@ -18027,6 +18032,13 @@ umi-notify@^0.1.1:
   dependencies:
     chalk "^2.4.1"
     is-ali-env "^0.1.4"
+
+umi-plugin-cache-route@^2.0.0:
+  version "2.0.0"
+  resolved "http://rcsgit.changhong.com:8081/repository/npm_group/umi-plugin-cache-route/-/umi-plugin-cache-route-2.0.0.tgz#baf8e63ec42e31bf44f227aadbd473f70845d99c"
+  integrity sha1-uvjmPsQuMb9E8ieq29Rz9whF2Zw=
+  dependencies:
+    react-router-cache-route "1.8.3"
 
 umi-plugin-dll@1.6.1:
   version "1.6.1"
