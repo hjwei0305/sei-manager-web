@@ -205,6 +205,9 @@ class FormModal extends PureComponent {
                 <Radio.Button key="web" value="web">
                   前端模块
                 </Radio.Button>
+                <Radio.Button key="mobile" value="mobile">
+                  移动端模块
+                </Radio.Button>
                 <Radio.Button key="java" value="java">
                   后端模块
                 </Radio.Button>
