@@ -8,7 +8,7 @@ import { constants } from '../../../utils';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, PRODUCT_TEMPLATE_TYPE } = constants;
 const formItemLayout = {
   labelCol: {
     span: 24,
@@ -33,9 +33,10 @@ class FormModal extends PureComponent {
 
   constructor(props) {
     super(props);
-    const { rowData } = props;
+    // const { rowData } = props;
     this.state = {
-      moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
+      // moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
+      moduleType: PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
     };
   }
 
@@ -99,7 +100,11 @@ class FormModal extends PureComponent {
   handlerModuleTypeChange = e => {
     const { form } = this.props;
     const moduleType = e.target.value;
-    if (moduleType === 'web') {
+    if (
+      [PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0], PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0]].includes(
+        moduleType,
+      )
+    ) {
       form.setFieldsValue({ nameSpace: '' });
     }
     this.setState({ moduleType });
@@ -202,15 +207,11 @@ class FormModal extends PureComponent {
               ],
             })(
               <Radio.Group onChange={this.handlerModuleTypeChange} disabled={onlyView} size="small">
-                <Radio.Button key="web" value="web">
-                  前端模块
-                </Radio.Button>
-                <Radio.Button key="mobile" value="mobile">
-                  移动端模块
-                </Radio.Button>
-                <Radio.Button key="java" value="java">
-                  后端模块
-                </Radio.Button>
+                {Object.values(PRODUCT_TEMPLATE_TYPE).map(([key, value]) => (
+                  <Radio.Button key={key} value={key}>
+                    {value}
+                  </Radio.Button>
+                ))}
               </Radio.Group>,
             )}
           </FormItem>
@@ -266,11 +267,21 @@ class FormModal extends PureComponent {
               initialValue: get(rowData, 'nameSpace'),
               rules: [
                 {
-                  required: moduleType === 'java',
+                  required: moduleType === PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
                   message: '命名空间(包路径)不能为空',
                 },
               ],
-            })(<Input disabled={onlyView || moduleType === 'web'} />)}
+            })(
+              <Input
+                disabled={
+                  onlyView ||
+                  [
+                    PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0],
+                    PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0],
+                  ].includes(moduleType)
+                }
+              />,
+            )}
           </FormItem>
           {onlyView ? (
             <>
