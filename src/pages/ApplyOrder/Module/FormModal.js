@@ -35,15 +35,15 @@ class FormModal extends PureComponent {
     super(props);
     // const { rowData } = props;
     this.state = {
-      // moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
-      moduleType: PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
+      // type: get(rowData, 'nameSpace') ? 'java' : 'web',
+      type: PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
     };
   }
 
   componentDidUpdate(preProps) {
     const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
-      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
+      this.setState({ type: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
@@ -99,15 +99,13 @@ class FormModal extends PureComponent {
 
   handlerModuleTypeChange = e => {
     const { form } = this.props;
-    const moduleType = e.target.value;
+    const type = e.target.value;
     if (
-      [PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0], PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0]].includes(
-        moduleType,
-      )
+      [PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0], PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0]].includes(type)
     ) {
       form.setFieldsValue({ nameSpace: '' });
     }
-    this.setState({ moduleType });
+    this.setState({ type });
   };
 
   handlerCopy = text => {
@@ -145,7 +143,7 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { moduleType } = this.state;
+    const { type } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -197,8 +195,8 @@ class FormModal extends PureComponent {
             })(<ComboList {...appProps} disabled={onlyView} />)}
           </FormItem>
           <FormItem style={{ marginBottom: 0 }}>
-            {getFieldDecorator('moduleType', {
-              initialValue: moduleType,
+            {getFieldDecorator('type', {
+              initialValue: type,
               rules: [
                 {
                   required: true,
@@ -267,7 +265,7 @@ class FormModal extends PureComponent {
               initialValue: get(rowData, 'nameSpace'),
               rules: [
                 {
-                  required: moduleType === PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
+                  required: type === PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
                   message: '命名空间(包路径)不能为空',
                 },
               ],
@@ -278,7 +276,7 @@ class FormModal extends PureComponent {
                   [
                     PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0],
                     PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0],
-                  ].includes(moduleType)
+                  ].includes(type)
                 }
               />,
             )}
