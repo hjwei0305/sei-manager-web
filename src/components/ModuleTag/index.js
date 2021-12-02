@@ -6,7 +6,7 @@ const ModuleTag = ({ moduleItem, style = {} }) => {
   let color = 'blue';
   let desc = null;
   if (moduleItem.hasOwnProperty('nameSpace')) {
-    desc = <span className="tag web">前端</span>;
+    desc = <span className="tag web">{moduleItem.type.includes('WEB') ? '前端' : '移动端'}</span>;
     if (moduleItem.nameSpace) {
       color = 'cyan';
       desc = <span className="tag api">后端</span>;

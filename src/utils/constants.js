@@ -1,8 +1,8 @@
 /*
  * @Author: Eason
  * @Date: 2020-02-21 18:03:16
- * @Last Modified by: Eason
- * @Last Modified time: 2021-03-31 10:36:17
+ * @Last Modified by: zp
+ * @Last Modified time: 2021-10-19 14:46:15
  */
 import { name } from '../../package.json';
 
@@ -251,6 +251,20 @@ const APP_MODULE_ACTION = {
   SEC_DEV: 'SEC_DEV',
 };
 
+// 产品项目模版
+const PRODUCT_TEMPLATE_TYPE = {
+  PRODUCT_JAVA: ['PRODUCT_JAVA', '后端模块'],
+  PRODUCT_WEB: ['PRODUCT_WEB', '前端模块'],
+  PRODUCT_MOBILE: ['PRODUCT_MOBILE', '移动模块'],
+};
+
+// 二开项目模版
+const PROJECT_TEMPLATE_TYPE = {
+  PROJECT_WEB: ['PROJECT_WEB', '前端模块'],
+  PROJECT_MOBILE: ['PROJECT_MOBILE', '移动模块'],
+  PROJECT_JAVA: ['PROJECT_JAVA', '后端模块'],
+};
+
 export default {
   NoMenuPage,
   NoMenuPages,
@@ -281,4 +295,6 @@ export default {
   USER_STATUS,
   CHANGE_TYPE,
   APP_MODULE_ACTION,
+  PRODUCT_TEMPLATE_TYPE,
+  PROJECT_TEMPLATE_TYPE,
 };

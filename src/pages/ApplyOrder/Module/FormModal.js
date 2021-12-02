@@ -8,7 +8,7 @@ import { constants } from '../../../utils';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const { SERVER_PATH } = constants;
+const { SERVER_PATH, PRODUCT_TEMPLATE_TYPE } = constants;
 const formItemLayout = {
   labelCol: {
     span: 24,
@@ -33,16 +33,17 @@ class FormModal extends PureComponent {
 
   constructor(props) {
     super(props);
-    const { rowData } = props;
+    // const { rowData } = props;
     this.state = {
-      moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
+      // type: get(rowData, 'nameSpace') ? 'java' : 'web',
+      type: PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
     };
   }
 
   componentDidUpdate(preProps) {
     const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
-      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
+      this.setState({ type: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
@@ -98,11 +99,13 @@ class FormModal extends PureComponent {
 
   handlerModuleTypeChange = e => {
     const { form } = this.props;
-    const moduleType = e.target.value;
-    if (moduleType === 'web') {
+    const type = e.target.value;
+    if (
+      [PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0], PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0]].includes(type)
+    ) {
       form.setFieldsValue({ nameSpace: '' });
     }
-    this.setState({ moduleType });
+    this.setState({ type });
   };
 
   handlerCopy = text => {
@@ -140,7 +143,7 @@ class FormModal extends PureComponent {
   };
 
   render() {
-    const { moduleType } = this.state;
+    const { type } = this.state;
     const { form, rowData, showModal, closeFormModal, onlyView } = this.props;
     const { getFieldDecorator } = form;
     const title = rowData ? '修改模块申请' : '新建模块申请';
@@ -192,8 +195,8 @@ class FormModal extends PureComponent {
             })(<ComboList {...appProps} disabled={onlyView} />)}
           </FormItem>
           <FormItem style={{ marginBottom: 0 }}>
-            {getFieldDecorator('moduleType', {
-              initialValue: moduleType,
+            {getFieldDecorator('type', {
+              initialValue: type,
               rules: [
                 {
                   required: true,
@@ -202,12 +205,11 @@ class FormModal extends PureComponent {
               ],
             })(
               <Radio.Group onChange={this.handlerModuleTypeChange} disabled={onlyView} size="small">
-                <Radio.Button key="web" value="web">
-                  前端模块
-                </Radio.Button>
-                <Radio.Button key="java" value="java">
-                  后端模块
-                </Radio.Button>
+                {Object.values(PRODUCT_TEMPLATE_TYPE).map(([key, value]) => (
+                  <Radio.Button key={key} value={key}>
+                    {value}
+                  </Radio.Button>
+                ))}
               </Radio.Group>,
             )}
           </FormItem>
@@ -263,11 +265,21 @@ class FormModal extends PureComponent {
               initialValue: get(rowData, 'nameSpace'),
               rules: [
                 {
-                  required: moduleType === 'java',
+                  required: type === PRODUCT_TEMPLATE_TYPE.PRODUCT_JAVA[0],
                   message: '命名空间(包路径)不能为空',
                 },
               ],
-            })(<Input disabled={onlyView || moduleType === 'web'} />)}
+            })(
+              <Input
+                disabled={
+                  onlyView ||
+                  [
+                    PRODUCT_TEMPLATE_TYPE.PRODUCT_WEB[0],
+                    PRODUCT_TEMPLATE_TYPE.PRODUCT_MOBILE[0],
+                  ].includes(type)
+                }
+              />,
+            )}
           </FormItem>
           {onlyView ? (
             <>

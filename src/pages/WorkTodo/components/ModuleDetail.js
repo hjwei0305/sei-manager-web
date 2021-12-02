@@ -28,14 +28,14 @@ class ModuleDetail extends PureComponent {
     super(props);
     const { rowData } = props;
     this.state = {
-      moduleType: get(rowData, 'nameSpace') ? 'java' : 'web',
+      type: get(rowData, 'nameSpace') ? 'java' : 'web',
     };
   }
 
   componentDidUpdate(preProps) {
     const { rowData } = this.props;
     if (!isEqual(preProps.rowData, rowData)) {
-      this.setState({ moduleType: get(rowData, 'nameSpace') ? 'java' : 'web' });
+      this.setState({ type: get(rowData, 'nameSpace') ? 'java' : 'web' });
     }
   }
 
@@ -66,7 +66,7 @@ class ModuleDetail extends PureComponent {
   };
 
   render() {
-    const { moduleType } = this.state;
+    const { type } = this.state;
     const { form, rowData, showModal, closeFormModal } = this.props;
     const { getFieldDecorator } = form;
     return (
@@ -93,8 +93,8 @@ class ModuleDetail extends PureComponent {
             })(<Input disabled />)}
           </FormItem>
           <FormItem style={{ marginBottom: 0 }}>
-            {getFieldDecorator('moduleType', {
-              initialValue: moduleType,
+            {getFieldDecorator('type', {
+              initialValue: type,
               rules: [
                 {
                   required: true,
@@ -161,7 +161,7 @@ class ModuleDetail extends PureComponent {
               initialValue: get(rowData, 'nameSpace'),
               rules: [
                 {
-                  required: moduleType === 'java',
+                  required: type === 'java',
                   message: '命名空间(包路径)不能为空',
                 },
               ],
