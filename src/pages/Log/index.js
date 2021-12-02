@@ -524,7 +524,7 @@ class LogList extends PureComponent {
         ...this.getColumnSearchProps('fromServer'),
       },
       {
-        title: '日志等极',
+        title: '日志等级',
         dataIndex: 'level',
         width: 120,
         required: true,
