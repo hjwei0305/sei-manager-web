@@ -91,11 +91,11 @@ class Dashboard extends React.Component {
                   ease: 'easeInOutQuint',
                   duration: 1000,
                 },
-                { scale: 1, width: '100%', delay: -300, duration: 1000, ease: 'easeInOutQuint' },
+                { scale: 1, width: '480px', delay: -300, duration: 1000, ease: 'easeInOutQuint' },
               ],
             }}
           >
-            SEI开发运维平台
+            UAP开发运维平台
           </Texty>
           <TweenOne
             className="combined-bar"

@@ -91,13 +91,13 @@ class Login extends Component {
       <div className={styles['container-box']}>
         <div className={cls('form-logo', 'horizontal')}>
           <Animate type="fadeInLeft" delay={200}>
-            S
+            U
           </Animate>
           <Animate type="tada" delay={400} duration={1500}>
-            E
+            A
           </Animate>
           <Animate type="fadeInRight" delay={200}>
-            I
+            P
           </Animate>
         </div>
         <div className="login-form-title">
