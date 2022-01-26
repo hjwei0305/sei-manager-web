@@ -148,7 +148,7 @@ class NavLeft extends React.Component {
       >
         <div className="layout-logo" onClick={this.handleLogoClick}>
           <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 24, fontWeight: 700 }}>
-            {collapsed ? 'SEI' : '开发运维平台'}
+            {collapsed ? 'UAP' : '开发运维平台'}
           </span>
         </div>
         <div className="layout-menu-search">

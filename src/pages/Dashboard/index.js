@@ -91,18 +91,18 @@ class Dashboard extends React.Component {
                   ease: 'easeInOutQuint',
                   duration: 1000,
                 },
-                { scale: 1, width: '100%', delay: -300, duration: 1000, ease: 'easeInOutQuint' },
+                { scale: 1, width: '480px', delay: -300, duration: 1000, ease: 'easeInOutQuint' },
               ],
             }}
           >
-            SEI开发运维平台
+            UAP开发运维平台
           </Texty>
           <TweenOne
             className="combined-bar"
             animation={{ delay: 2000, width: 0, x: 225, type: 'from', ease: 'easeInOutExpo' }}
           />
           <Texty className="content" type="bottom" split={this.getSplit} delay={2200} interval={30}>
-            智慧创造价值 专业赢得信赖
+            努力超越 追求卓越
           </Texty>
         </div>
       </div>
