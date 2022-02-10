@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import cls from 'classnames';
 import { get, isEqual } from 'lodash';
+import moment from 'moment';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Button, Card } from 'antd';
@@ -371,6 +372,18 @@ class TagList extends Component {
         dataIndex: 'branch',
         width: 140,
         required: true,
+      },
+      {
+        title: '创建者',
+        dataIndex: 'createAccount',
+        width: 100,
+        required: true,
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        width: 180,
+        render: t => moment(t).format('YYYY-MM-DD HH:MM:ss'),
       },
     ];
     const toolBarProps = {

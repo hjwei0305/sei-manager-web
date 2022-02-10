@@ -95,14 +95,14 @@ class Dashboard extends React.Component {
               ],
             }}
           >
-            UAP开发运维平台
+            SEI开发运维平台
           </Texty>
           <TweenOne
             className="combined-bar"
             animation={{ delay: 2000, width: 0, x: 225, type: 'from', ease: 'easeInOutExpo' }}
           />
           <Texty className="content" type="bottom" split={this.getSplit} delay={2200} interval={30}>
-            努力超越 追求卓越
+            智慧创造价值 专业赢得信赖
           </Texty>
         </div>
       </div>
