@@ -4,7 +4,7 @@ import { get, isEqual } from 'lodash';
 import moment from 'moment';
 import { connect } from 'dva';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Button, Card } from 'antd';
+import { Button, Card, Tooltip } from 'antd';
 import { ExtTable, BannerTitle, ExtIcon, ComboList } from 'suid';
 import { MdEditorView } from '@/components';
 import { constants } from '@/utils';
@@ -383,7 +383,9 @@ class TagList extends Component {
         title: '创建时间',
         dataIndex: 'createTime',
         width: 180,
-        render: t => moment(t).format('YYYY-MM-DD HH:MM:ss'),
+        render: t => (
+          <Tooltip title={moment(t).format('YYYY-MM-DD HH:MM:ss')}>{moment(t).fromNow()}</Tooltip>
+        ),
       },
     ];
     const toolBarProps = {
