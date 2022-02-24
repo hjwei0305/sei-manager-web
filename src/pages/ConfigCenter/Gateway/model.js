@@ -96,10 +96,10 @@ export default modelExtend(model, {
     },
     *releaseConfigs(_, { call, select }) {
       const { selectedEnv } = yield select(sel => sel.appGateway);
-      const basePath = get(selectedEnv, 'gatewayServer');
+      const env = get(selectedEnv, 'code');
       message.destroy();
-      if (basePath) {
-        const re = yield call(releaseConfigs, { basePath: get(selectedEnv, 'gatewayServer') });
+      if (env) {
+        const re = yield call(releaseConfigs, { env });
         if (re.success) {
           message.success('发布成功');
         } else {

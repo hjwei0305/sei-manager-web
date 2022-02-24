@@ -35,13 +35,13 @@ export async function syncConfigs(data) {
 }
 
 /** 发布 */
-export async function releaseConfigs(data) {
-  const { basePath } = data;
-  const url = `${basePath}/routes/reloadCache`;
+export async function releaseConfigs(params) {
+  const url = `${SERVER_PATH}/sei-manager/authWhitelist/publish`;
   return request({
     url,
     method: 'POST',
-    data,
+    params,
+    data: {},
   });
 }
 
