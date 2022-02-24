@@ -53,7 +53,7 @@ export default modelExtend(model, {
     *getServices(_, { call, put, select }) {
       const { currentEnvViewType } = yield select(sel => sel.availableService);
       const re = yield call(getServices, {
-        agentServer: get(currentEnvViewType, 'agentServer'),
+        env: get(currentEnvViewType, 'code'),
       });
       if (re.success) {
         yield put({
@@ -66,10 +66,10 @@ export default modelExtend(model, {
     },
     *getServiceInstance({ payload, callback }, { call, select }) {
       const { currentEnvViewType } = yield select(sel => sel.availableService);
-      const agentServer = get(currentEnvViewType, 'agentServer');
+      const env = get(currentEnvViewType, 'code');
       const { serviceCode } = payload;
       const re = yield call(getServiceInstance, {
-        agentServer,
+        env,
         serviceCode,
       });
       callback(re);

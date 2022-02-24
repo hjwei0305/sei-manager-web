@@ -362,8 +362,8 @@ class LogList extends PureComponent {
 
   getFilter = () => {
     const { runtimeLog } = this.props;
-    const { filter, currentEnvViewType } = runtimeLog;
-    const filters = [{ fieldName: 'env', operator: 'EQ', value: get(currentEnvViewType, 'code') }];
+    const { filter } = runtimeLog;
+    const filters = [];
     let idxName = '*';
     FILTER_FIELDS.forEach(f => {
       const value = get(filter, f.fieldName, null) || null;
@@ -497,6 +497,17 @@ class LogList extends PureComponent {
         dataIndex: 'timestamp',
         width: 210,
         required: true,
+        render: (t, r) => {
+          if (r.traceId) {
+            return (
+              <span style={{ paddingLeft: 8 }}>
+                <ExtIcon className="tag" antd type="link" />
+                {t}
+              </span>
+            );
+          }
+          return t;
+        },
         ...this.getColumnSearchProps('timestamp'),
       },
       {
@@ -574,7 +585,7 @@ class LogList extends PureComponent {
         </>
       ),
     };
-    const agentServer = get(currentEnvViewType, 'agentServer');
+    const code = get(currentEnvViewType, 'code');
     const tableProps = {
       bordered: false,
       toolBar: toolBarProps,
@@ -584,6 +595,7 @@ class LogList extends PureComponent {
       searchPlaceHolder: '输入关键字查询',
       cascadeParams: {
         ...this.getFilter(),
+        env: code,
         highlightFields: ['message', 'logger', 'serviceName', 'fromServer'],
       },
       remotePaging: true,
@@ -594,11 +606,11 @@ class LogList extends PureComponent {
         },
       },
     };
-    if (agentServer) {
+    if (code) {
       Object.assign(tableProps, {
         store: {
           type: 'POST',
-          url: `${agentServer}/log/findByPage`,
+          url: `${SERVER_PATH}/sei-manager/log/findByPage`,
         },
       });
     }
