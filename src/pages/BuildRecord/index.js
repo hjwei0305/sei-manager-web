@@ -343,6 +343,12 @@ class BuildRecord extends Component {
         render: t => <JenkinsState state={t} />,
       },
       {
+        title: '构建环境',
+        dataIndex: 'envName',
+        width: 160,
+        required: true,
+      },
+      {
         title: '构建主题',
         dataIndex: 'name',
         width: 260,
